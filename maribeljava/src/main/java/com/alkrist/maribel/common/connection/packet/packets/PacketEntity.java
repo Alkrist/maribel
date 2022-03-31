@@ -17,15 +17,17 @@ public class PacketEntity extends Packet{
 	@SuppressWarnings("rawtypes")
 	private static final ComponentMapper UID_MAPPER = ComponentMapper.getFor(EntityID.class);
 	
-	public PacketEntity() {}
+	public PacketEntity() {
+		super("ENTITY");
+	}
 	public PacketEntity(byte id) {
-		super(id);
+		super(id, "ENTITY");
 	}
 	
 	Entity entity;
 	
 	public PacketEntity(byte id, Entity entity) {
-		super(id);
+		super(id, "ENTITY");
 		this.entity = entity;
 	}
 	

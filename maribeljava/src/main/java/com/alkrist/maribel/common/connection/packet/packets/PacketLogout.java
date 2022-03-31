@@ -6,16 +6,18 @@ import com.alkrist.maribel.common.connection.sides.ServerSide;
 
 public class PacketLogout extends Packet{
 
-	public PacketLogout() {}
+	public PacketLogout() {
+		super("LOGOUT");
+	}
 	public PacketLogout(byte id) {
-		super(id);
+		super(id, "LOGOUT");
 	}
 	
 	String name;
 	int name_len;
 	
 	public PacketLogout(byte id, String name) {
-		super(id);
+		super(id, "LOGOUT");
 		this.name = name;
 		this.name_len = name.length();
 	}

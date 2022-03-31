@@ -9,15 +9,17 @@ import com.alkrist.maribel.common.connection.sides.ClientSide;
 
 public class PacketLoginReply extends Packet{
 
-	public PacketLoginReply() {}
+	public PacketLoginReply() {
+		super("LOGIN_REPLY");
+	}
 	public PacketLoginReply(byte id) {
-		super(id);
+		super(id, "LOGIN_REPLY");
 	}
 	
 	private short state;
 	
 	public PacketLoginReply(byte id, short state) {
-		super(id);
+		super(id, "LOGIN_REPLY");
 		this.state = state;
 	}
 	

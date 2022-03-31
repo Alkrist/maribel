@@ -6,9 +6,11 @@ import com.alkrist.maribel.common.connection.sides.ServerSide;
 
 public class PacketClientTick extends Packet{
 
-	public PacketClientTick() {}
+	public PacketClientTick() {
+		super("CLIENT_TICK");
+	}
 	public PacketClientTick(byte id) {
-		super(id);
+		super(id, "CLIENT_TICK");
 	}
 	
 	//TODO: add unique data

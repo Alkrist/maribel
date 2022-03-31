@@ -9,16 +9,18 @@ import com.alkrist.maribel.common.connection.sides.Side;
 
 public class PacketLoginRequest extends Packet{
 
-	public PacketLoginRequest() {}
+	public PacketLoginRequest() {
+		super("LOGIN_REQUEST");
+	}
 	public PacketLoginRequest(byte id) {
-		super(id);
+		super(id, "LOGIN_REQUEST");
 	}
 	
 	private String name;
 	private int name_len;
 	
 	public PacketLoginRequest(byte id, String name) {
-		super(id);
+		super(id, "LOGIN_REQUEST");
 		this.name = name;
 		this.name_len = name.length();
 	}

@@ -1,6 +1,6 @@
 package com.alkrist.maribel.common.loader;
 
-import com.alkrist.maribel.client.Client;
+import com.alkrist.maribel.api.MaribelRegistry;
 import com.alkrist.maribel.client.Updater;
 import com.alkrist.maribel.common.event.EventManager;
 import com.alkrist.maribel.common.event.events.InitializationEvent;
@@ -22,11 +22,11 @@ public final class MasterLoader {
 	 */
 	public void preInit() {
 		System.out.println("preInit");
-		//ListenerRegistry.register();
 		
 		//TODO: here go essential registration things like Display init etc.
 		//TODO: also set the loading screen
-		Client.packetRegistry.registerDefaultPackets();
+		MaribelRegistry.registerPackets();
+		MaribelRegistry.registerListeners();
 		EventManager.callEvent(new PreinitializationEvent());
 		
 		//TODO: fix the loading process so it can be adjusted from api.

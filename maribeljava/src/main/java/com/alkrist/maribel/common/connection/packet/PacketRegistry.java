@@ -2,12 +2,6 @@ package com.alkrist.maribel.common.connection.packet;
 
 import java.util.HashMap;
 
-import com.alkrist.maribel.common.connection.packet.packets.PacketClientTick;
-import com.alkrist.maribel.common.connection.packet.packets.PacketEntity;
-import com.alkrist.maribel.common.connection.packet.packets.PacketLoginReply;
-import com.alkrist.maribel.common.connection.packet.packets.PacketLoginRequest;
-import com.alkrist.maribel.common.connection.packet.packets.PacketLogout;
-import com.alkrist.maribel.common.connection.packet.packets.PacketTick;
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.connection.serialization.SerialBuilder;
 import com.alkrist.maribel.common.connection.serialization.Serializable;
@@ -34,28 +28,14 @@ public class PacketRegistry implements SerialBuilder{
 	 * @param packet
 	 * @param NAME
 	 */
-	public static void registerPacket(Packet packet, String NAME) {
+	public static void registerPacket(Packet packet) {
 		if(nextID < 0) {
 			System.err.println("[PacketRegistry]: Stack overflow. Too many packets registered!");
 			System.exit(1);
 		}
 		packet.id = nextID++;
 		packets[packet.id] = packet;
-		ids.put(NAME, packet.id);
-	}
-	
-	/**
-	 * Register all packets. Mind the order of registry.
-	 * WARNING: The order and amount of registered packets should be 100% similar on both sides,
-	 * otherwise it will cause malfunction!
-	 */
-	public void registerDefaultPackets() {
-		registerPacket(new PacketLoginRequest(), "LOGIN_REQUEST");
-		registerPacket(new PacketLoginReply(), "LOGIN_REPLY");
-		registerPacket(new PacketLogout(), "LOGOUT");
-		registerPacket(new PacketTick(), "TICK");
-		registerPacket(new PacketClientTick(), "CLIENT_TICK");
-		registerPacket(new PacketEntity(), "ENTITY");
+		ids.put(packet.getName(), packet.id);
 	}
 	
 	/**

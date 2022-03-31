@@ -11,15 +11,17 @@ public class PacketTick extends Packet{
 	 * Write - only server side
 	 * Read,Process - only client side
 	 */
-	public PacketTick() {}
+	public PacketTick() {
+		super("TICK");
+	}
 	public PacketTick(byte id) {
-		super(id);
+		super(id, "TICK");
 	}
 	
 	Packet snapshot[];
 	
 	public PacketTick(byte id, Packet[] updates) {
-		super(id);
+		super(id, "TICK");
 		this.snapshot = updates;
 	}
 	

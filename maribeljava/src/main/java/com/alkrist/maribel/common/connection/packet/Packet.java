@@ -46,18 +46,27 @@ import com.alkrist.maribel.common.connection.sides.Side;
 public class Packet implements Serializable{
 
 	public byte id;
-
+	
+	private String NAME;
+	
 	/**
 	 * A simple constructor for packet registry, when the ID isn't yet assigned.
 	 */
-	public Packet() {}
+	public Packet(String NAME) {
+		this.NAME = NAME;
+	}
 	
 	/**
 	 * A default packet constructor. Used in specific constructors.
 	 * @param id - packet ID
 	 */
-	public Packet(byte id) {
+	public Packet(byte id, String NAME) {
 		this.id = id;
+		this.NAME = NAME;
+	}
+	
+	public String getName() {
+		return NAME;
 	}
 	
 	/**

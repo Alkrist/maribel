@@ -29,6 +29,7 @@ public final class MasterLoader {
 		Client.packetRegistry.registerDefaultPackets();
 		EventManager.callEvent(new PreinitializationEvent());
 		
+		//TODO: fix the loading process so it can be adjusted from api.
 		//Updater.setActiveElement(new TestGenericBackground());
 		Updater.enable();
 	}

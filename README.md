@@ -39,6 +39,7 @@ In Maribel we have 3 main instances (not including Utils and API packages):
 2. Server
 3. Common
 
+![Server-Client relation](https://ibb.co/Cbrxh72)
 Client is in charge of rendering and inputs, Server is in charge of world updating and game mechanics. Common contains stuff necessary for both instances, like
 ECS, Events and Connection. 
 Connection is established locally, via shared memory or remotely, via the UDP. Switching between them is possible, if the game is hosted and played on the same machine. _Not implemented yet_

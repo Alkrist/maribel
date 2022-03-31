@@ -1,5 +1,7 @@
 package com.alkrist.maribel.client;
 
+import com.alkrist.maribel.common.event.EventManager;
+import com.alkrist.maribel.common.event.events.CleanupEvent;
 import com.alkrist.maribel.common.loader.MasterLoader;
 
 public class Main {
@@ -20,7 +22,7 @@ public class Main {
 			e.printStackTrace();
 		}finally {
 			System.out.println("cleanup");
-			//TODO: cleanup - cleanup event
+			EventManager.callEvent(new CleanupEvent());
 		}
 	}
 }

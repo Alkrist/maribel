@@ -51,13 +51,12 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 
 ## TODO:
 0. Fix all of the small TODO lists inside the project.
-1. Find a way how to init N listeners on preInit stage.
-2. Find a way how to init N packets on Init stage.
+1. Make logger synchronized.
+2. ID reconsumption issue.
 3. Make tests for ECS and server.
-4. Add Logger
-5. Add object pooling and ID reconsuming.
-6. Add Graphics via LWJGL 3
-7. Add Models
-8. Add Sounds via OpenAL
-9. Add Commands
-10. Add Configs
+5. Add object pooling.
+6. Add Graphics via LWJGL 3.
+7. Add Models.
+8. Add Sounds via OpenAL.
+9. Add Commands.
+10. Add Configs.

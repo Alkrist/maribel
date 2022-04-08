@@ -4,7 +4,7 @@ import com.alkrist.maribel.common.event.EventManager;
 import com.alkrist.maribel.common.event.events.CleanupEvent;
 import com.alkrist.maribel.common.loader.MasterLoader;
 
-public class Main {
+public class Maribel {
 
 	private static MasterLoader loader;
 	
@@ -25,4 +25,5 @@ public class Main {
 			EventManager.callEvent(new CleanupEvent());
 		}
 	}
+	
 }

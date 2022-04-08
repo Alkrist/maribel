@@ -3,6 +3,7 @@ package com.alkrist.maribel.client;
 import com.alkrist.maribel.common.event.EventManager;
 import com.alkrist.maribel.common.event.events.CleanupEvent;
 import com.alkrist.maribel.common.loader.MasterLoader;
+import com.alkrist.maribel.utils.Logging;
 
 public class Maribel {
 
@@ -10,6 +11,7 @@ public class Maribel {
 	
 	public static void main(String[] args) {
 		loader = new MasterLoader();
+		Logging.initLogger();
 		
 		try {
 			

@@ -1,5 +1,8 @@
 package com.alkrist.maribel.client;
 
+import java.util.logging.Level;
+import com.alkrist.maribel.utils.Logging;
+
 /**
  * This class is WIP, holds the data that is red from the config file upon loading, it has
  * the default values for the application
@@ -15,8 +18,9 @@ public class Settings {
 	public int port;
 	
 	public void load() {
+
 		username = "test";
 		port = 2222;
-		System.out.println("Settings are loaded");
+		Logging.getLogger().log(Level.INFO, "Settings loaded.");
 	}
 }

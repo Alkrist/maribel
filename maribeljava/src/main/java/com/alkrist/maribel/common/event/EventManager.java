@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * Represents a master class for the event system.
@@ -14,7 +15,6 @@ import java.util.logging.Logger;
  * @author Mikhail
  */
 public class EventManager {
-	private static final Logger LOGGER = Logger.getLogger(EventManager.class.getCanonicalName());
 	private EventManager() {}
 	
 	/**
@@ -31,7 +31,7 @@ public class EventManager {
 				try {
 					listener.callEvent(event);
 				}catch(Throwable ex) {
-					LOGGER.log(Level.SEVERE, "Could not pass event " + event.getEventName()+" to "
+					Logging.getLogger().log(Level.SEVERE, "Could not pass event " + event.getEventName()+" to "
 							+listener.getOwner().getClass().getName(), ex);
 				}
 			}
@@ -121,7 +121,7 @@ public class EventManager {
 			 for (Method method : listener.getClass().getDeclaredMethods())
 	             methods.add(method);
 		 }catch(NoClassDefFoundError e) { //In case the class does not exist
-			 LOGGER.log(Level.SEVERE, "Failed to register events to " 
+			 Logging.getLogger().log(Level.SEVERE, "Failed to register events to " 
 					 + listener.getClass() + " because " + e.getMessage() + " does not exist.");
 			 return returnable;
 		 }
@@ -133,7 +133,7 @@ public class EventManager {
 			 Class<?> checkClass; //That'll be a class to check method's parameter type
 			 if(method.getParameterTypes().length != 1 //Method should have only one parameter
 					 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) { //Parameter type should be instance of Event class
-				 LOGGER.log(Level.SEVERE, "Attempted to register an invalid EventHandler method signature \"" 
+				 Logging.getLogger().log(Level.SEVERE, "Attempted to register an invalid EventHandler method signature \"" 
 					 + method.toGenericString() + "\" in " + listener.getClass()); 
 				 continue;
 			 }

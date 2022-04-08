@@ -52,6 +52,28 @@ public class FileUtil {
 			return getUserPath() + "/.maribel/";
 	}
 	
+	/**
+	 * 
+	 * @return path to logs
+	 */
+	public static String getLogPath() {
+		if(isWindows())
+			return getBasePath()+"logs\\";
+		else
+			return getBasePath() + "logs/";
+	}
+	
+	/**
+	 * 
+	 * @return path to config files
+	 */
+	public static String getConfigPath() {
+		if(isWindows())
+			return getBasePath()+"config\\";
+		else
+			return getBasePath() + "config/";
+	}
+	
 	private static String getUserPath() {
 		return System.getProperty("user.home");
 	}

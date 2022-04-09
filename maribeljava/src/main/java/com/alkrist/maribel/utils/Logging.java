@@ -23,6 +23,8 @@ import java.util.zip.GZIPOutputStream;
  * Logger creates a sub folder in a specified folder and stores current log as "latest.log",
  * previous log is zipped and saved with a name of last modify time.
  * 
+ * Logging is thread-safe.
+ * 
  * @author Mikhail
  *
  */
@@ -72,7 +74,6 @@ public class Logging {
 			
 	}
 	
-	//TODO: make it sync!!!
 	public static Logger getLogger() {
 		return logger;
 	}

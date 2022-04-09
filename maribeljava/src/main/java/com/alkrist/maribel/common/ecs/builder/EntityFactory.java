@@ -121,11 +121,11 @@ public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 		
 		if(entityIDmapper.hasComponent(entity)){
 			EntityID eid = (EntityID) entityIDmapper.getComponent(entity);
-			buffer.writeInt(eid.ID); //Write Entity UIPD second
+			buffer.writeInt(eid.ID); //Write Entity UID second
 			
 			gameObject.serializeEntity(entity, buffer); //Write other things
 		}
-		else throw new IllegalStateException("Entity must have an ENtityID component to be processed on client!");
+		else throw new IllegalStateException("Entity must have an EntityID component to be processed on client!");
 	}
 	
 	/**

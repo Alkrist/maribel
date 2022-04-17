@@ -71,6 +71,8 @@ public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 	 * 2) Entity Unique ID
 	 * 3) - N) Components
 	 */
+	
+	
 	/**
 	 * Create a fresh new entity in a specific manner.
 	 * @return created entity

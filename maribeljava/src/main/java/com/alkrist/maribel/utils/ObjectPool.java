@@ -1,5 +1,7 @@
 package com.alkrist.maribel.utils;
 
+import java.util.logging.Level;
+
 /**
  * Object pool to reuse objects, can be effectively used for 2 cases:
  * 1) when you have to limit creation of new objects
@@ -105,7 +107,7 @@ public abstract class ObjectPool <T> {
 			tail = Math.max(0, tail - 1);
 			if(tail*2 < stack.length)
 				reduce();
-			if(value == null) System.out.println("value is null");
+			if(value == null) Logging.getLogger().log(Level.WARNING, "[Object Pool]: Queued value is null");
 			return value;
 		}
 		

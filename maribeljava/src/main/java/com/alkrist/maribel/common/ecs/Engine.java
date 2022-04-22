@@ -1,9 +1,11 @@
 package com.alkrist.maribel.common.ecs;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.utils.Command;
 import com.alkrist.maribel.utils.ImmutableArrayList;
+import com.alkrist.maribel.utils.Logging;
 
 
 /**
@@ -48,8 +50,7 @@ public class Engine {
 		try {
 			return componentClass.newInstance();
 		}catch(Exception e) {
-			System.err.println("Invalid call to component class");
-			e.printStackTrace();
+			Logging.getLogger().log(Level.WARNING, "Invalid call to component class", e);
 			return null;
 		}
 	}
@@ -191,7 +192,7 @@ public class Engine {
 			}
 			
 		}catch(Exception e) {
-			System.err.println("An error occured in system update");
+			Logging.getLogger().log(Level.WARNING, "An error occured in system update", e);
 			e.printStackTrace();
 		}finally {updating = false;}	
 	}

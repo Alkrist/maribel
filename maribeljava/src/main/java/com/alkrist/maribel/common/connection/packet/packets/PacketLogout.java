@@ -1,8 +1,11 @@
 package com.alkrist.maribel.common.connection.packet.packets;
 
+import java.util.logging.Level;
+
 import com.alkrist.maribel.common.connection.packet.Packet;
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.connection.sides.ServerSide;
+import com.alkrist.maribel.utils.Logging;
 
 public class PacketLogout extends Packet{
 
@@ -25,7 +28,7 @@ public class PacketLogout extends Packet{
 	@Override
 	public void process(ServerSide server) {
 		server.removeClient(server.getClient(name));
-		System.out.println("logout attempt: "+name);
+		Logging.getLogger().log(Level.INFO, "logout attempt: "+name);
 	}
 	
 	@Override

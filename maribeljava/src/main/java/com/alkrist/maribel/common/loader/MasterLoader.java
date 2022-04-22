@@ -1,11 +1,14 @@
 package com.alkrist.maribel.common.loader;
 
+import java.util.logging.Level;
+
 import com.alkrist.maribel.api.MaribelRegistry;
 import com.alkrist.maribel.client.Updater;
 import com.alkrist.maribel.common.event.EventManager;
 import com.alkrist.maribel.common.event.events.InitializationEvent;
 import com.alkrist.maribel.common.event.events.PostinitializationEvent;
 import com.alkrist.maribel.common.event.events.PreinitializationEvent;
+import com.alkrist.maribel.utils.Logging;
 
 
 /**
@@ -21,7 +24,7 @@ public final class MasterLoader {
 	 * d) Loading screen for loading
 	 */
 	public void preInit() {
-		System.out.println("preInit");
+		Logging.getLogger().log(Level.INFO, "PreInit stage...");
 		
 		//TODO: here go essential registration things like Display init etc.
 		//TODO: also set the loading screen

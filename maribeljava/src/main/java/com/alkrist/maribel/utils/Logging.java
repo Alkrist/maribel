@@ -66,7 +66,7 @@ public class Logging {
 				fh = new FileHandler(FileUtil.getLogPath()+"latest.log");
 				logger.addHandler(fh);
 				fh.setFormatter(formatter);
-				logger.info("log started today");
+				logger.info("Logger started.");
 
 			} catch (SecurityException | IOException e) {
 				e.printStackTrace();

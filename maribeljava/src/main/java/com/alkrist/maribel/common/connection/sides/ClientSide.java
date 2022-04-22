@@ -2,6 +2,7 @@ package com.alkrist.maribel.common.connection.sides;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.common.connection.bridge.LocalBridge;
 import com.alkrist.maribel.common.connection.bridge.RemoteBridge;
@@ -9,6 +10,7 @@ import com.alkrist.maribel.common.connection.packet.Packet;
 import com.alkrist.maribel.common.connection.packet.PacketRegistry;
 import com.alkrist.maribel.common.connection.packet.packets.PacketLoginRequest;
 import com.alkrist.maribel.common.connection.packet.packets.PacketLogout;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * Client side is a side implementation for Client, it has server's address and port (for remote)
@@ -33,7 +35,7 @@ public class ClientSide extends Side{
 		if(username.length() <= 16)
 			this.username = username;
 		else {
-			System.err.println("wrong username length, name must be <16 characters!");
+			Logging.getLogger().log(Level.SEVERE, "wrong username length, name must be <16 characters!");
 			System.exit(1);
 		}
 	}

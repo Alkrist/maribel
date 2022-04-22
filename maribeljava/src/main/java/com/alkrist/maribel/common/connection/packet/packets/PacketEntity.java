@@ -1,5 +1,7 @@
 package com.alkrist.maribel.common.connection.packet.packets;
 
+import java.util.logging.Level;
+
 import com.alkrist.maribel.client.Client;
 import com.alkrist.maribel.common.connection.packet.Packet;
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
@@ -9,6 +11,7 @@ import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.common.ecs.builder.EntityFactory;
 import com.alkrist.maribel.common.ecs.builder.EntityID;
 import com.alkrist.maribel.common.ecs.builder.GameObjectID;
+import com.alkrist.maribel.utils.Logging;
 
 public class PacketEntity extends Packet{
 
@@ -54,8 +57,8 @@ public class PacketEntity extends Packet{
 			return true;
 		}
 		else {
-			System.err.println("[PacketEntity]: entity has no game object id bound to it!");
-			 //TODO: add default entity with error goid
+			Logging.getLogger().log(Level.WARNING, "[PacketEntity]: entity has no game object id bound to it!"); 
+			//TODO: add default entity with error goid
 			return false;
 		}
 	}

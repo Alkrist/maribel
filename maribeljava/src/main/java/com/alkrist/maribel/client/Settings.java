@@ -12,8 +12,12 @@ import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.Logging;
 
 /**
- * This class is WIP, holds the data that is red from the properties file upon loading, it has
- * the default values for the application
+ * Singleton class.
+ * Loads the parameters for the game engine, if they don't exist, loads defaults.
+ * 
+ * The configuration handling is performed as follows:
+ * Load Settings/Store Defaults -> Run Game -> Save Current Settings
+ * 
  * @author Mikhail
  *
  */
@@ -25,6 +29,9 @@ public class Settings {
 	public String username;
 	public int port;
 	
+	/**
+	 * Init singleton, load values from properties file or use defaults.
+	 */
 	public void load() {
 		
 		File file = new File(FileUtil.getConfigPath()+"maribel.properties");
@@ -59,6 +66,9 @@ public class Settings {
 		Logging.getLogger().log(Level.INFO, "Settings loaded.");
 	}
 	
+	/**
+	 * Save values to properties file.
+	 */
 	public void save() {
 		File file = new File(FileUtil.getConfigPath()+"maribel.properties");
 		if(!file.exists() || file.isDirectory()) {

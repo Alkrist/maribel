@@ -1,10 +1,13 @@
 package com.alkrist.maribel.common.connection.packet;
 
+import java.util.logging.Level;
+
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.connection.serialization.Serializable;
 import com.alkrist.maribel.common.connection.sides.ClientSide;
 import com.alkrist.maribel.common.connection.sides.ServerSide;
 import com.alkrist.maribel.common.connection.sides.Side;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * <pre>
@@ -86,7 +89,7 @@ public class Packet implements Serializable{
 	 * @param server - the server side on which the packet will be processed.
 	 */
 	protected void process(ServerSide server) {
-		System.err.println("Wrong packet call on server side!");
+		Logging.getLogger().log(Level.SEVERE, "Wrong packet call on server side!");
 	}
 	
 	/**
@@ -95,7 +98,7 @@ public class Packet implements Serializable{
 	 * @param client - the client side on which the packet will be processed.
 	 */
 	protected void process(ClientSide client) {
-		System.err.println("Wrong packet call on client side!");
+		Logging.getLogger().log(Level.SEVERE, "Wrong packet call on client side!");
 	}
 	
 	@Override

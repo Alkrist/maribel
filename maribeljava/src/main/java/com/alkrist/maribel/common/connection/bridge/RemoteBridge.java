@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.client.Client;
 import com.alkrist.maribel.common.connection.packet.Packet;
@@ -12,6 +13,7 @@ import com.alkrist.maribel.common.connection.packet.packets.PacketLoginRequest;
 import com.alkrist.maribel.common.connection.sides.ClientSide;
 import com.alkrist.maribel.common.connection.sides.ServerSide;
 import com.alkrist.maribel.utils.ByteConverter;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * <pre>
@@ -142,7 +144,7 @@ public class RemoteBridge extends Bridge{
 		
 		//step II: check whether the array size isn't bigger than receive buffer capacity.
 		if(packetData.length > Bridge.MAX_DATAGRAM_LENGTH) {
-			System.err.println("packet is overloaded, max length = "+Bridge.MAX_DATAGRAM_LENGTH+
+			Logging.getLogger().log(Level.SEVERE, "packet is overloaded, max length = "+Bridge.MAX_DATAGRAM_LENGTH+
 					", current = "+packetData.length);
 			return;
 		}

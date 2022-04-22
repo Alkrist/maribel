@@ -27,7 +27,6 @@ public class SerialBuffer {
 		if((pos+add)>= capacity) {
 			capacity <<= 1;
 			data = Arrays.copyOf(data, capacity);
-			System.out.println("new Serial Buffer capacity: "+capacity);
 		}
 	}
 	

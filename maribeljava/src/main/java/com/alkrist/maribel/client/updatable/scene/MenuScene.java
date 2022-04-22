@@ -1,5 +1,9 @@
 package com.alkrist.maribel.client.updatable.scene;
 
+import java.util.logging.Level;
+
+import com.alkrist.maribel.utils.Logging;
+
 public class MenuScene extends SceneBase{
 
 	public MenuScene() {
@@ -13,7 +17,7 @@ public class MenuScene extends SceneBase{
 
 	@Override
 	public void enable() {
-		System.out.println("Menu scene enabled!");
+		Logging.getLogger().log(Level.INFO, "Menu scene enabled!");
 	}
 
 	@Override

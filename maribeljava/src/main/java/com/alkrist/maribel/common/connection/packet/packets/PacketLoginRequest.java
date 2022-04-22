@@ -1,11 +1,13 @@
 package com.alkrist.maribel.common.connection.packet.packets;
 
 import java.net.InetAddress;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.common.connection.packet.Packet;
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.connection.sides.ServerSide;
 import com.alkrist.maribel.common.connection.sides.Side;
+import com.alkrist.maribel.utils.Logging;
 
 public class PacketLoginRequest extends Packet{
 
@@ -27,7 +29,7 @@ public class PacketLoginRequest extends Packet{
 	
 	@Override
 	public void process(Side side) {
-		System.err.println("Wrong call for the Login Packet!");
+		Logging.getLogger().log(Level.SEVERE, "Wrong call for the Login Packet!");
 	}
 	
 	public void doLogin(ServerSide server, InetAddress address, int port) {

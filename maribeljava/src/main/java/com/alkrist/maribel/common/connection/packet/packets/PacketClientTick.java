@@ -17,7 +17,7 @@ public class PacketClientTick extends Packet{
 	
 	@Override
 	public void process(ServerSide server) {
-		System.out.println("clientTick.");
+
 	}
 	
 	@Override

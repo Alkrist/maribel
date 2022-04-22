@@ -2,11 +2,13 @@ package com.alkrist.maribel.common.connection.sides;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.common.connection.bridge.LocalBridge;
 import com.alkrist.maribel.common.connection.bridge.RemoteBridge;
 import com.alkrist.maribel.common.connection.proxy.ProxyClient;
 import com.alkrist.maribel.common.connection.proxy.RemoteClient;
+import com.alkrist.maribel.utils.Logging;
 
 
 /**
@@ -61,7 +63,7 @@ public class ServerSide extends Side{
 	 * @param port - client's port
 	 */
 	public void login(String name, InetAddress address, int port) {
-		System.out.println("Attempt to connect from: "+address.getHostName()+":"+port);
+		Logging.getLogger().log(Level.INFO, "Attempt to connect from: "+address.getHostName()+":"+port);
 		RemoteClient client = new RemoteClient(name, this, address, port);
 		
 		if(addClient(client))

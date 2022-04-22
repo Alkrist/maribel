@@ -2,11 +2,13 @@ package com.alkrist.maribel.common.ecs.builder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.client.Client;
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
+import com.alkrist.maribel.utils.Logging;
 
 
 /**
@@ -160,7 +162,7 @@ public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 		public <T extends EntityBuilder> void registerEntityFactoryFor(Class <T> gameObjectClass) throws InstantiationException, IllegalAccessException {
 			
 			if(gameObjectIDs.containsKey(gameObjectClass)) {
-				System.out.println("this class is already registered!");
+				Logging.getLogger().log(Level.WARNING, "this class is already registered!");
 				return;
 			}
 			

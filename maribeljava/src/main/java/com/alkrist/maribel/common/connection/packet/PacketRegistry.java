@@ -1,10 +1,12 @@
 package com.alkrist.maribel.common.connection.packet;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.connection.serialization.SerialBuilder;
 import com.alkrist.maribel.common.connection.serialization.Serializable;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * <pre>
@@ -30,7 +32,7 @@ public class PacketRegistry implements SerialBuilder{
 	 */
 	public static void registerPacket(Packet packet) {
 		if(nextID < 0) {
-			System.err.println("[PacketRegistry]: Stack overflow. Too many packets registered!");
+			Logging.getLogger().log(Level.SEVERE, "[PacketRegistry]: Stack overflow. Too many packets registered!");
 			System.exit(1);
 		}
 		packet.id = nextID++;
@@ -52,7 +54,7 @@ public class PacketRegistry implements SerialBuilder{
 		try {	
 			return packets[id].getClass().newInstance();		
 		}catch(Exception e) {
-			System.err.println("[PacketRegistry]: An error occured in packet builder, packet isn't recognized.");
+			Logging.getLogger().log(Level.SEVERE, "[PacketRegistry]: An error occured in packet builder, packet isn't recognized.");
 			e.printStackTrace();
 			return null;
 		}	

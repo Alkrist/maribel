@@ -1,9 +1,12 @@
 package com.alkrist.maribel.common.connection.packet.packets;
 
+import java.util.logging.Level;
+
 import com.alkrist.maribel.client.Client;
 import com.alkrist.maribel.common.connection.packet.Packet;
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.connection.sides.ClientSide;
+import com.alkrist.maribel.utils.Logging;
 
 public class PacketTick extends Packet{
 
@@ -46,7 +49,7 @@ public class PacketTick extends Packet{
 		for(int i=0; i<snapshot_len; i++) {
 			Packet packet = (Packet) Client.packetRegistry.build(buffer);
 			if(packet == null) {
-				System.err.println("[PacketTick]: Unknown packet received with id: "+buffer.peekByte());
+				Logging.getLogger().log(Level.WARNING,"[PacketTick]: Unknown packet received with id: "+buffer.peekByte());
 				return false;
 			}
 			packet.read(buffer);

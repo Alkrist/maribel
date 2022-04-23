@@ -1,10 +1,12 @@
 package com.alkrist.maribel.common.connection.bridge;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.client.Client;
 import com.alkrist.maribel.common.connection.packet.Packet;
 import com.alkrist.maribel.common.connection.sides.Side;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * <pre>
@@ -60,7 +62,7 @@ public class LocalBridge extends Bridge{
 					try {
 						lock.wait();
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						Logging.getLogger().log(Level.SEVERE, Thread.currentThread().getName()+" was interrupted", e);
 					}
 				}
 				if(inputQueue.isEmpty())

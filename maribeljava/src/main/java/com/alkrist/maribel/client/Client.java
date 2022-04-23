@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
 
 import com.alkrist.maribel.client.updatable.scene.GameScene;
 import com.alkrist.maribel.client.updatable.scene.SceneBase;
@@ -16,6 +17,7 @@ import com.alkrist.maribel.common.connection.sides.ClientSide;
 import com.alkrist.maribel.common.event.EventManager;
 import com.alkrist.maribel.common.event.events.ClientTickEvent;
 import com.alkrist.maribel.server.Server;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * A representation of the LOGICAL CLIENT.
@@ -69,9 +71,9 @@ public class Client {
 					tick();	
 					long delta = System.currentTimeMillis() - start;
 					if(delta > 50) 
-						System.out.println("Client tick took "+delta+"ms");				
+						Logging.getLogger().log(Level.INFO, "Client tick took "+delta+"ms");
 				}catch(Exception e) {
-					e.printStackTrace();
+					Logging.getLogger().log(Level.SEVERE, "An error occured durning client tick", e);
 				}	
 			}
 			
@@ -98,12 +100,11 @@ public class Client {
 		mySide.send(new PacketClientTick(PacketRegistry.getIDFor("CLIENT_TICK"))); //Send the input result to server
 	}
 	
-	//TODO: use parameter - file path
+	//TODO: add path
 	public static void loadSingleplayer() {
 		internalServer = new Server();
 		if(!internalServer.loadWorld())
-			System.err.println("failed to load the world");
-		
+			Logging.getLogger().log(Level.SEVERE, "Failed to load the world");
 		mySide = new ClientSide(Settings.CURRENT.username);
 		createLocalConnection();
 		login();
@@ -113,8 +114,7 @@ public class Client {
 	public static void createSingleplayer() {
 		internalServer = new Server();
 		if(!internalServer.createWorld())
-			System.err.println("failed to create the world");
-		
+			Logging.getLogger().log(Level.SEVERE, "Failed to create the world");
 		mySide = new ClientSide(Settings.CURRENT.username);
 		createLocalConnection();
 		login();
@@ -155,8 +155,7 @@ public class Client {
 			try {
 				mySide.init("localhost", Settings.CURRENT.port);
 			}catch(Exception e) {
-				System.err.println("failed to change localclient to global on localhost at port "+Settings.CURRENT.port);
-				e.printStackTrace();
+				Logging.getLogger().log(Level.SEVERE, "failed to change localclient to global on localhost at port "+Settings.CURRENT.port, e);
 				//TODO: quit the game or change back to local
 				mySide = null;
 				return;
@@ -168,7 +167,7 @@ public class Client {
 		
 			login();
 		}else {
-			System.err.println("The connection is already global!");
+			Logging.getLogger().log(Level.WARNING, "The connection is already global!");
 		}
 	}
 	
@@ -188,7 +187,7 @@ public class Client {
 			login();
 			startTimers();
 		}else {
-			System.err.println("The connection is already local!");
+			Logging.getLogger().log(Level.WARNING, "The connection is already local!");
 		}
 		
 	}
@@ -214,11 +213,11 @@ public class Client {
 		
 		if(mySide.isLocal()) {
 			if(internalServer.getConnection().addClient(new LocalClient(Settings.CURRENT.username, internalServer.getConnection()))) {
-				System.out.println("Locally logged in successfuly.");
+				Logging.getLogger().log(Level.INFO, "Locally logged in successfuly.");
 				if(!(Updater.getActiveElement() instanceof GameScene))
 					Updater.setActiveElement(getScene(GameScene.class));
 			}		
-			else System.out.println("Local login failed!");
+			else Logging.getLogger().log(Level.INFO, "Local log in failed.");
 		}else {
 			mySide.login();
 		}

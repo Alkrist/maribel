@@ -30,9 +30,9 @@ public class EventManager {
 			for(RegisteredListener listener: listeners) {
 				try {
 					listener.callEvent(event);
-				}catch(Throwable ex) {
+				}catch(Throwable e) {
 					Logging.getLogger().log(Level.SEVERE, "Could not pass event " + event.getEventName()+" to "
-							+listener.getOwner().getClass().getName(), ex);
+							+listener.getOwner().getClass().getName(), e);
 				}
 			}
 		}

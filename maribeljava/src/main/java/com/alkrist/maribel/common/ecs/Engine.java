@@ -193,7 +193,6 @@ public class Engine {
 			
 		}catch(Exception e) {
 			Logging.getLogger().log(Level.WARNING, "An error occured in system update", e);
-			e.printStackTrace();
 		}finally {updating = false;}	
 	}
 	

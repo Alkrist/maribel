@@ -64,7 +64,7 @@ public class ClientSide extends Side{
 		try {
 			this.serverAddress = InetAddress.getByName(host);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			Logging.getLogger().log(Level.WARNING, "unknown host", e);
 		}	
 		((RemoteBridge)bridge).init(this);
 		

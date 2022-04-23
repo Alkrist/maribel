@@ -1,7 +1,10 @@
 package com.alkrist.maribel.common.connection.serialization;
 
+import java.util.logging.Level;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
+
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * This class performs a zip compression of a {@link connection.serialization.Serializable} object 
@@ -58,7 +61,7 @@ public class Serializer {
 			return compressedBuffer.toArray();
 			
 		}catch(Exception e) {
-			e.printStackTrace();
+			Logging.getLogger().log(Level.SEVERE, "An error occured durning encode", e);
 			return null;
 		}
 	}
@@ -98,7 +101,7 @@ public class Serializer {
 			return obj;
 			
 		}catch(Exception e) {
-			e.printStackTrace();
+			Logging.getLogger().log(Level.SEVERE, "An error occured durning decode", e);
 			return null;
 		}
 	}

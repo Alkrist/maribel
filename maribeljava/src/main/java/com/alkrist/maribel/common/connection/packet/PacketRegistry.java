@@ -54,8 +54,7 @@ public class PacketRegistry implements SerialBuilder{
 		try {	
 			return packets[id].getClass().newInstance();		
 		}catch(Exception e) {
-			Logging.getLogger().log(Level.SEVERE, "[PacketRegistry]: An error occured in packet builder, packet isn't recognized.");
-			e.printStackTrace();
+			Logging.getLogger().log(Level.SEVERE, "[PacketRegistry]: An error occured in packet builder, packet isn't recognized.", e);
 			return null;
 		}	
 	}

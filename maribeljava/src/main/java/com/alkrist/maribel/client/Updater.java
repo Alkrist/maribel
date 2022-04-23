@@ -1,7 +1,10 @@
 package com.alkrist.maribel.client;
 
+import java.util.logging.Level;
+
 import com.alkrist.maribel.client.updatable.Updatable;
 import com.alkrist.maribel.client.updatable.scene.SceneBase;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * Updater is a client side looper. It operates with one target object of {@link engine.client.updatables.Updatable}
@@ -80,7 +83,7 @@ public final class Updater {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				Logging.getLogger().log(Level.SEVERE, Thread.currentThread().getName()+" was interrupted", e);
 			}
 			updating = true;
 			if(activeElement!=null) {

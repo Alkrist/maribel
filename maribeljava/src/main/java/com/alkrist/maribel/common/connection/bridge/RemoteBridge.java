@@ -44,7 +44,7 @@ public class RemoteBridge extends Bridge{
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
-			e.printStackTrace();
+			Logging.getLogger().log(Level.SEVERE, "UDP connection clientside init failure:", e);
 		}
 	}
 	
@@ -59,7 +59,7 @@ public class RemoteBridge extends Bridge{
 		try {
 			socket = new DatagramSocket(port);
 		} catch (SocketException e) {
-			e.printStackTrace();
+			Logging.getLogger().log(Level.SEVERE, "UDP connection serverside init failure:", e);
 		}
 	}
 	
@@ -91,7 +91,7 @@ public class RemoteBridge extends Bridge{
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logging.getLogger().log(Level.SEVERE, "UDP connection runtime failure:", e);
 			}
 			
 			parsePacket(packet);
@@ -154,7 +154,7 @@ public class RemoteBridge extends Bridge{
 		try {
 			socket.send(packet);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logging.getLogger().log(Level.SEVERE, "UDP connection packet send failure:", e);
 		}
 	}
 	

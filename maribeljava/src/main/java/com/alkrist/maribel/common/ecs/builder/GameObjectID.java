@@ -17,10 +17,23 @@ public class GameObjectID implements Component{
 		this.GOID = id;
 	}
 	
-	/**
-	 * @return game object ID
-	 */
-	public int getValue() {
+	public int getID() {
 		return GOID;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o != null && o.getClass() == GameObjectID.class) {
+			if(((GameObjectID)o).getID() == GOID)
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 13;
+		hash = (this.GOID + hash) * 17;
+		return hash;
 	}
 }

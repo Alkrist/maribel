@@ -12,8 +12,8 @@ import com.alkrist.maribel.common.connection.bridge.LocalBridge;
 import com.alkrist.maribel.common.connection.packet.PacketRegistry;
 import com.alkrist.maribel.common.connection.packet.packets.PacketClientTick;
 import com.alkrist.maribel.common.connection.proxy.LocalClient;
-import com.alkrist.maribel.common.connection.proxy.WorldProxy;
 import com.alkrist.maribel.common.connection.sides.ClientSide;
+import com.alkrist.maribel.common.ecs.builder.EntityProxy;
 import com.alkrist.maribel.common.event.EventManager;
 import com.alkrist.maribel.common.event.events.ClientTickEvent;
 import com.alkrist.maribel.server.Server;
@@ -49,7 +49,7 @@ public class Client {
 		scenes.put(scene.getID(), scene);
 	}
 	
-	public static WorldProxy world;
+	public static EntityProxy world;
 	private static ClientSide mySide;
 	private static Server internalServer;
 	private static Timer clientTickTimer;

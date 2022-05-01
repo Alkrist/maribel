@@ -1,8 +1,9 @@
-package com.alkrist.maribel.common.connection.proxy;
+package com.alkrist.maribel.common.ecs.builder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.alkrist.maribel.common.ecs.Component;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.utils.Bits;
@@ -24,7 +25,7 @@ import com.alkrist.maribel.utils.Bits;
  * @author Mikhail
  *
  */
-public class WorldProxy {
+public class EntityProxy implements Component{
 
 	private HashMap<Integer, Entity> entities; //Links with their IDs
 	
@@ -36,7 +37,7 @@ public class WorldProxy {
 	/**
 	 * @param engine - client side engine on which this world proxy is currently attached
 	 */
-	public WorldProxy(Engine engine) {
+	public EntityProxy(Engine engine) {
 		entities = new HashMap<Integer, Entity>();
 		proxyBits = new Bits();
 		snapshotBits = new Bits();

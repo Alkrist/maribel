@@ -7,6 +7,8 @@ import java.util.logging.Level;
 import com.alkrist.maribel.client.Client;
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
+import com.alkrist.maribel.common.ecs.ComponentUID;
+import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.utils.Logging;
 
@@ -31,7 +33,7 @@ import com.alkrist.maribel.utils.Logging;
  */
 public class EntityFactory <T extends EntityBuilder>{
 
-public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
+	public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 	
 	private static int globalID = 1;
 	
@@ -42,6 +44,10 @@ public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 	private int objectID;
 	
 	private EntityFactory(T object, int id) {
+		if(MANAGER.getProxy() == null) {
+			Logging.getLogger().log(Level.SEVERE, "Entity proxy is invalid", new NullPointerException("Entity Proxy is null"));
+			System.exit(1);
+		}	
 		this.gameObject = object;
 		this.objectID = id;
 	}
@@ -94,7 +100,8 @@ public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 	 * @return recreated entity
 	 */
 	public Entity readEntity(SerialBuffer buffer) {
-		int entityID = buffer.readInt(); //Read the entity unique id from buffer
+		//OLD IMPLEMENTATION
+		/*int entityID = buffer.readInt(); //Read the entity unique id from buffer
 		
 		Entity entity;
 		if(Client.world.hasEntity(entityID)) {//if the entity already exists on client, just update it
@@ -105,11 +112,36 @@ public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 			if(entity == null) return null;
 			
 			Client.world.addEntity(entity, entityID);
-			//TODO: Has really really needed to be here???
+			entity.addComponent(new GameObjectID(objectID)); //Adds essential GOID component
+			entity.addComponent(new EntityID(entityID)); //Adds essential Entity UID component
+		}*/
+		int entityID = buffer.readInt();
+		Entity entity;
+		if(MANAGER.getProxy().hasEntity(entityID)) {
+			GameObjectID goid = MANAGER.getProxy().getEntity(entityID).getComponent(ComponentUID.getFor(GameObjectID.class));
+			if(goid == null) {
+				Logging.getLogger().log(Level.WARNING, "Received null game object on Client: "+gameObject.getClass().getSimpleName());
+				return null;
+			}
+			
+			if(goid.getID() == this.objectID) {
+				entity = gameObject.updateEntity(MANAGER.getProxy().getEntity(entityID), buffer);
+			}else {
+				entity = MANAGER.getProxy().getEntity(entityID);
+				//TODO: clean entity;
+				entity.addComponent(new GameObjectID(objectID)); //Adds essential GOID component
+				entity.addComponent(new EntityID(entityID)); //Adds essential Entity UID component
+				entity = gameObject.updateEntity(entity, buffer);
+			}
+		}else {
+			entity = gameObject.reproduceEntity(buffer);
+			
+			if(entity == null) return null;
+			
+			MANAGER.getProxy().addEntity(entity, entityID);
 			entity.addComponent(new GameObjectID(objectID)); //Adds essential GOID component
 			entity.addComponent(new EntityID(entityID)); //Adds essential Entity UID component
 		}
-			
 		return entity;
 	}
 	
@@ -125,7 +157,7 @@ public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 		
 		if(entityIDmapper.hasComponent(entity)){
 			EntityID eid = (EntityID) entityIDmapper.getComponent(entity);
-			buffer.writeInt(eid.ID); //Write Entity UID second
+			buffer.writeInt(eid.getID()); //Write Entity UID second
 			
 			gameObject.serializeEntity(entity, buffer); //Write other things
 		}
@@ -141,6 +173,17 @@ public static final EntityFactoryManager MANAGER = new EntityFactoryManager();
 	 * @author Mikhail
 	 */
 	public static class EntityFactoryManager{
+		
+		private EntityProxy proxy;
+		
+		public void init(Engine engine) {
+			this.proxy = new EntityProxy(engine);
+		}
+		
+		public EntityProxy getProxy() {
+			return proxy;
+		}
+		
 		@SuppressWarnings("rawtypes")
 		private Map<Integer, EntityFactory> factories;	//All factories stored relevantly to their IDs.
 		private Map<Class<? extends EntityBuilder>, Integer> gameObjectIDs;

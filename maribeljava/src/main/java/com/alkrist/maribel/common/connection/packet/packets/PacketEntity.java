@@ -37,7 +37,7 @@ public class PacketEntity extends Packet{
 	@Override
 	public void process(ClientSide client) {
 		EntityID uid = (EntityID) UID_MAPPER.getComponent(entity);
-		Client.world.setSnapshotBit(uid.ID);
+		Client.world.setSnapshotBit(uid.getID());
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class PacketEntity extends Packet{
 		super.write(buffer);
 		if(GOID_MAPPER.hasComponent(entity)) {
 			GameObjectID goidComponent = (GameObjectID) GOID_MAPPER.getComponent(entity);
-			EntityFactory.MANAGER.getFactoryFor(goidComponent.getValue()).writeEntity(entity, buffer);
+			EntityFactory.MANAGER.getFactoryFor(goidComponent.getID()).writeEntity(entity, buffer);
 			return true;
 		}
 		else {

@@ -7,9 +7,29 @@ import com.alkrist.maribel.common.ecs.Component;
  * @author Mikhail
  */
 public class EntityID implements Component{
-	public int ID;
+	private int ID;
 	
 	public EntityID(int id) {
 		this.ID = id;
+	}
+	
+	public int getID() {
+		return ID;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o != null && o.getClass() == EntityID.class) {
+			if(((EntityID)o).getID() == ID)
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = (this.ID + hash) * 31;
+		return hash;
 	}
 }

@@ -60,9 +60,8 @@ public class EntityFactory <T extends EntityBuilder>{
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	@SuppressWarnings("deprecation")
-	public static <T extends EntityBuilder> EntityFactory<T> getFactoryFor(Class<T> gameObjectClass) throws InstantiationException, IllegalAccessException{
-		T object = gameObjectClass.newInstance();
+	protected static <T extends EntityBuilder> EntityFactory<T> getFactoryFor(T gameObject) throws InstantiationException, IllegalAccessException{
+		T object = gameObject;
 		return new EntityFactory<T>(object, globalID++);
 	}
 	
@@ -86,11 +85,12 @@ public class EntityFactory <T extends EntityBuilder>{
 	 * @return created entity
 	 */
 	public Entity createEntity() {
-		Entity entity = gameObject.createEntity(); //Adds non-important data, can even be empty
-		if(entity== null) return null;
+		//TODO: if this works, add exception to getCreator()
+		Entity entity = MANAGER.getCreator().createEntity(objectID); //Adds non-important data, can even be empty
+		entity = gameObject.createEntity(entity);
 		
-		entity.addComponent(new GameObjectID(objectID)); //Adds essential ID component
-		return entity;
+		return entity == null ? null : entity;
+		//entity.addComponent(new GameObjectID(objectID)); //Adds essential ID component
 	}
 	
 	/**
@@ -115,7 +115,13 @@ public class EntityFactory <T extends EntityBuilder>{
 			entity.addComponent(new GameObjectID(objectID)); //Adds essential GOID component
 			entity.addComponent(new EntityID(entityID)); //Adds essential Entity UID component
 		}*/
+		//int goID = buffer.readInt();
 		int entityID = buffer.readInt();
+		/*if(goID != objectID) {
+			Logging.getLogger().log(Level.WARNING, "Non-matching game object ID on Client: "+gameObject.getClass().getSimpleName());
+			return null;
+		}*/
+			
 		Entity entity;
 		if(MANAGER.getProxy().hasEntity(entityID)) {
 			GameObjectID goid = MANAGER.getProxy().getEntity(entityID).getComponent(ComponentUID.getFor(GameObjectID.class));
@@ -138,9 +144,9 @@ public class EntityFactory <T extends EntityBuilder>{
 			
 			if(entity == null) return null;
 			
-			MANAGER.getProxy().addEntity(entity, entityID);
 			entity.addComponent(new GameObjectID(objectID)); //Adds essential GOID component
 			entity.addComponent(new EntityID(entityID)); //Adds essential Entity UID component
+			MANAGER.getProxy().addEntity(entity, entityID);
 		}
 		return entity;
 	}
@@ -175,13 +181,19 @@ public class EntityFactory <T extends EntityBuilder>{
 	public static class EntityFactoryManager{
 		
 		private EntityProxy proxy;
+		private EntityCreator creator;
 		
-		public void init(Engine engine) {
-			this.proxy = new EntityProxy(engine);
+		public void init(EntityProxy proxy, EntityCreator creator) {
+			this.proxy = proxy;
+			this.creator = creator;
 		}
 		
 		public EntityProxy getProxy() {
 			return proxy;
+		}
+		
+		public EntityCreator getCreator() {
+			return creator;
 		}
 		
 		@SuppressWarnings("rawtypes")
@@ -202,21 +214,19 @@ public class EntityFactory <T extends EntityBuilder>{
 		 * @throws IllegalAccessException
 		 */
 		@SuppressWarnings("rawtypes")
-		public <T extends EntityBuilder> void registerEntityFactoryFor(Class <T> gameObjectClass) throws InstantiationException, IllegalAccessException {
+		public <T extends EntityBuilder> void registerEntityFactoryFor(T gameObject) throws InstantiationException, IllegalAccessException {
 			
-			if(gameObjectIDs.containsKey(gameObjectClass)) {
+			if(gameObjectIDs.containsKey(gameObject.getClass())) {
 				Logging.getLogger().log(Level.WARNING, "this class is already registered!");
 				return;
 			}
 			
-			EntityFactory factory = EntityFactory.getFactoryFor(gameObjectClass);
+			EntityFactory factory = EntityFactory.getFactoryFor(gameObject);
 			int id = factory.getID();
 			if(!factories.containsKey(id)) {
 				factories.put(id, factory);
 			}
-			gameObjectIDs.put(gameObjectClass, id);
-			
-			System.out.println(id);
+			gameObjectIDs.put(gameObject.getClass(), id);
 		}
 		
 		/**

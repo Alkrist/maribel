@@ -42,9 +42,10 @@ public class EntityCreator implements Component {
 	 * @return new Entity
 	 */
 	public Entity createEntity(int goid) {
-		Entity e = EntityFactory.MANAGER.getFactoryFor(goid).createEntity();
+		Entity e = engine.createEntity();
 		if (e != null) {
 			e.addComponent(pool.consume());
+			e.addComponent(new GameObjectID(goid));
 			engine.addEntity(e);
 			return e;
 		} else

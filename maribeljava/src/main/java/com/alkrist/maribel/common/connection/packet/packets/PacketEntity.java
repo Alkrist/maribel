@@ -27,7 +27,7 @@ public class PacketEntity extends Packet{
 		super(id, "ENTITY");
 	}
 	
-	Entity entity;
+	public Entity entity;
 	
 	public PacketEntity(byte id, Entity entity) {
 		super(id, "ENTITY");

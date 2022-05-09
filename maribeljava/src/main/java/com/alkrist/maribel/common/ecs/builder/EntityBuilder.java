@@ -30,7 +30,7 @@ public interface EntityBuilder {
 	 * DON'T attach GOID manually!
 	 * @return created entity
 	 */
-	public Entity createEntity();
+	public Entity createEntity(Entity entity);
 	
 	/**
 	 * Create a new entity on Client Side from serial buffer.

@@ -81,6 +81,13 @@ public class EntityCreator implements Component {
 		engine.removeEntity(entity);
 	}
 
+	/**
+	 * Clears all free entity ids.
+	 */
+	public void clear() {
+		pool.clear();
+	}
+	
 	/* A local implementation for entity ID pool */
 	private static class EIDPool extends ObjectPool<EntityID> {
 

@@ -121,4 +121,18 @@ public class EntityProxy implements Component{
 		for(int id: unused)
 			removeEntity(id);
 	}
+	
+	public int numOfEntities() {
+		return entities.keySet().size();
+	}
+	
+	public void clear() {
+		synchronized(entities) {
+			for(Entity e: entities.values())
+				engine.removeEntity(e);
+			entities.clear();
+			resetSnapshotBits();
+			proxyBits.clear();
+		}
+	}
 }

@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import com.alkrist.maribel.client.Client;
 import com.alkrist.maribel.common.connection.serialization.SerialBuffer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.ComponentUID;
-import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.utils.Logging;
 
@@ -85,7 +83,6 @@ public class EntityFactory <T extends EntityBuilder>{
 	 * @return created entity
 	 */
 	public Entity createEntity() {
-		//TODO: if this works, add exception to getCreator()
 		Entity entity = MANAGER.getCreator().createEntity(objectID); //Adds non-important data, can even be empty
 		entity = gameObject.createEntity(entity);
 		
@@ -100,27 +97,7 @@ public class EntityFactory <T extends EntityBuilder>{
 	 * @return recreated entity
 	 */
 	public Entity readEntity(SerialBuffer buffer) {
-		//OLD IMPLEMENTATION
-		/*int entityID = buffer.readInt(); //Read the entity unique id from buffer
-		
-		Entity entity;
-		if(Client.world.hasEntity(entityID)) {//if the entity already exists on client, just update it
-			entity = gameObject.updateEntity(Client.world.getEntity(entityID), buffer);
-		}else {//If the entity is new, create new entity from buffer
-			entity = gameObject.reproduceEntity(buffer);
-			
-			if(entity == null) return null;
-			
-			Client.world.addEntity(entity, entityID);
-			entity.addComponent(new GameObjectID(objectID)); //Adds essential GOID component
-			entity.addComponent(new EntityID(entityID)); //Adds essential Entity UID component
-		}*/
-		//int goID = buffer.readInt();
 		int entityID = buffer.readInt();
-		/*if(goID != objectID) {
-			Logging.getLogger().log(Level.WARNING, "Non-matching game object ID on Client: "+gameObject.getClass().getSimpleName());
-			return null;
-		}*/
 			
 		Entity entity;
 		if(MANAGER.getProxy().hasEntity(entityID)) {
@@ -134,7 +111,7 @@ public class EntityFactory <T extends EntityBuilder>{
 				entity = gameObject.updateEntity(MANAGER.getProxy().getEntity(entityID), buffer);
 			}else {
 				entity = MANAGER.getProxy().getEntity(entityID);
-				//TODO: clean entity;
+				entity.removeAllComponents();
 				entity.addComponent(new GameObjectID(objectID)); //Adds essential GOID component
 				entity.addComponent(new EntityID(entityID)); //Adds essential Entity UID component
 				entity = gameObject.updateEntity(entity, buffer);
@@ -189,10 +166,14 @@ public class EntityFactory <T extends EntityBuilder>{
 		}
 		
 		public EntityProxy getProxy() {
+			if(proxy == null)
+				Logging.getLogger().log(Level.SEVERE, "Entity Factory Manager on Client: null pointer to world proxy!");
 			return proxy;
 		}
 		
 		public EntityCreator getCreator() {
+			if(creator == null)
+				Logging.getLogger().log(Level.SEVERE, "Entity Factory Manager on Server: null pointer to creator object!");
 			return creator;
 		}
 		

@@ -123,7 +123,7 @@ public class SerialBuffer {
 	 */
 	public void writeFloat(float value) {
 		checkCapacity(4);
-		ByteConverter.setDouble(data, pos, value);
+		ByteConverter.setFloat(data, pos, value);
 		pos+=4;
 	}
 	

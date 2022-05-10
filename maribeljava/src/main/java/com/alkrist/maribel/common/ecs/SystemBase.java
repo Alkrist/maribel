@@ -96,7 +96,7 @@ public abstract class SystemBase {
 	 * 
 	 * @param engine
 	 */
-	public void addedToEngine(Engine engine) {}
+	public void addedToEngine() {}
 
 	/**
 	 * Some action which occurs when this system is removed from the engine.
@@ -104,5 +104,5 @@ public abstract class SystemBase {
 	 * 
 	 * @param engine
 	 */
-	public void removedFromEngine(Engine engine) {}
+	public void removedFromEngine() {}
 }

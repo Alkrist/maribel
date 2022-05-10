@@ -46,7 +46,7 @@ public class SystemManager {
 		systems.sort(systemComparator);
 		
 		system.setEngine(engine);
-		system.addedToEngine(engine);
+		system.addedToEngine();
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class SystemManager {
 			systemsByClass.remove(system.getClass());
 			
 			system.setEngine(null);
-			system.removedFromEngine(engine);
+			system.removedFromEngine();
 		}	
 	}
 	

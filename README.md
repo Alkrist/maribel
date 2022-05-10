@@ -51,8 +51,6 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 
 ## TODO:
 0. Fix all of the small TODO lists inside the project.
-3. Make tests for ECS and server.
-5. Serialization unit tests
 6. Add Graphics via LWJGL 3.
 7. Add Models.
 8. Add Sounds via OpenAL.

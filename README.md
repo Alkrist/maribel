@@ -51,9 +51,7 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 
 ## TODO:
 0. Fix all of the small TODO lists inside the project.
-2. ID reconsumption issue + World as entity
 3. Make tests for ECS and server.
-4. Event unit tests
 5. Serialization unit tests
 6. Add Graphics via LWJGL 3.
 7. Add Models.

@@ -43,7 +43,6 @@ public class LocalBridge extends Bridge{
 	 */
 	private void process(byte[] data) {
 		Packet packet = (Packet) coder.decode(data, Client.packetRegistry);
-		
 		packet.process(side);
 	}
 	

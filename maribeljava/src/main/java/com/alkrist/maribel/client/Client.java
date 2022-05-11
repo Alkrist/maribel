@@ -55,6 +55,14 @@ public class Client {
 	private static Timer clientTickTimer;
 	public static PacketRegistry packetRegistry = new PacketRegistry();
 	
+	public static Server getServer() {
+		return internalServer;
+	}
+	
+	public static ClientSide getSide() {
+		return mySide;
+	}
+	
 	/**
 	 * Client timer is used for fixed rate input listening (20 ticks) 
 	 * and sending updates to server.
@@ -217,7 +225,7 @@ public class Client {
 				if(!(Updater.getActiveElement() instanceof GameScene))
 					Updater.setActiveElement(getScene(GameScene.class));
 			}		
-			else Logging.getLogger().log(Level.INFO, "Local log in failed.");
+			else Logging.getLogger().log(Level.INFO, "Local login failed.");
 		}else {
 			mySide.login();
 		}

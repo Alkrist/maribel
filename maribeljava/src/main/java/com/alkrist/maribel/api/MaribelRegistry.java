@@ -34,6 +34,7 @@ public class MaribelRegistry {
 		PacketRegistry.registerPacket(new PacketTick());
 		PacketRegistry.registerPacket(new PacketClientTick());
 		PacketRegistry.registerPacket(new PacketEntity());
+		
 	}
 	
 	/**

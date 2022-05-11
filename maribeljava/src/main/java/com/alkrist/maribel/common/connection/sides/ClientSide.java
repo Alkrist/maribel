@@ -75,6 +75,10 @@ public class ClientSide extends Side{
 		return username;
 	}
 	
+	public InetAddress getServerAddress() {
+		return this.serverAddress;
+	}
+	
 	/**
 	 * Sends the packet via this side's bridge. Defines the type of the connection and uses the proper bridge.
 	 * @param packet - packet that should be transmitted
@@ -112,17 +116,5 @@ public class ClientSide extends Side{
 		Packet packet = new PacketLogout(PacketRegistry.getIDFor("LOGOUT"), username);
 		send(packet);
 	}
-	
-	//test
-	/*public void test(String message) {
-		Packet packet = new TestPacket(PacketRegistry.getIDFor("TEST"), username, message);
-		if(super.isLocal()) {
-			((LocalBridge)bridge).send(bridge.coder.encode(packet));
-			System.out.println("sent");
-		}
-			
-		else
-			((RemoteBridge)bridge).send(bridge.coder.encode(packet), serverAddress, serverPort);
-	}*/
 }
 

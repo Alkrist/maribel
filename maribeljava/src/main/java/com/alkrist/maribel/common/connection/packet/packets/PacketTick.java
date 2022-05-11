@@ -30,13 +30,13 @@ public class PacketTick extends Packet{
 	
 	@Override
 	public void process(ClientSide client) {
-		Client.world.resetSnapshotBits();
-		
+		//Client.world.resetSnapshotBits();
+		//TODO: do something with it
 		int snapshot_len = snapshot.length;
 		for(int i=0; i<snapshot_len; i++)
 			snapshot[i].process(client);
 		
-		Client.world.syncEntityCache();
+		//Client.world.syncEntityCache();
 	}
 	
 	//Client-side only

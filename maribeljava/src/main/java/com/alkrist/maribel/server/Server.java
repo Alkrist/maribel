@@ -81,6 +81,7 @@ public class Server {
 		tickTimer.scheduleAtFixedRate(new TimerTask() {
 
 			public void run() {
+				Thread.currentThread().setName("Server thread");
 				long startTime = System.currentTimeMillis();
 				
 				engine.update(deltaTime);

@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.alkrist.maribel.api.MaribelRegistry;
 import com.alkrist.maribel.client.Client;
 import com.alkrist.maribel.common.connection.packet.Packet;
 import com.alkrist.maribel.common.connection.packet.PacketRegistry;
@@ -83,7 +84,7 @@ public class TestEntityExchange {
 			e.printStackTrace();
 		}
 		
-		PacketRegistry.registerPacket(new PacketEntity());
+		MaribelRegistry.registerPackets();
 	}
 	
 	@Test

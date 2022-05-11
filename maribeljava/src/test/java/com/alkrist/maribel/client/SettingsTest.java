@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,12 @@ public class SettingsTest {
 		assertEquals(Settings.CURRENT.port, 2222);
 		assertEquals(Settings.CURRENT.username, "test");
 		
+		Settings.CURRENT.save();
+	}
+	
+	@AfterAll
+	public static void createDamnConfigFile() {
+		Settings.CURRENT.load();
 		Settings.CURRENT.save();
 	}
 }

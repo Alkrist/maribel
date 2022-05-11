@@ -121,8 +121,11 @@ public class Client {
 	//TODO: use parameter - world name, seed, other settings
 	public static void createSingleplayer() {
 		internalServer = new Server();
-		if(!internalServer.createWorld())
+		if(!internalServer.createWorld()) {
 			Logging.getLogger().log(Level.SEVERE, "Failed to create the world");
+			return;
+		}
+			
 		mySide = new ClientSide(Settings.CURRENT.username);
 		createLocalConnection();
 		login();

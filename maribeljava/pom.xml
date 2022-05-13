@@ -2,15 +2,67 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.alkrist</groupId>
   <artifactId>maribeljava</artifactId>
-  <version>20220512</version>
+  <version>20220513</version>
   <name>Afterworlds</name>
   
   	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.source>11</maven.compiler.source>
 		<junit.jupiter.version>5.4.0</junit.jupiter.version>
+		<lwjgl.version>3.3.1</lwjgl.version>
 	</properties>
 	
+	<profiles>
+	<profile>
+		<id>lwjgl-natives-linux-amd64</id>
+		<activation>
+			<os>
+				<family>unix</family>
+				<arch>amd64</arch>
+			</os>
+		</activation>
+		<properties>
+			<lwjgl.natives>natives-linux</lwjgl.natives>
+		</properties>
+	</profile>
+	<profile>
+		<id>lwjgl-natives-macos-x86_64</id>
+		<activation>
+			<os>
+				<family>mac</family>
+				<arch>x86_64</arch>
+			</os>
+		</activation>
+		<properties>
+			<lwjgl.natives>natives-macos</lwjgl.natives>
+		</properties>
+	</profile>
+	<profile>
+		<id>lwjgl-natives-windows-amd64</id>
+		<activation>
+			<os>
+				<family>windows</family>
+				<arch>amd64</arch>
+			</os>
+		</activation>
+		<properties>
+			<lwjgl.natives>natives-windows</lwjgl.natives>
+		</properties>
+	</profile>
+	</profiles>
+	
+	<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-bom</artifactId>
+			<version>${lwjgl.version}</version>
+			<scope>import</scope>
+			<type>pom</type>
+		</dependency>
+	</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -24,7 +76,60 @@
 			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-assimp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-glfw</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-openal</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-opengl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-stb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-assimp</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-glfw</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-openal</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-opengl</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-stb</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>	
 	</dependencies>
-    
     
 </project>

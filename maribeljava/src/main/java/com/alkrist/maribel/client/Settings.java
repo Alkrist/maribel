@@ -29,6 +29,9 @@ public class Settings {
 	public String username;
 	public int port;
 	
+	/*GRAPHICS*/
+	public boolean vsyncEnabled;
+	
 	/**
 	 * Init singleton, load values from properties file or use defaults.
 	 */
@@ -52,8 +55,7 @@ public class Settings {
 			Properties prop = new Properties();
 			prop.load(fis);
 			
-			username = prop.getProperty("username", "Maribel");
-			port = Integer.valueOf(prop.getProperty("port", "1331"));
+			loadProperties(prop);
 			
 			fis.close();
 			
@@ -87,8 +89,7 @@ public class Settings {
 			FileOutputStream fos = new FileOutputStream(file);
 			Properties prop = new Properties();
 			
-			prop.setProperty("username", username);
-			prop.setProperty("port", String.valueOf(port));
+			saveProperties(prop);
 			
 			prop.store(fos, null);
 			fos.close();
@@ -100,5 +101,17 @@ public class Settings {
 		}
 		
 		Logging.getLogger().log(Level.INFO, "Settings saved.");
+	}
+	
+	private void loadProperties(Properties prop) {
+		username = prop.getProperty("username", "Maribel");
+		port = Integer.valueOf(prop.getProperty("port", "1331"));
+		vsyncEnabled = Boolean.valueOf(prop.getProperty("vsync", "false"));
+	}
+	
+	private void saveProperties(Properties prop) {
+		prop.setProperty("username", username);
+		prop.setProperty("port", String.valueOf(port));
+		prop.setProperty("vsync", String.valueOf(vsyncEnabled));
 	}
 }

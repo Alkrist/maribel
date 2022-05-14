@@ -31,6 +31,7 @@ public class Settings {
 	
 	/*GRAPHICS*/
 	public boolean vsyncEnabled;
+	public boolean fullscreen;
 	
 	/**
 	 * Init singleton, load values from properties file or use defaults.
@@ -107,11 +108,13 @@ public class Settings {
 		username = prop.getProperty("username", "Maribel");
 		port = Integer.valueOf(prop.getProperty("port", "1331"));
 		vsyncEnabled = Boolean.valueOf(prop.getProperty("vsync", "false"));
+		fullscreen = Boolean.valueOf(prop.getProperty("fullscreen_mode", "false"));
 	}
 	
 	private void saveProperties(Properties prop) {
 		prop.setProperty("username", username);
 		prop.setProperty("port", String.valueOf(port));
 		prop.setProperty("vsync", String.valueOf(vsyncEnabled));
+		prop.setProperty("fullscreen_mode", String.valueOf(fullscreen));
 	}
 }

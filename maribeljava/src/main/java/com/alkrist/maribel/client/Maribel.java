@@ -20,7 +20,7 @@ public class Maribel {
 			Settings.CURRENT.load();
 			loader.preInit(); //Setup some components needed for loading
 			loader.load(); //Background game loading process
-			Updater.update(); //Actual game loop
+			Updater.update(0); //Actual game loop TODO: add deltatime from rendering
 			
 		}catch(Exception e) {
 			e.printStackTrace();

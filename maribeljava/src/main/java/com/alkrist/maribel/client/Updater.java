@@ -72,12 +72,10 @@ public final class Updater {
 		running = false;
 	}
 	
-	private static long deltaTime = 0; //in milliseconds
-	
 	/**
 	 * The actual update loop. it will work only if the Updater is enabled.
 	 */
-	public static void update() {
+	public static void update(double deltaTime) {
 		while(running) {
 			//Debug purposes 
 			try {
@@ -87,9 +85,7 @@ public final class Updater {
 			}
 			updating = true;
 			if(activeElement!=null) {
-				long start = System.currentTimeMillis();
 				activeElement.update(deltaTime);
-				deltaTime = (System.currentTimeMillis() - start);
 			}
 				
 			updating = false;

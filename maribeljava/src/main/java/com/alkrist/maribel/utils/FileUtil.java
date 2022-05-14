@@ -13,10 +13,8 @@ public class FileUtil {
 	 * @return if the current OS is Windows
 	 */
 	public static boolean isWindows() {
-		if((System.getProperty("os.name").toUpperCase().contains("WIN"))) {
+		if((System.getProperty("os.name").toUpperCase().contains("WIN")))
 			return true;
-		}
-			
 		return false;
 	}
 	
@@ -45,11 +43,8 @@ public class FileUtil {
 	 * @return base path for the game files
 	 */
 	public static String getBasePath() {
-		
-		if(isWindows())
-			return System.getenv("APPDATA") + "\\.maribel\\";		
-		else
-			return getUserPath() + "/.maribel/";
+		if(isWindows()) return System.getenv("APPDATA") + "\\.maribel\\";				
+		else return getUserPath() + "/.maribel/";
 	}
 	
 	/**
@@ -57,10 +52,8 @@ public class FileUtil {
 	 * @return path to logs
 	 */
 	public static String getLogPath() {
-		if(isWindows())
-			return getBasePath()+"logs\\";
-		else
-			return getBasePath() + "logs/";
+		if(isWindows()) return getBasePath()+"logs\\";
+		else return getBasePath() + "logs/";
 	}
 	
 	/**
@@ -68,10 +61,18 @@ public class FileUtil {
 	 * @return path to config files
 	 */
 	public static String getConfigPath() {
-		if(isWindows())
-			return getBasePath()+"config\\";
-		else
-			return getBasePath() + "config/";
+		if(isWindows()) return getBasePath()+"config\\";
+		else return getBasePath() + "config/";	
+	}
+	
+	public static String getAssetsPath() {
+		if(isWindows()) return "src\\main\\resources\\assets\\";
+		else return "src/main/resources/assets/";	
+	}
+	
+	public static String getShadersPath() {
+		if(isWindows()) return getAssetsPath()+"shaders\\";
+		else return getAssetsPath()+"shaders/";	
 	}
 	
 	private static String getUserPath() {

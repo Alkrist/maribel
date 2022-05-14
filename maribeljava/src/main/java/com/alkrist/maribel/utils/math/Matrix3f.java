@@ -5,40 +5,33 @@ import java.nio.FloatBuffer;
 /**
  * 3x3 float Matrix
  * 
- * Based on LWJGL 2 Matrix3f by cix_foo, since this class is not included in LWJGL 3.
+ * Based on LWJGL 2 Matrix3f by cix_foo, since this class is not included in
+ * LWJGL 3.
  * 
  * @author Mikhail
  *
  */
-public class Matrix3f extends Matrix{
+public class Matrix3f extends Matrix {
 
 	/*
 	 * | m00 m01 m02 |
 	 * | m10 m11 m12 |
 	 * | m20 m21 m22 |
 	 */
-	
-	public float m00,
-	m01,
-	m02,
-	m10,
-	m11,
-	m12,
-	m20,
-	m21,
-	m22;
-	
+
+	public float m00, m01, m02, m10, m11, m12, m20, m21, m22;
+
 	/**
-	 * Constructor for Matrix3f. Matrix is initialised to the identity.
-	 * | m00 m01 m02 |
-	 * | m10 m11 m12 |
+	 * Constructor for Matrix3f. Matrix is initialised to the identity. 
+	 * | m00 m01 m02 | 
+	 * | m10 m11 m12 | 
 	 * | m20 m21 m22 |
 	 */
 	public Matrix3f() {
 		super();
 		setIdentity();
 	}
-	
+
 	@Override
 	public Matrix setIdentity() {
 		return setIdentity(this);
@@ -46,6 +39,7 @@ public class Matrix3f extends Matrix{
 
 	/**
 	 * Set the matrix to be the identity matrix.
+	 * 
 	 * @param m The matrix to be set to the identity
 	 * @return m
 	 */
@@ -61,7 +55,7 @@ public class Matrix3f extends Matrix{
 		m.m22 = 1.0f;
 		return m;
 	}
-	
+
 	@Override
 	public Matrix invert() {
 		return invert(this, this);
@@ -69,7 +63,8 @@ public class Matrix3f extends Matrix{
 
 	/**
 	 * Invert the source matrix and put the result into the destination matrix
-	 * @param src The source matrix to be inverted
+	 * 
+	 * @param src  The source matrix to be inverted
 	 * @param dest The destination matrix, or null if a new one is to be created
 	 * @return The inverted matrix if successful, null otherwise
 	 */
@@ -79,41 +74,40 @@ public class Matrix3f extends Matrix{
 		if (determinant != 0) {
 			if (dest == null)
 				dest = new Matrix3f();
-			 /* do it the ordinary way
-			  *
-			  * inv(A) = 1/det(A) * adj(T), where adj(T) = transpose(Conjugate Matrix)
-			  *
-			  * m00 m01 m02
-			  * m10 m11 m12
-			  * m20 m21 m22
-			  */
-			 float determinant_inv = 1f/determinant;
+			/*
+			 * do it the ordinary way
+			 *
+			 * inv(A) = 1/det(A) * adj(T), where adj(T) = transpose(Conjugate Matrix)
+			 *
+			 * m00 m01 m02 m10 m11 m12 m20 m21 m22
+			 */
+			float determinant_inv = 1f / determinant;
 
-			 // get the conjugate matrix
-			 float t00 = src.m11 * src.m22 - src.m12* src.m21;
-			 float t01 = - src.m10 * src.m22 + src.m12 * src.m20;
-			 float t02 = src.m10 * src.m21 - src.m11 * src.m20;
-			 float t10 = - src.m01 * src.m22 + src.m02 * src.m21;
-			 float t11 = src.m00 * src.m22 - src.m02 * src.m20;
-			 float t12 = - src.m00 * src.m21 + src.m01 * src.m20;
-			 float t20 = src.m01 * src.m12 - src.m02 * src.m11;
-			 float t21 = -src.m00 * src.m12 + src.m02 * src.m10;
-			 float t22 = src.m00 * src.m11 - src.m01 * src.m10;
+			// get the conjugate matrix
+			float t00 = src.m11 * src.m22 - src.m12 * src.m21;
+			float t01 = -src.m10 * src.m22 + src.m12 * src.m20;
+			float t02 = src.m10 * src.m21 - src.m11 * src.m20;
+			float t10 = -src.m01 * src.m22 + src.m02 * src.m21;
+			float t11 = src.m00 * src.m22 - src.m02 * src.m20;
+			float t12 = -src.m00 * src.m21 + src.m01 * src.m20;
+			float t20 = src.m01 * src.m12 - src.m02 * src.m11;
+			float t21 = -src.m00 * src.m12 + src.m02 * src.m10;
+			float t22 = src.m00 * src.m11 - src.m01 * src.m10;
 
-			 dest.m00 = t00*determinant_inv;
-			 dest.m11 = t11*determinant_inv;
-			 dest.m22 = t22*determinant_inv;
-			 dest.m01 = t10*determinant_inv;
-			 dest.m10 = t01*determinant_inv;
-			 dest.m20 = t02*determinant_inv;
-			 dest.m02 = t20*determinant_inv;
-			 dest.m12 = t21*determinant_inv;
-			 dest.m21 = t12*determinant_inv;
-			 return dest;
+			dest.m00 = t00 * determinant_inv;
+			dest.m11 = t11 * determinant_inv;
+			dest.m22 = t22 * determinant_inv;
+			dest.m01 = t10 * determinant_inv;
+			dest.m10 = t01 * determinant_inv;
+			dest.m20 = t02 * determinant_inv;
+			dest.m02 = t20 * determinant_inv;
+			dest.m12 = t21 * determinant_inv;
+			dest.m21 = t12 * determinant_inv;
+			return dest;
 		} else
-			 return null;
+			return null;
 	}
-	
+
 	@Override
 	public Matrix load(FloatBuffer buf) {
 		m00 = buf.get();
@@ -131,16 +125,18 @@ public class Matrix3f extends Matrix{
 
 	/**
 	 * Load from another matrix
+	 * 
 	 * @param src The source matrix
 	 * @return this
 	 */
 	public Matrix3f load(Matrix3f src) {
 		return load(src, this);
 	}
-	
+
 	/**
 	 * Copy source matrix to destination matrix
-	 * @param src The source matrix
+	 * 
+	 * @param src  The source matrix
 	 * @param dest The destination matrix, or null of a new matrix is to be created
 	 * @return The copied matrix
 	 */
@@ -160,8 +156,7 @@ public class Matrix3f extends Matrix{
 
 		return dest;
 	}
-	
-	
+
 	@Override
 	public Matrix loadTranspose(FloatBuffer buf) {
 		m00 = buf.get();
@@ -184,16 +179,18 @@ public class Matrix3f extends Matrix{
 
 	/**
 	 * Negate this matrix and place the result in a destination matrix.
+	 * 
 	 * @param dest The destination matrix, or null if a new matrix is to be created
 	 * @return the negated matrix
 	 */
 	public Matrix3f negate(Matrix3f dest) {
 		return negate(this, dest);
 	}
-	
+
 	/**
 	 * Negate the source matrix and place the result in the destination matrix.
-	 * @param src The source matrix
+	 * 
+	 * @param src  The source matrix
 	 * @param dest The destination matrix, or null if a new matrix is to be created
 	 * @return the negated matrix
 	 */
@@ -212,7 +209,7 @@ public class Matrix3f extends Matrix{
 		dest.m22 = -src.m21;
 		return dest;
 	}
-	
+
 	@Override
 	public Matrix store(FloatBuffer buf) {
 		buf.put(m00);
@@ -243,9 +240,10 @@ public class Matrix3f extends Matrix{
 
 	/**
 	 * Add two matrices together and place the result in a third matrix.
-	 * @param left The left source matrix
+	 * 
+	 * @param left  The left source matrix
 	 * @param right The right source matrix
-	 * @param dest The destination matrix, or null if a new one is to be created
+	 * @param dest  The destination matrix, or null if a new one is to be created
 	 * @return the destination matrix
 	 */
 	public static Matrix3f add(Matrix3f left, Matrix3f right, Matrix3f dest) {
@@ -264,12 +262,14 @@ public class Matrix3f extends Matrix{
 
 		return dest;
 	}
-	
+
 	/**
-	 * Subtract the right matrix from the left and place the result in a third matrix.
-	 * @param left The left source matrix
+	 * Subtract the right matrix from the left and place the result in a third
+	 * matrix.
+	 * 
+	 * @param left  The left source matrix
 	 * @param right The right source matrix
-	 * @param dest The destination matrix, or null if a new one is to be created
+	 * @param dest  The destination matrix, or null if a new one is to be created
 	 * @return the destination matrix
 	 */
 	public static Matrix3f sub(Matrix3f left, Matrix3f right, Matrix3f dest) {
@@ -288,36 +288,28 @@ public class Matrix3f extends Matrix{
 
 		return dest;
 	}
-	
+
 	/**
 	 * Multiply the right matrix by the left and place the result in a third matrix.
-	 * @param left The left source matrix
+	 * 
+	 * @param left  The left source matrix
 	 * @param right The right source matrix
-	 * @param dest The destination matrix, or null if a new one is to be created
+	 * @param dest  The destination matrix, or null if a new one is to be created
 	 * @return the destination matrix
 	 */
 	public static Matrix3f mul(Matrix3f left, Matrix3f right, Matrix3f dest) {
 		if (dest == null)
 			dest = new Matrix3f();
 
-		float m00 =
-			left.m00 * right.m00 + left.m10 * right.m01 + left.m20 * right.m02;
-		float m01 =
-			left.m01 * right.m00 + left.m11 * right.m01 + left.m21 * right.m02;
-		float m02 =
-			left.m02 * right.m00 + left.m12 * right.m01 + left.m22 * right.m02;
-		float m10 =
-			left.m00 * right.m10 + left.m10 * right.m11 + left.m20 * right.m12;
-		float m11 =
-			left.m01 * right.m10 + left.m11 * right.m11 + left.m21 * right.m12;
-		float m12 =
-			left.m02 * right.m10 + left.m12 * right.m11 + left.m22 * right.m12;
-		float m20 =
-			left.m00 * right.m20 + left.m10 * right.m21 + left.m20 * right.m22;
-		float m21 =
-			left.m01 * right.m20 + left.m11 * right.m21 + left.m21 * right.m22;
-		float m22 =
-			left.m02 * right.m20 + left.m12 * right.m21 + left.m22 * right.m22;
+		float m00 = left.m00 * right.m00 + left.m10 * right.m01 + left.m20 * right.m02;
+		float m01 = left.m01 * right.m00 + left.m11 * right.m01 + left.m21 * right.m02;
+		float m02 = left.m02 * right.m00 + left.m12 * right.m01 + left.m22 * right.m02;
+		float m10 = left.m00 * right.m10 + left.m10 * right.m11 + left.m20 * right.m12;
+		float m11 = left.m01 * right.m10 + left.m11 * right.m11 + left.m21 * right.m12;
+		float m12 = left.m02 * right.m10 + left.m12 * right.m11 + left.m22 * right.m12;
+		float m20 = left.m00 * right.m20 + left.m10 * right.m21 + left.m20 * right.m22;
+		float m21 = left.m01 * right.m20 + left.m11 * right.m21 + left.m21 * right.m22;
+		float m22 = left.m02 * right.m20 + left.m12 * right.m21 + left.m22 * right.m22;
 
 		dest.m00 = m00;
 		dest.m01 = m01;
@@ -331,13 +323,13 @@ public class Matrix3f extends Matrix{
 
 		return dest;
 	}
-	
+
 	/**
-	 * Transform a Vector by a matrix and return the result in a destination
-	 * vector.
-	 * @param left The left matrix
+	 * Transform a Vector by a matrix and return the result in a destination vector.
+	 * 
+	 * @param left  The left matrix
 	 * @param right The right vector
-	 * @param dest The destination vector, or null if a new one is to be created
+	 * @param dest  The destination vector, or null if a new one is to be created
 	 * @return the destination vector
 	 */
 	public static Vector3f transform(Matrix3f left, Vector3f right, Vector3f dest) {
@@ -355,7 +347,6 @@ public class Matrix3f extends Matrix{
 		return dest;
 	}
 
-	
 	@Override
 	public Matrix transpose() {
 		return transpose(this, this);
@@ -363,22 +354,24 @@ public class Matrix3f extends Matrix{
 
 	/**
 	 * Transpose this matrix and place the result in another matrix
+	 * 
 	 * @param dest The destination matrix or null if a new matrix is to be created
 	 * @return the transposed matrix
 	 */
 	public Matrix3f transpose(Matrix3f dest) {
 		return transpose(this, dest);
 	}
-	
+
 	/**
 	 * Transpose the source matrix and place the result into the destination matrix
-	 * @param src The source matrix to be transposed
+	 * 
+	 * @param src  The source matrix to be transposed
 	 * @param dest The destination matrix or null if a new matrix is to be created
 	 * @return the transposed matrix
 	 */
 	public static Matrix3f transpose(Matrix3f src, Matrix3f dest) {
 		if (dest == null)
-		   dest = new Matrix3f();
+			dest = new Matrix3f();
 		float m00 = src.m00;
 		float m01 = src.m10;
 		float m02 = src.m20;
@@ -400,7 +393,7 @@ public class Matrix3f extends Matrix{
 		dest.m22 = m22;
 		return dest;
 	}
-	
+
 	@Override
 	public Matrix setZero() {
 		return setZero(this);
@@ -408,6 +401,7 @@ public class Matrix3f extends Matrix{
 
 	/**
 	 * Set the matrix matrix to 0.
+	 * 
 	 * @param m The matrix to be set to 0
 	 * @return m
 	 */
@@ -423,14 +417,11 @@ public class Matrix3f extends Matrix{
 		m.m22 = 0.0f;
 		return m;
 	}
-	
+
 	@Override
 	public float determinant() {
-		float f =
-				m00 * (m11 * m22 - m12 * m21)
-					+ m01 * (m12 * m20 - m10 * m22)
-					+ m02 * (m10 * m21 - m11 * m20);
-			return f;
+		float f = m00 * (m11 * m22 - m12 * m21) + m01 * (m12 * m20 - m10 * m22) + m02 * (m10 * m21 - m11 * m20);
+		return f;
 	}
 
 	@Override

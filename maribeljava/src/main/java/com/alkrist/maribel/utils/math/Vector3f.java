@@ -5,29 +5,30 @@ import java.nio.FloatBuffer;
 /**
  * Vector of 3 floats
  * 
- * Based on LWJGL 2 Vector2f by cix_foo, since this class is not included in LWJGL 3.
+ * Based on LWJGL 2 Vector2f by cix_foo, since this class is not included in
+ * LWJGL 3.
  * 
  * @author Mikhail
  *
  */
-public class Vector3f extends Vector{
+public class Vector3f extends Vector {
 
 	public float x, y, z;
-	
+
 	/**
 	 * Constructor for Vector3f.
 	 */
 	public Vector3f() {
 		super();
 	}
-	
+
 	/**
 	 * Constructor
 	 */
 	public Vector3f(float x, float y, float z) {
 		set(x, y, z);
 	}
-	
+
 	/**
 	 * Set values
 	 * 
@@ -40,8 +41,7 @@ public class Vector3f extends Vector{
 		this.y = y;
 		this.z = z;
 	}
-	
-	
+
 	@Override
 	public float lengthSquared() {
 		return x * x + y * y + z * z;
@@ -49,6 +49,7 @@ public class Vector3f extends Vector{
 
 	/**
 	 * Translate a vector
+	 * 
 	 * @param x The translation in x
 	 * @param y the translation in y
 	 * @return this
@@ -59,13 +60,13 @@ public class Vector3f extends Vector{
 		this.z += z;
 		return this;
 	}
-	
+
 	/**
-	 * Add a vector to another vector and place the result in a destination
-	 * vector.
-	 * @param left The LHS vector
+	 * Add a vector to another vector and place the result in a destination vector.
+	 * 
+	 * @param left  The LHS vector
 	 * @param right The RHS vector
-	 * @param dest The destination vector, or null if a new vector is to be created
+	 * @param dest  The destination vector, or null if a new vector is to be created
 	 * @return the sum of left and right in dest
 	 */
 	public static Vector3f add(Vector3f left, Vector3f right, Vector3f dest) {
@@ -76,13 +77,14 @@ public class Vector3f extends Vector{
 			return dest;
 		}
 	}
-	
+
 	/**
 	 * Subtract a vector from another vector and place the result in a destination
 	 * vector.
-	 * @param left The LHS vector
+	 * 
+	 * @param left  The LHS vector
 	 * @param right The RHS vector
-	 * @param dest The destination vector, or null if a new vector is to be created
+	 * @param dest  The destination vector, or null if a new vector is to be created
 	 * @return left minus right in dest
 	 */
 	public static Vector3f sub(Vector3f left, Vector3f right, Vector3f dest) {
@@ -93,33 +95,26 @@ public class Vector3f extends Vector{
 			return dest;
 		}
 	}
-	
+
 	/**
 	 * The cross product of two vectors.
 	 *
-	 * @param left The LHS vector
+	 * @param left  The LHS vector
 	 * @param right The RHS vector
-	 * @param dest The destination result, or null if a new vector is to be created
+	 * @param dest  The destination result, or null if a new vector is to be created
 	 * @return left cross right
 	 */
-	public static Vector3f cross(
-			Vector3f left,
-			Vector3f right,
-			Vector3f dest)
-	{
+	public static Vector3f cross(Vector3f left, Vector3f right, Vector3f dest) {
 
 		if (dest == null)
 			dest = new Vector3f();
 
-		dest.set(
-				left.y * right.z - left.z * right.y,
-				right.x * left.z - right.z * left.x,
-				left.x * right.y - left.y * right.x
-				);
+		dest.set(left.y * right.z - left.z * right.y, right.x * left.z - right.z * left.x,
+				left.x * right.y - left.y * right.x);
 
 		return dest;
 	}
-	
+
 	@Override
 	public Vector load(FloatBuffer buf) {
 		x = buf.get();
@@ -138,6 +133,7 @@ public class Vector3f extends Vector{
 
 	/**
 	 * Negate a vector and place the result in a destination vector.
+	 * 
 	 * @param dest The destination vector or null if a new vector is to be created
 	 * @return the negated vector
 	 */
@@ -149,9 +145,10 @@ public class Vector3f extends Vector{
 		dest.z = -z;
 		return dest;
 	}
-	
+
 	/**
 	 * Normalise this vector and place the result in another vector.
+	 * 
 	 * @param dest The destination vector, or null if a new vector is to be created
 	 * @return the normalised vector
 	 */
@@ -165,20 +162,22 @@ public class Vector3f extends Vector{
 
 		return dest;
 	}
-	
+
 	/**
-	 * The dot product of two vectors is calculated as
-	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
-	 * @param left The LHS vector
+	 * The dot product of two vectors is calculated as v1.x * v2.x + v1.y * v2.y +
+	 * v1.z * v2.z
+	 * 
+	 * @param left  The LHS vector
 	 * @param right The RHS vector
 	 * @return left dot right
 	 */
 	public static float dot(Vector3f left, Vector3f right) {
 		return left.x * right.x + left.y * right.y + left.z * right.z;
 	}
-	
+
 	/**
 	 * Calculate the angle between two vectors, in radians
+	 * 
 	 * @param a A vector
 	 * @param b The other vector
 	 * @return the angle between the two vectors, in radians
@@ -189,9 +188,9 @@ public class Vector3f extends Vector{
 			dls = -1f;
 		else if (dls > 1.0f)
 			dls = 1.0f;
-		return (float)Math.acos(dls);
+		return (float) Math.acos(dls);
 	}
-	
+
 	@Override
 	public Vector store(FloatBuffer buf) {
 		buf.put(x);
@@ -223,25 +222,29 @@ public class Vector3f extends Vector{
 		sb.append(']');
 		return sb.toString();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		Vector3f other = (Vector3f)obj;
-		
-		if (x == other.x && y == other.y && z == other.z) return true;
-		
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Vector3f other = (Vector3f) obj;
+
+		if (x == other.x && y == other.y && z == other.z)
+			return true;
+
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int hash = 7;
 		hash += Integer.valueOf(String.valueOf(x));
 		hash += Integer.valueOf(String.valueOf(y));
 		hash += Integer.valueOf(String.valueOf(z));
-		return hash*31;
+		return hash * 31;
 	}
 }

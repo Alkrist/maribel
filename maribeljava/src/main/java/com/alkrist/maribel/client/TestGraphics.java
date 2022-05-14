@@ -1,12 +1,11 @@
 package com.alkrist.maribel.client;
 
-import java.io.File;
-
 import com.alkrist.maribel.client.graphics.BufferObjectLoader;
 import com.alkrist.maribel.client.graphics.DisplayManager;
 import com.alkrist.maribel.client.graphics.Renderer;
 import com.alkrist.maribel.client.graphics.model.Mesh;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.client.graphics.shader.shaders.StaticShader;
+import com.alkrist.maribel.client.graphics.texture.Texture;
 import com.alkrist.maribel.utils.Logging;
 
 /**
@@ -32,6 +31,12 @@ public class TestGraphics {
 				3,1,2
 		};
 
+		float[] textureCoords = {
+			0,0,
+			0,1,
+			1,1,
+			1,0
+		};
 		Logging.initLogger();
 		Settings.CURRENT.load();	
 		DisplayManager manager = new DisplayManager();
@@ -39,11 +44,15 @@ public class TestGraphics {
 		
 		Renderer renderer = new Renderer();
 		BufferObjectLoader loader = new BufferObjectLoader();
-		Mesh mesh = loader.loadToVAO(vertices, indices);
+		Texture texture = Texture.loadTexture("test");
+		Mesh mesh = loader.loadToVAO(vertices, textureCoords, indices);
+		StaticShader shader = new StaticShader();
 		
 		while(!manager.isCloseRequested()) {
+			shader.start();
 			renderer.prepare();
-			renderer.render(mesh);
+			renderer.render(mesh, texture);
+			shader.stop();
 			manager.updateWindow();
 		}manager.destroyWindow();
 		

@@ -5,31 +5,33 @@ import java.nio.FloatBuffer;
 /**
  * Vector of 2 floats.
  * 
- * Based on LWJGL 2 Vector2f by cix_foo, since this class is not included in LWJGL 3.
+ * Based on LWJGL 2 Vector2f by cix_foo, since this class is not included in
+ * LWJGL 3.
  * 
  * @author Mikhail
  *
  */
-public class Vector2f extends Vector{
+public class Vector2f extends Vector {
 
 	public float x, y;
-	
+
 	/**
 	 * Constructor for Vector2f.
 	 */
 	public Vector2f() {
 		super();
 	}
-	
+
 	/**
 	 * Constructor.
 	 */
 	public Vector2f(float x, float y) {
 		set(x, y);
 	}
-	
+
 	/**
 	 * Set values
+	 * 
 	 * @param x
 	 * @param y
 	 */
@@ -37,7 +39,7 @@ public class Vector2f extends Vector{
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	@Override
 	public float lengthSquared() {
 		return x * x + y * y;
@@ -45,6 +47,7 @@ public class Vector2f extends Vector{
 
 	/**
 	 * Translate a vector
+	 * 
 	 * @param x The translation in x
 	 * @param y the translation in y
 	 * @return this
@@ -54,7 +57,7 @@ public class Vector2f extends Vector{
 		this.y += y;
 		return this;
 	}
-	
+
 	@Override
 	public Vector load(FloatBuffer buf) {
 		x = buf.get();
@@ -71,6 +74,7 @@ public class Vector2f extends Vector{
 
 	/**
 	 * Negate a vector and place the result in a destination vector.
+	 * 
 	 * @param dest The destination vector or null if a new vector is to be created
 	 * @return the negated vector
 	 */
@@ -81,9 +85,10 @@ public class Vector2f extends Vector{
 		dest.y = -y;
 		return dest;
 	}
-	
+
 	/**
 	 * Normalise this vector and place the result in another vector.
+	 * 
 	 * @param dest The destination vector, or null if a new vector is to be created
 	 * @return the normalised vector
 	 */
@@ -97,20 +102,22 @@ public class Vector2f extends Vector{
 
 		return dest;
 	}
-	
+
 	/**
-	 * The dot product of two vectors is calculated as
-	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
-	 * @param left The LHS vector
+	 * The dot product of two vectors is calculated as v1.x * v2.x + v1.y * v2.y +
+	 * v1.z * v2.z
+	 * 
+	 * @param left  The LHS vector
 	 * @param right The RHS vector
 	 * @return left dot right
 	 */
 	public static float dot(Vector2f left, Vector2f right) {
 		return left.x * right.x + left.y * right.y;
 	}
-	
+
 	/**
 	 * Calculate the angle between two vectors, in radians
+	 * 
 	 * @param a A vector
 	 * @param b The other vector
 	 * @return the angle between the two vectors, in radians
@@ -121,15 +128,15 @@ public class Vector2f extends Vector{
 			dls = -1f;
 		else if (dls > 1.0f)
 			dls = 1.0f;
-		return (float)Math.acos(dls);
+		return (float) Math.acos(dls);
 	}
-	
+
 	/**
-	 * Add a vector to another vector and place the result in a destination
-	 * vector.
-	 * @param left The LHS vector
+	 * Add a vector to another vector and place the result in a destination vector.
+	 * 
+	 * @param left  The LHS vector
 	 * @param right The RHS vector
-	 * @param dest The destination vector, or null if a new vector is to be created
+	 * @param dest  The destination vector, or null if a new vector is to be created
 	 * @return the sum of left and right in dest
 	 */
 	public static Vector2f add(Vector2f left, Vector2f right, Vector2f dest) {
@@ -140,13 +147,14 @@ public class Vector2f extends Vector{
 			return dest;
 		}
 	}
-	
+
 	/**
 	 * Subtract a vector from another vector and place the result in a destination
 	 * vector.
-	 * @param left The LHS vector
+	 * 
+	 * @param left  The LHS vector
 	 * @param right The RHS vector
-	 * @param dest The destination vector, or null if a new vector is to be created
+	 * @param dest  The destination vector, or null if a new vector is to be created
 	 * @return left minus right in dest
 	 */
 	public static Vector2f sub(Vector2f left, Vector2f right, Vector2f dest) {
@@ -157,7 +165,7 @@ public class Vector2f extends Vector{
 			return dest;
 		}
 	}
-	
+
 	@Override
 	public Vector store(FloatBuffer buf) {
 		buf.put(x);
@@ -184,24 +192,28 @@ public class Vector2f extends Vector{
 		sb.append(']');
 		return sb.toString();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		Vector2f other = (Vector2f)obj;
-		
-		if (x == other.x && y == other.y) return true;
-		
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Vector2f other = (Vector2f) obj;
+
+		if (x == other.x && y == other.y)
+			return true;
+
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int hash = 7;
 		hash += Integer.valueOf(String.valueOf(x));
 		hash += Integer.valueOf(String.valueOf(y));
-		return hash*31;
+		return hash * 31;
 	}
 }

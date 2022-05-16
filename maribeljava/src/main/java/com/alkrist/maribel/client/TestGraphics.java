@@ -1,12 +1,16 @@
 package com.alkrist.maribel.client;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.alkrist.maribel.client.graphics.BufferObjectLoader;
 import com.alkrist.maribel.client.graphics.DisplayManager;
-import com.alkrist.maribel.client.graphics.Renderer;
+import com.alkrist.maribel.client.graphics.InputHandler;
+import com.alkrist.maribel.client.graphics.ModelCompositeRenderer;
 import com.alkrist.maribel.client.graphics.model.Mesh;
-import com.alkrist.maribel.client.graphics.shader.shaders.StaticShader;
+import com.alkrist.maribel.client.graphics.shader.shaders.ModelShader;
 import com.alkrist.maribel.client.graphics.texture.Texture;
 import com.alkrist.maribel.utils.Logging;
+import com.alkrist.maribel.utils.math.MatrixMath;
 
 /**
  * REMOVE THIS FUCKING CLASS LATER!!!
@@ -41,18 +45,19 @@ public class TestGraphics {
 		Settings.CURRENT.load();	
 		DisplayManager manager = new DisplayManager();
 		manager.createWindow("test");
-		
-		Renderer renderer = new Renderer();
+		ModelShader shader = new ModelShader();
+		ModelCompositeRenderer renderer = new ModelCompositeRenderer(shader, MatrixMath.createProjectionMatrix(manager.getWidth(), manager.getHeight()));
 		BufferObjectLoader loader = new BufferObjectLoader();
 		Texture texture = Texture.loadTexture("test");
 		Mesh mesh = loader.loadToVAO(vertices, textureCoords, indices);
-		StaticShader shader = new StaticShader();
+		
 		
 		while(!manager.isCloseRequested()) {
-			shader.start();
+			/*shader.start();
 			renderer.prepare();
 			renderer.render(mesh, texture);
-			shader.stop();
+			shader.stop();*/
+
 			manager.updateWindow();
 		}manager.destroyWindow();
 		

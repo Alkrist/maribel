@@ -2,6 +2,8 @@ package com.alkrist.maribel.client.graphics.texture;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -102,6 +104,8 @@ public class Texture {
         }
     }
     
+    private static Map<String, Texture> allTextures = new HashMap<String, Texture>();
+    
     /**
      * Creates a texture with specified width, height and data.
      *
@@ -136,28 +140,34 @@ public class Texture {
      * @return Texture from specified file
      */
     public static Texture loadTexture(String path) {
-        ByteBuffer image;
-        int width, height;
-        
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            /* Prepare image buffers */
-            IntBuffer w = stack.mallocInt(1);
-            IntBuffer h = stack.mallocInt(1);
-            IntBuffer comp = stack.mallocInt(1);
-
-            /* Load image */
-            //STBImage.stbi_set_flip_vertically_on_load(true);
-            image = STBImage.stbi_load(FileUtil.getTexturesPath()+path+".png", w, h, comp, 4);
-            if (image == null) {
-                throw new RuntimeException("Failed to load a texture file!"
-                                           + System.lineSeparator() + STBImage.stbi_failure_reason());
-            }
-
-            /* Get width and height of image */
-            width = w.get();
-            height = h.get();
-        }
-
-        return createTexture(width, height, image);
+    	if(allTextures.get(path)!=null) {
+    		return allTextures.get(path);
+    	}else {
+    		ByteBuffer image;
+	        int width, height;
+	        
+	        try (MemoryStack stack = MemoryStack.stackPush()) {
+	            /* Prepare image buffers */
+	            IntBuffer w = stack.mallocInt(1);
+	            IntBuffer h = stack.mallocInt(1);
+	            IntBuffer comp = stack.mallocInt(1);
+	
+	            /* Load image */
+	            //STBImage.stbi_set_flip_vertically_on_load(true);
+	            image = STBImage.stbi_load(FileUtil.getTexturesPath()+path+".png", w, h, comp, 4);
+	            if (image == null) {
+	                throw new RuntimeException("Failed to load a texture file!"
+	                                           + System.lineSeparator() + STBImage.stbi_failure_reason());
+	            }
+	
+	            /* Get width and height of image */
+	            width = w.get();
+	            height = h.get();
+	        }
+	        
+	        Texture tex = createTexture(width, height, image);
+	        allTextures.put(path, tex);
+	        return tex;
+    	}
     }
 }

@@ -24,6 +24,10 @@ import com.alkrist.maribel.utils.Logging;
 public class Settings {
 	public static final Settings CURRENT = new Settings();
 	
+	public final float FOV = 70;
+	public final float NEAR_PLANE = 0.1f;
+	public final float FAR_PLANE = 1000; 
+	
 	private Settings() {}
 	
 	public String username;

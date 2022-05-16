@@ -92,11 +92,11 @@ public class FileUtil {
 			return getAssetsPath() + "textures/";
 	}
 	
-	public static String getMeshesPath() {
+	public static String getModelsPath() {
 		if (isWindows())
-			return getAssetsPath() + "meshes\\";
+			return getAssetsPath() + "models\\";
 		else
-			return getAssetsPath() + "meshes/";
+			return getAssetsPath() + "models/";
 	}
 
 	private static String getUserPath() {

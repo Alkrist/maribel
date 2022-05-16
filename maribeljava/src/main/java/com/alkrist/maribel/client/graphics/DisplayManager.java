@@ -89,6 +89,7 @@ public class DisplayManager {
 		
 		GLFW.glfwMakeContextCurrent(window);
 		GLFW.glfwShowWindow(window);
+		InputHandler.init(window);
 		
 		GL.createCapabilities();
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -139,7 +140,8 @@ public class DisplayManager {
 	}
 	
 	public void updateWindow() {
-		//GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		InputHandler.update();
+		
 		GLFW.glfwSwapBuffers(window);
 		GLFW.glfwPollEvents();
 		

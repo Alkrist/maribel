@@ -13,20 +13,21 @@ import org.lwjgl.opengl.GL30;
 
 import com.alkrist.maribel.client.graphics.model.Mesh;
 
+
 public class BufferObjectLoader {
 
 	private List<Integer> VAOs = new ArrayList<Integer>();
 	private List<Integer> VBOs = new ArrayList<Integer>();
 	
-	public Mesh loadToVAO(float[] positions, float[] textureCoords, int[] indices) {
+	public Mesh loadToVAO(float[] vertices, float[] textureCoords, int[] indices) {		
 		int vaoID = createVAO();
+		
 		bindIndicesBuffer(indices);
-		
-		storeDataInAttributeList(0, 3, positions);
+		storeDataInAttributeList(0, 3, vertices);
 		storeDataInAttributeList(1, 2, textureCoords);
-		
 		unbindVAO();
-		return new Mesh(vaoID, indices.length);
+		
+		return new Mesh(vaoID, indices.length);		
 	}
 	
 	private int createVAO() {

@@ -5,7 +5,11 @@ in vec2 texCoords;
 
 out vec2 pass_texCoords;
 
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+
 void main(void){
-	gl_Position = vec4(position,1.0);
+	gl_Position = viewMatrix * projectionMatrix * transformationMatrix * vec4(position,1.0);
 	pass_texCoords = texCoords;
 }

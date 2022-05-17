@@ -27,7 +27,7 @@ public class OBJLoader {
 	 * @param loader - loader
 	 * @return raw mesh
 	 */
-	/*public static Mesh loadObjModel(String fileName, BufferObjectLoader loader) {
+	public static Mesh loadObjModel(String fileName, BufferObjectLoader loader) {
 		FileReader fr = null;
 		
 		try {
@@ -132,6 +132,6 @@ public class OBJLoader {
 		normalsArray[currentVertexPointer*3] = currentNorm.x;
 		normalsArray[currentVertexPointer*3+1] = currentNorm.y;
 		normalsArray[currentVertexPointer*3+2] = currentNorm.z;
-	}*/
+	}
 	
 }

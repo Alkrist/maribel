@@ -19,12 +19,13 @@ public class BufferObjectLoader {
 	private List<Integer> VAOs = new ArrayList<Integer>();
 	private List<Integer> VBOs = new ArrayList<Integer>();
 	
-	public Mesh loadToVAO(float[] vertices, float[] textureCoords, int[] indices) {		
+	public Mesh loadToVAO(float[] vertices, float[] textureCoords, float[] normals, int[] indices) {		
 		int vaoID = createVAO();
 		
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, vertices);
 		storeDataInAttributeList(1, 2, textureCoords);
+		storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
 		
 		return new Mesh(vaoID, indices.length);		

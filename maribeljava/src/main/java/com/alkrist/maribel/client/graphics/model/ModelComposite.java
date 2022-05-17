@@ -1,8 +1,19 @@
 package com.alkrist.maribel.client.graphics.model;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+
+import org.json.JSONObject;
+
+import com.alkrist.maribel.client.graphics.BufferObjectLoader;
+import com.alkrist.maribel.client.graphics.texture.Texture;
+import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * Maribel Model Composite.
@@ -67,8 +78,53 @@ public class ModelComposite {
 		return model;
 	}
 	
-	public static ModelComposite loadFromJson(String filename) {
-		//TODO: implement
+	public static ModelComposite loadFromJson(String filename, BufferObjectLoader loader) {
+		
+		try {
+			
+			String contents = readFileAsString(FileUtil.getModelsPath()+filename+".json");
+			JSONObject jsonObject = new JSONObject(contents);
+			
+			String name = jsonObject.getString("name");
+			if(name == null) {
+				Logging.getLogger().log(Level.WARNING, "Failed to load model, no name");
+	        	return null;
+			}
+			ModelComposite mc = new ModelComposite(name);
+			
+			Iterator<String> keys = jsonObject.keys();
+			
+			while(keys.hasNext()) {
+				String key = keys.next();
+				if (jsonObject.get(key) instanceof JSONObject) {
+					  
+			          String modelPath = jsonObject.getJSONObject(key).getString("mesh");
+			          String texturePath = jsonObject.getJSONObject(key).getString("texture");
+			          
+			          Mesh mesh = OBJLoader.loadObjModel(modelPath, loader);
+			          if(mesh == null) {
+			        	  Logging.getLogger().log(Level.WARNING, "Failed to load model, mesh null");
+			        	  return null;
+			          }
+			          
+			          Texture texture = Texture.loadTexture(texturePath);
+			          if (texture == null) {
+			        	  Logging.getLogger().log(Level.WARNING, "Failed to load model, texture null");
+			        	  return null;
+			          }
+			          
+			          mc.setNode(new MCPart(mesh, texture, key));
+			    }
+				
+			}
+			if(mc.getNodeNames().size() == 0) {
+					Logging.getLogger().log(Level.WARNING, "Failed to load model, no nodes found");
+		        	return null;
+			}
+			return mc;
+		}catch (Exception e) {
+			Logging.getLogger().log(Level.WARNING, "Failed to load model, no contents loaded",e);
+        }
 		return null;
 	}
 	
@@ -76,4 +132,8 @@ public class ModelComposite {
 		//TODO: implement
 		return null;
 	}
+	
+	private static String readFileAsString(String file)throws Exception{
+        return new String(Files.readAllBytes(Paths.get(file)));
+    }
 }

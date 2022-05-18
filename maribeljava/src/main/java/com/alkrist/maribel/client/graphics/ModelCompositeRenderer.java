@@ -55,14 +55,16 @@ public class ModelCompositeRenderer {
 		GL20.glEnableVertexAttribArray(2); //normals
 				
 		Texture texture = node.getTexture();
-		//TODO: texture props
-		//TODO: culling
+		shader.loadSpecularProperties(node.getShineDamper(), node.getReflecivity());
+		if(node.isTransparent()) {
+			RenderSystem.disableCulling();
+		}
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
 	}
 	
 	private void unbindModel() {
-		//TODO: culling
+		RenderSystem.enableCulling();
 		GL20.glDisableVertexAttribArray(0); //vertices
 		GL20.glDisableVertexAttribArray(1); //texture coords
 		GL20.glDisableVertexAttribArray(2); //normals

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
@@ -122,8 +121,8 @@ public class Texture {
 
         texture.bind();
 
-        texture.setParameter(GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
-        texture.setParameter(GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
+        texture.setParameter(GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+        texture.setParameter(GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
         texture.setParameter(GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
         texture.setParameter(GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 

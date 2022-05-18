@@ -1,9 +1,15 @@
 package com.alkrist.maribel.client.graphics.model;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -29,14 +35,12 @@ import com.alkrist.maribel.utils.Logging;
  *
  */
 public class ModelComposite {
-
-	//TODO: ways to create an MMC object
-	//TODO: read mmc file
-	//TODO: read obj and json
+	
 	private String name;
 	private Map<String, MCPart> nodes;
 	
 	private ModelComposite(String name) {
+		this.name = name;
 		nodes = new HashMap<String, MCPart>();
 	}
 	
@@ -98,8 +102,18 @@ public class ModelComposite {
 				String key = keys.next();
 				if (jsonObject.get(key) instanceof JSONObject) {
 					  
+					  float shine = 1;
+					  float reflex = 0;
+					  boolean trans = false;
+					  String material = "GENERIC";
+					  
 			          String modelPath = jsonObject.getJSONObject(key).getString("mesh");
 			          String texturePath = jsonObject.getJSONObject(key).getString("texture");
+			          
+			          material = jsonObject.getJSONObject(key).getString("material");
+			          trans = jsonObject.getJSONObject(key).getBoolean("transparency");
+			          reflex = jsonObject.getJSONObject(key).getFloat("reflexivity");
+			          shine = jsonObject.getJSONObject(key).getFloat("shineDamper");
 			          
 			          Mesh mesh = OBJLoader.loadObjModel(modelPath, loader);
 			          if(mesh == null) {
@@ -113,7 +127,7 @@ public class ModelComposite {
 			        	  return null;
 			          }
 			          
-			          mc.setNode(new MCPart(mesh, texture, key));
+			          mc.setNode(new MCPart(mesh, texture, key, shine, reflex, material, trans));
 			    }
 				
 			}
@@ -128,12 +142,225 @@ public class ModelComposite {
 		return null;
 	}
 	
-	public static ModelComposite loadFromMMC(String filename) {
-		//TODO: implement
-		return null;
+	public static ModelComposite loadFromMMC(String filename, BufferObjectLoader loader) {
+		FileReader fr = null;
+		
+		try {
+			fr  = new FileReader(new File(FileUtil.getModelsPath()+filename+".mmc"));
+		} catch (FileNotFoundException e) {
+			System.err.println("Couldn't load file!");
+			e.printStackTrace(); //TODO: logging
+		}
+		
+		BufferedReader reader = new BufferedReader(fr);
+		
+		String nodeName = "autho_generated_node_name";
+		ModelComposite model = null;
+		//Material properties
+		String textureName = null; //tx
+		float shineDamper = 1; //sd
+		float reflexivity = 0; //rf
+		boolean isTransparent = false; //tr
+		String material = "GENERIC"; //mt
+		
+		MCPart node;
+		boolean isFirst = true;
+		
+		boolean indicesRead = false;
+		boolean verticesRead = false;
+		boolean texturesRead = false;
+		boolean normalsRead = false;
+		
+		String line;		
+		List<Float>vertexPoints = new ArrayList<Float>();
+		List<Float>texturePoints = new ArrayList<Float>();
+		List<Float>normalPoints = new ArrayList<Float>();
+		List<Integer>indices = new ArrayList<Integer>();
+		
+		float[] verticesArray = null;
+		float[] normalsArray = null;
+		float[] texturesArray = null;
+		int[] indicesArray = null;
+		int j=0;
+		
+		try {
+			while(true) {
+				line = reader.readLine();
+				if(line==null) break;
+				String[] currentLine = line.split(" ");
+				if(line.startsWith("nm ")) {
+					model = new ModelComposite(currentLine[1]);
+				}else if(line.startsWith("o ")) {
+					
+					if(!isFirst) { //If it's not a first object
+						//Init arrays
+						verticesArray = new float[vertexPoints.size()];
+						texturesArray = new float[texturePoints.size()];
+						normalsArray = new float[normalPoints.size()];
+						indicesArray = new int[indices.size()];
+						
+						//Fill arrays
+						j=0;
+						for(float point: vertexPoints) {
+							verticesArray[j] = point;
+							j++;
+						}j=0;
+						for(float point: texturePoints) {
+							texturesArray[j] = point;
+							j++;
+						}j=0;
+						for(float point: normalPoints) {
+							normalsArray[j] = point;
+							j++;
+						}j=0;
+						for(int point: indices) {
+							indicesArray[j] = point;
+							j++;
+						}j=0;
+						
+						//Clear lists
+						vertexPoints.clear();
+						texturePoints.clear();
+						normalPoints.clear();
+						indices.clear();
+						
+						//Create node
+						node = makeNode(verticesArray,
+								texturesArray, 
+								normalsArray, 
+								indicesArray, 
+								nodeName, 
+								textureName, 
+								shineDamper, 
+								reflexivity, 
+								isTransparent, 
+								material, 
+								loader);
+						
+						//Set node in current model
+						model.setNode(node);
+						
+						//Reset default params
+						shineDamper = 1;
+						reflexivity = 0;
+						material = "GENERIC";
+						isTransparent = false;
+						
+					}else isFirst = false; //If it was first object, ignore it for now
+					
+					nodeName = currentLine[1]; //Set new node name
+					
+				}else if(line.startsWith("sd")) {
+					shineDamper = Float.parseFloat(currentLine[1]);
+				}else if(line.startsWith("rf ")) {
+					reflexivity = Float.parseFloat(currentLine[1]);
+				}else if(line.startsWith("tx ")) {
+					textureName = currentLine[1];
+				}else if(line.startsWith("tr ")) {
+					if(currentLine[1].startsWith("1")) isTransparent = true;
+				}else if(line.startsWith("mt ")) {
+					material = currentLine[1].toUpperCase();
+				}else if(line.startsWith("vc")) {
+					verticesRead = true;
+					indicesRead = false;
+					texturesRead = false;
+					normalsRead = false;
+				}else if(line.startsWith("vn")) {
+					verticesRead = false;
+					indicesRead = false;
+					texturesRead = false;
+					normalsRead = true;
+				}else if(line.startsWith("vt")) {
+					verticesRead = false;
+					indicesRead = false;
+					texturesRead = true;
+					normalsRead = false;
+				}else if(line.startsWith("in")) {
+					verticesRead = false;
+					indicesRead = true;
+					texturesRead = false;
+					normalsRead = false;
+				}else if(verticesRead) {
+					for(int i=0;i<currentLine.length;i++) {
+						vertexPoints.add(Float.parseFloat(currentLine[i]));
+					}
+				}else if(texturesRead) {
+					for(int i=0;i<currentLine.length;i++) {
+						texturePoints.add(Float.parseFloat(currentLine[i]));
+					}
+				}else if(normalsRead) {
+					for(int i=0;i<currentLine.length;i++) {
+						normalPoints.add(Float.parseFloat(currentLine[i]));
+					}
+				}else if(indicesRead) {
+					for(int i=0;i<currentLine.length;i++) {
+						indices.add(Integer.parseInt(currentLine[i]));
+					}
+				}
+				
+			}
+			reader.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			//TODO: logging
+		}
+		
+		//Init arrays
+		verticesArray = new float[vertexPoints.size()];
+		texturesArray = new float[texturePoints.size()];
+		normalsArray = new float[normalPoints.size()];
+		indicesArray = new int[indices.size()];
+		
+		//Fill arrays
+		j=0;
+		for(float point: vertexPoints) {
+			verticesArray[j] = point;
+			j++;
+		}j=0;
+		for(float point: texturePoints) {
+			texturesArray[j] = point;
+			j++;
+		}j=0;
+		for(float point: normalPoints) {
+			normalsArray[j] = point;
+			j++;
+		}j=0;
+		for(int point: indices) {
+			indicesArray[j] = point;
+			j++;
+		}
+		
+		//Create node
+		node = makeNode(verticesArray,
+				texturesArray, 
+				normalsArray, 
+				indicesArray, 
+				nodeName, 
+				textureName, 
+				shineDamper, 
+				reflexivity, 
+				isTransparent, 
+				material, 
+				loader);
+		
+		//Set node in current model
+		model.setNode(node);
+		
+		return model;
 	}
 	
 	private static String readFileAsString(String file)throws Exception{
         return new String(Files.readAllBytes(Paths.get(file)));
     }
+	
+	private static MCPart makeNode(float[] vertices, float[] textureCoords, float[] normals, int[] indices, String name,
+			String texName, float shineDamper, float reflexivity, boolean transparency, String material, BufferObjectLoader loader) {
+		Mesh mesh = loader.loadToVAO(vertices, textureCoords, normals, indices);
+		Texture texture = Texture.loadTexture(texName);
+		
+		if(mesh!=null) {
+			return new MCPart(mesh, texture, name, shineDamper, reflexivity, material, transparency);
+		}else throw new IllegalArgumentException("mesh load failure");
+	}
 }

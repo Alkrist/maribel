@@ -1,15 +1,7 @@
 {
 	"name": "Stall",
     "first":{
-        "mesh": "sample",
-        "texture": "sample"
-    },
-	"third":{
         "mesh": "dragon",
-        "texture": "tree"
-    },
-	"second":{
-        "mesh": "tree",
-        "texture": "tree"
+        "texture": "iron"
     }
 }

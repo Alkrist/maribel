@@ -1,7 +1,5 @@
 package com.alkrist.maribel.utils.math;
 
-import org.lwjgl.opengl.GL11;
-
 import com.alkrist.maribel.client.Settings;
 import com.alkrist.maribel.client.graphics.Camera;
 

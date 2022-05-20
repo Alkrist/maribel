@@ -31,6 +31,13 @@ public class BufferObjectLoader {
 		return new Mesh(vaoID, indices.length);		
 	}
 	
+	public Mesh loadToVAO(float[] positions, int dimensions) {
+		int vaoID = createVAO();
+		this.storeDataInAttributeList(0, dimensions, positions);
+		unbindVAO();
+		return new Mesh(vaoID, positions.length/dimensions);
+	}
+	
 	private int createVAO() {
 		int vaoID = GL30.glGenVertexArrays();
 		VAOs.add(vaoID);

@@ -49,14 +49,23 @@ public class TestGraphics {
 		batch.add(transform);
 		batch2.add(transform2);
 		objects.put(dragon, batch);
-		objects.put(tent, batch2);
+		//objects.put(tent, batch2);
 		GUIFrame coloredFrame = new GUIFrame(new Vector2f(0,0), new Vector2f(0.25f, 0.25f), new Vector4f(0,1,0,1));
 		GUIFrame texturedFrame = new GUIFrame(new Vector2f(-0.5f,-0.5f), new Vector2f(0.25f, 0.25f), "samplegui", new Vector4f(1,0,0,0));
 		List<GUIFrame> frames = new ArrayList<GUIFrame>();
 		frames.add(texturedFrame);
 		frames.add(coloredFrame);		
 		Camera camera = new Camera(0,0,0,0,0,0);
-		Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
+		Light light1 = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
+		Light light2 = new Light(new Vector3f(0,-20,0), new Vector3f(0,1,1));
+		Light light3 = new Light(new Vector3f(-20,0,-20), new Vector3f(1,1,0));
+		Light light4 = new Light(new Vector3f(0,0,5), new Vector3f(1,0,1));
+		List<Light> lights = new ArrayList<Light>();
+		lights.add(light1);
+		lights.add(light2);
+		lights.add(light3);
+		lights.add(light4);
+		
 		while(!manager.isCloseRequested()) {
 			
 			texturedFrame.color.w+=0.001f;
@@ -66,11 +75,11 @@ public class TestGraphics {
 			shader.start();
 			renderer.prepare();
 			shader.loadViewMatrix(MatrixMath.createViewMatrix(camera));
-			shader.loadLight(light);
+			shader.loadLights(lights);
 			renderer.render(objects);
 			shader.stop();
 			
-			guiRenderer.render(frames);
+			//guiRenderer.render(frames);
 			manager.updateWindow();
 		}manager.destroyWindow();
 		

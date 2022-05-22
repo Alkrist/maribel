@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.alkrist</groupId>
   <artifactId>maribeljava</artifactId>
-  <version>20220520</version>
+  <version>20220522</version>
   <name>Afterworlds</name>
   
   	<properties>

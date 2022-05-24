@@ -29,7 +29,7 @@ import com.alkrist.maribel.utils.math.Vector4f;
  *
  */
 public class TestGraphics {
-	
+
 	public static void main(String[] args) {
 		Logging.initLogger();
 		Settings.CURRENT.load();	
@@ -57,9 +57,9 @@ public class TestGraphics {
 		frames.add(coloredFrame);		
 		Camera camera = new Camera(0,0,0,0,0,0);
 		Light light1 = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
-		Light light2 = new Light(new Vector3f(0,-20,0), new Vector3f(0,1,1));
-		Light light3 = new Light(new Vector3f(-20,0,-20), new Vector3f(1,1,0));
-		Light light4 = new Light(new Vector3f(0,0,5), new Vector3f(1,0,1));
+		Light light2 = new Light(new Vector3f(0,-20,0), new Vector3f(0,1,1), new Vector3f(1,0.1f, 0.002f));
+		Light light3 = new Light(new Vector3f(-20,0,0), new Vector3f(0,1,0), new Vector3f(1,0.1f, 0.002f));
+		Light light4 = new Light(new Vector3f(0,0,5), new Vector3f(1,0,1), new Vector3f(1,0.1f, 0.002f));
 		List<Light> lights = new ArrayList<Light>();
 		lights.add(light1);
 		lights.add(light2);

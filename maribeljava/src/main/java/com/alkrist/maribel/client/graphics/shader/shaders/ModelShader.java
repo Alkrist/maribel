@@ -16,6 +16,7 @@ public class ModelShader extends ShaderBase{
 	int loc_viewMatrix;
 	int loc_lightPosition[];
 	int loc_lightColor[];
+	int loc_lightAttenuation[];
 	int loc_shineDamper;
 	int loc_reflectivity;
 	
@@ -32,9 +33,11 @@ public class ModelShader extends ShaderBase{
 		loc_reflectivity = super.getUniformLocation("reflectivity");
 		loc_lightPosition = new int [MAX_LIGHTS];
 		loc_lightColor = new int[MAX_LIGHTS];
+		loc_lightAttenuation = new int[MAX_LIGHTS];
 		for(int i=0; i<4; i++) {
 			loc_lightPosition[i] = super.getUniformLocation("lightPosition["+i+"]");
 			loc_lightColor[i] = super.getUniformLocation("lightColor["+i+"]");
+			loc_lightAttenuation[i] = super.getUniformLocation("attenuation["+i+"]");
 		}
 	}
 
@@ -61,9 +64,11 @@ public class ModelShader extends ShaderBase{
 			if(i<lights.size()) {
 				super.loadVector3f(loc_lightPosition[i], lights.get(i).position);
 				super.loadVector3f(loc_lightColor[i], lights.get(i).color);
+				super.loadVector3f(loc_lightAttenuation[i], lights.get(i).attenuation);
 			}else {
 				super.loadVector3f(loc_lightPosition[i], new Vector3f(0,0,0));
 				super.loadVector3f(loc_lightColor[i], new Vector3f(0,0,0));
+				super.loadVector3f(loc_lightAttenuation[i], new Vector3f(1,0,0));
 			}
 		}
 	}

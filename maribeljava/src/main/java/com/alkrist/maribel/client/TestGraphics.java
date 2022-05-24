@@ -16,7 +16,9 @@ import com.alkrist.maribel.client.graphics.gui.GUIRenderer;
 import com.alkrist.maribel.client.graphics.model.ModelComposite;
 import com.alkrist.maribel.client.graphics.shader.shaders.ModelShader;
 import com.alkrist.maribel.utils.Logging;
+import com.alkrist.maribel.utils.math.Matrix4f;
 import com.alkrist.maribel.utils.math.MatrixMath;
+import com.alkrist.maribel.utils.math.RayCaster;
 import com.alkrist.maribel.utils.math.Vector2f;
 import com.alkrist.maribel.utils.math.Vector3f;
 import com.alkrist.maribel.utils.math.Vector4f;
@@ -36,7 +38,8 @@ public class TestGraphics {
 		DisplayManager manager = new DisplayManager();
 		manager.createWindow("test");
 		ModelShader shader = new ModelShader();
-		ModelCompositeRenderer renderer = new ModelCompositeRenderer(shader, MatrixMath.createProjectionMatrix(manager.getWidth(), manager.getHeight()));
+		Matrix4f projection = MatrixMath.createProjectionMatrix(manager.getWidth(), manager.getHeight());
+		ModelCompositeRenderer renderer = new ModelCompositeRenderer(shader, projection);
 		BufferObjectLoader loader = new BufferObjectLoader();
 		GUIRenderer guiRenderer = new GUIRenderer(loader);
 		ModelComposite dragon = ModelComposite.loadFromMMC("dragon", loader);
@@ -66,12 +69,16 @@ public class TestGraphics {
 		lights.add(light3);
 		lights.add(light4);
 		
+		RayCaster caster = new RayCaster(camera, projection);
+		
 		while(!manager.isCloseRequested()) {
 			
 			texturedFrame.color.w+=0.001f;
 			texturedFrame.color.w = Math.min(texturedFrame.color.w, 1);
 			transform.rotation.y +=0.1f;
 			camera.move();
+			caster.update(manager);
+			//System.out.println(caster.getCurrentRay());
 			shader.start();
 			renderer.prepare();
 			shader.loadViewMatrix(MatrixMath.createViewMatrix(camera));

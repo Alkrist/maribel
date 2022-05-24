@@ -1,8 +1,10 @@
 package com.alkrist.maribel.client.graphics;
 
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.logging.Level;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -12,6 +14,7 @@ import org.lwjgl.system.MemoryStack;
 
 import com.alkrist.maribel.client.Settings;
 import com.alkrist.maribel.utils.Logging;
+import com.alkrist.maribel.utils.math.Vector2f;
 
 public class DisplayManager {
 
@@ -161,5 +164,14 @@ public class DisplayManager {
 	
 	private static double getCurrentTimeMillis() {
 		return GLFW.glfwGetTime() * 1000; //getTime gives time in seconds, *1000 for ms
+	}
+	
+	public Vector2f getMousePosition() {
+		DoubleBuffer bfX = BufferUtils.createDoubleBuffer(1);
+		DoubleBuffer bfY = BufferUtils.createDoubleBuffer(1);
+		GLFW.glfwGetCursorPos(window, bfX, bfY);
+		float x = (float) bfX.get(0);
+		float y = (float) bfY.get(0);
+		return new Vector2f(x, y);
 	}
 }

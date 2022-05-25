@@ -26,7 +26,7 @@ import com.alkrist.maribel.utils.math.Vector4f;
 /**
  * REMOVE THIS FUCKING CLASS LATER!!!
  * 
- * It's for testing grphics without using the whole engine.
+ * It's for testing graphics without using the whole engine.
  * @author Mikhail
  *
  */

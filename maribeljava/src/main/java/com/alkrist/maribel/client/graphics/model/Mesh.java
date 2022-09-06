@@ -4,7 +4,7 @@ package com.alkrist.maribel.client.graphics.model;
  * This class represents a raw mesh containing VAO id and vertex count of this
  * object
  * 
- * @author Mikhail
+ * @author Alkrist
  *
  */
 public class Mesh {

@@ -5,7 +5,7 @@ import com.alkrist.maribel.client.graphics.texture.Texture;
 /**
  * This class represents a textured model. Used as one node in Maribel Model Composite.
  * 
- * @author Mikhail
+ * @author Alkrist
  *
  */
 public class MCPart {
@@ -19,6 +19,17 @@ public class MCPart {
 	private float reflecivity;
 	private boolean transparency;
 	
+	/**
+	 * Model Composite Part constructor.
+	 * 
+	 * @param mesh - {@link Mesh} of this part
+	 * @param texture - {@link Texture} of this part
+	 * @param name - name of this part
+	 * @param shineDamper - shine damper value of this part, range from 0 to 1
+	 * @param reflecivity - reflectivity value of this part, range from 0 to 1
+	 * @param material - material value of this part, is a string
+	 * @param transparency - transparency value of this part, true - transparent, false - not.
+	 */
 	public MCPart(Mesh mesh, Texture texture, String name, 
 			float shineDamper, float reflecivity, String material, boolean transparency) {
 		this.mesh = mesh;

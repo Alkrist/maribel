@@ -15,7 +15,7 @@ import com.alkrist.maribel.utils.math.Vector3f;
 /**
  * This class can load an .obj file from assets.
  * 
- * @author Mikhail
+ * @author Alkrist
  *
  */
 public class OBJLoader {

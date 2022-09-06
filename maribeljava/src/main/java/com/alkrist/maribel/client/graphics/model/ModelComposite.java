@@ -31,7 +31,7 @@ import com.alkrist.maribel.utils.Logging;
  * Nodes can be added and removed.
  * Names of nodes must be unique
  * 
- * @author Mikhail
+ * @author Alkrist
  *
  */
 public class ModelComposite {
@@ -50,22 +50,45 @@ public class ModelComposite {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return a list of node names of this model
+	 */
 	public Set<String> getNodeNames() {
 		return nodes.keySet();
 	}
 	
+	/**
+	 * 
+	 * @return name of this model
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * 
+	 * @return amount of nodes of this model
+	 */
 	public int nodeCount() {
 		return nodes.keySet().size();
 	}
 	
+	/**
+	 * Adds a new node to this model
+	 * 
+	 * @param node - new node
+	 */
 	public void setNode(MCPart node) {
 		nodes.put(node.getName(), node);
 	}
 	
+	/**
+	 * Removes a node from this model
+	 * 
+	 * @param nodeName - node to remove
+	 * @return true if node was removed, false if node wasn't found
+	 */
 	public boolean removeNode(String nodeName) {
 		MCPart node = getNode(nodeName);
 		if(node != null) {
@@ -74,6 +97,13 @@ public class ModelComposite {
 		}return false;
 	}
 	
+	/**
+	 * Creates a new Model Composite from existing parts
+	 * 
+	 * @param name - model name
+	 * @param nodes - nodes to add
+	 * @return new Model Composite
+	 */
 	public static ModelComposite create(String name, MCPart ... nodes) {
 		ModelComposite model = new ModelComposite(name);
 		for(MCPart node: nodes) {
@@ -82,6 +112,13 @@ public class ModelComposite {
 		return model;
 	}
 	
+	/**
+	 * Creates a new Model Composite from JSON file
+	 * 
+	 * @param filename - JSON file path
+	 * @param loader - loader to read JSON
+	 * @return new Model Composite
+	 */
 	public static ModelComposite loadFromJson(String filename, BufferObjectLoader loader) {
 		
 		try {
@@ -142,6 +179,13 @@ public class ModelComposite {
 		return null;
 	}
 	
+	/**
+	 * Creates a new Model Composite from MMC file
+	 * 
+	 * @param filename - MMC file path
+	 * @param loader - loader to read MMC file
+	 * @return new Model Composite
+	 */
 	public static ModelComposite loadFromMMC(String filename, BufferObjectLoader loader) {
 		FileReader fr = null;
 		

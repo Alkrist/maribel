@@ -1,4 +1,5 @@
 # maribel
+![alt text](https://github.com/Alkrist/maribel/blob/master/logo.png)
 game engine API, based on the ECS approach split for Server and Client. Every object in the game is represented as Entity with a set of Components, which later re updted in
 Systems. Every Entity is created based on Game Object which has no use in the game on its own and server just as a factory for entities.
 ### Version naimng idea:

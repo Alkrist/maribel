@@ -1,11 +1,21 @@
-# maribel
+# Maribel
 ![alt text](https://github.com/Alkrist/maribel/blob/master/logo.png)
 game engine API, based on the ECS approach split for Server and Client. Every object in the game is represented as Entity with a set of Components, which later re updted in
 Systems. Every Entity is created based on Game Object which has no use in the game on its own and server just as a factory for entities.
 ### Version naimng idea:
 for Maribel - YYYYMMDD, Year - Month - Day. 
 
-## how does it work
+## Goals
+The goal is to make a framework for an actual game project that will solve several problems:
+1. Enough abstraction for ANY new content integration (in simple words, you don't have to overwrite half of the engine to add new game object or feature, everything behaves in the same way for the core point of view).
+2. All common modern game graphical features and their detailed settings
+3. Memory saving
+4. Possibility of REAL multithreading (which is impossible in Unity Engine for example)
+5. Built-in flexible server-client architecture, maybe not very user friendly though, but who cares :)
+6. Tools for easier further game development (i.e. GUI constraint system, animating tools, storage tools, make networking without touching low level)
+7. Might and Power
+
+## How does it work
 The engine has 5 main stages, called one by one after the application is started:
 
 1. Preinitilization
@@ -52,7 +62,28 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 
 ## TODO:
 0. Fix all of the small TODO lists inside the project.
+
 6. Add Graphics via LWJGL 3.
+a) GUI system with constraints, with + without textures
+b) particles (instanced rendering)
+c) shadows
+d) point lights
+e) post porcessing effects
+f) fonts
+g) optional normal maps (checked on texture load)
+h) graphics improvement (mipmaps, antialiasing etc.)
+i) transparency
+j) fog effect
+k) texture atlases
+
 7. Add Models.
+a) add animations
+
 8. Add Sounds via OpenAL.
+a) 2D sound (general sound effect)
+b) 3D sound (point sound)
+
 9. Add Commands.
+a) chat with typing text
+b) server-side command processor
+c) access levels

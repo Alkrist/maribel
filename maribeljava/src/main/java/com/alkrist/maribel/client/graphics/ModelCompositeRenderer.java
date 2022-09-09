@@ -87,9 +87,9 @@ public class ModelCompositeRenderer {
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	public void prepare() {
+	//test method only, original see in Render System
+	/*public void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		// TODO: set bg color
-	}
+	}*/
 }

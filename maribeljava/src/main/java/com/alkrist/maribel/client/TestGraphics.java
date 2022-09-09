@@ -80,7 +80,7 @@ public class TestGraphics {
 			caster.update(manager);
 			//System.out.println(caster.getCurrentRay());
 			shader.start();
-			renderer.prepare();
+			//renderer.prepare();
 			shader.loadViewMatrix(MatrixMath.createViewMatrix(camera));
 			shader.loadLights(lights);
 			renderer.render(objects);

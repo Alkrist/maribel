@@ -17,14 +17,15 @@ import com.alkrist.maribel.common.ecs.SystemBase;
 import com.alkrist.maribel.utils.ImmutableArrayList;
 import com.alkrist.maribel.utils.math.Matrix4f;
 import com.alkrist.maribel.utils.math.MatrixMath;
+import com.alkrist.maribel.utils.math.Vector3f;
 
 //TODO: add GUI support, improve GUI system itself.
 //TODO: add tests for this whole thing.
-//TODO: prepare dupe issue (MCRenderer, here)
 public class RenderSystem extends SystemBase {
 
 	private DisplayManager window;
-
+	private Vector3f backgroundColor;
+	
 	private ModelCompositeRenderer modelRenderer;
 	private ModelShader modelShader;
 
@@ -44,7 +45,8 @@ public class RenderSystem extends SystemBase {
 	public RenderSystem(DisplayManager manager) {
 		super();
 		window = manager;
-
+		backgroundColor = new Vector3f(0,0,0);
+		
 		modelShader = new ModelShader();
 		Matrix4f projectionMatrix = MatrixMath.createProjectionMatrix(window.getWidth(), window.getHeight());
 
@@ -112,7 +114,7 @@ public class RenderSystem extends SystemBase {
 	private void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		// TODO: set bg color
+		GL11.glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1);
 	}
 
 	public static void enableCulling() {

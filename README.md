@@ -87,3 +87,10 @@ b) 3D sound (point sound)
 a) chat with typing text
 b) server-side command processor
 c) access levels
+
+10. Physics
+a) gravity
+b) acceleration
+c) ragdoll
+d) collision boxes
+e) collision meshes

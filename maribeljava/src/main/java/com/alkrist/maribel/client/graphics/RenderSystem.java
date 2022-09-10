@@ -15,6 +15,7 @@ import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.common.ecs.Family;
 import com.alkrist.maribel.common.ecs.SystemBase;
 import com.alkrist.maribel.utils.ImmutableArrayList;
+import com.alkrist.maribel.utils.Logging;
 import com.alkrist.maribel.utils.math.Matrix4f;
 import com.alkrist.maribel.utils.math.MatrixMath;
 import com.alkrist.maribel.utils.math.Vector3f;
@@ -62,9 +63,8 @@ public class RenderSystem extends SystemBase {
 
 	@Override
 	public void addedToEngine() {
-		// (model ^ transform) | light | camera
 		entities = engine
-				.getEntitiesOf(Family.all(Model.class, Transform.class).one(Light.class).one(Camera.class).get());
+				.getEntitiesOf(Family.one(Camera.class, Model.class, Transform.class, Light.class).get());
 	}
 
 	@Override

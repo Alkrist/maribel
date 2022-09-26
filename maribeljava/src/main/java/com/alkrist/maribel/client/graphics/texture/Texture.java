@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
+import com.alkrist.maribel.client.Settings;
 import com.alkrist.maribel.utils.FileUtil;
 
 /**
@@ -121,11 +124,18 @@ public class Texture {
 
         texture.bind();
 
+        /*if(Settings.CURRENT.mipmapEnabled) {
+    		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+    		texture.setParameter(GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+    		texture.setParameter(GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+    		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -1);
+    	}*/
+        
         texture.setParameter(GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
         texture.setParameter(GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
         texture.setParameter(GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
         texture.setParameter(GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
+        
         texture.uploadData(GL11.GL_RGBA8, width, height, GL11.GL_RGBA, data);
 
         return texture;

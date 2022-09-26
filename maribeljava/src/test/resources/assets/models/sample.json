@@ -1,0 +1,7 @@
+{
+	"name": "Stall",
+    "first":{
+        "mesh": "dragon",
+        "texture": "iron"
+    }
+}

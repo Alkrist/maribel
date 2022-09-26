@@ -24,9 +24,6 @@ public class RenderSystemTest {
 		loader = new BufferObjectLoader();
 		engine = new Engine();
 		engine.addSystem(new RenderSystem(manager));
-		Entity camera = engine.createEntity();
-		camera.addComponent(new Camera(0,0,0,0,0,0));
-		engine.addEntity(camera);
 	}
 	
 	@Test

@@ -4,6 +4,8 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
+import com.alkrist.maribel.utils.math.Vector2f;
+
 public class InputHandler {
 
 	private static final int KEYBOARD_SIZE = 512;
@@ -110,4 +112,5 @@ public class InputHandler {
 
 		return false;
 	}
+	
 }

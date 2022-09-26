@@ -36,6 +36,7 @@ public class Settings {
 	/*GRAPHICS*/
 	public boolean vsyncEnabled;
 	public boolean fullscreen;
+	public boolean mipmapEnabled;
 	
 	/**
 	 * Init singleton, load values from properties file or use defaults.
@@ -113,6 +114,7 @@ public class Settings {
 		port = Integer.valueOf(prop.getProperty("port", "1331"));
 		vsyncEnabled = Boolean.valueOf(prop.getProperty("vsync", "false"));
 		fullscreen = Boolean.valueOf(prop.getProperty("fullscreen_mode", "false"));
+		mipmapEnabled = Boolean.valueOf(prop.getProperty("mipmap", "true"));
 	}
 	
 	private void saveProperties(Properties prop) {
@@ -120,5 +122,6 @@ public class Settings {
 		prop.setProperty("port", String.valueOf(port));
 		prop.setProperty("vsync", String.valueOf(vsyncEnabled));
 		prop.setProperty("fullscreen_mode", String.valueOf(fullscreen));
+		prop.setProperty("mipmap", String.valueOf(mipmapEnabled));
 	}
 }

@@ -15,13 +15,13 @@ import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.common.ecs.Family;
 import com.alkrist.maribel.common.ecs.SystemBase;
 import com.alkrist.maribel.utils.ImmutableArrayList;
-import com.alkrist.maribel.utils.Logging;
 import com.alkrist.maribel.utils.math.Matrix4f;
 import com.alkrist.maribel.utils.math.MatrixMath;
 import com.alkrist.maribel.utils.math.Vector3f;
 
 //TODO: add GUI support, improve GUI system itself.
 //TODO: add tests for this whole thing.
+//TODO: improve camera concept
 public class RenderSystem extends SystemBase {
 
 	private DisplayManager window;
@@ -37,8 +37,7 @@ public class RenderSystem extends SystemBase {
 	private ComponentMapper<Transform> transformMapper;
 	private ComponentMapper<Model> modelMapper;
 
-	private Camera camera;
-	private ComponentMapper<Camera> cameraMapper;
+	private Camera mainCamera;
 
 	private List<Light> lights;
 	private ComponentMapper<Light> lightMapper;
@@ -56,7 +55,7 @@ public class RenderSystem extends SystemBase {
 		transformMapper = ComponentMapper.getFor(Transform.class);
 		modelMapper = ComponentMapper.getFor(Model.class);
 
-		cameraMapper = ComponentMapper.getFor(Camera.class);
+		mainCamera = Camera.MAIN_CAMERA;
 		lightMapper = ComponentMapper.getFor(Light.class);
 		lights = new ArrayList<Light>();
 	}
@@ -64,11 +63,17 @@ public class RenderSystem extends SystemBase {
 	@Override
 	public void addedToEngine() {
 		entities = engine
-				.getEntitiesOf(Family.one(Camera.class, Model.class, Transform.class, Light.class).get());
+				.getEntitiesOf(Family.one(Model.class, Transform.class, Light.class).get());
 	}
 
 	@Override
 	public void update(double deltaTime) {
+		/* TODO:
+		 * 1) prepare
+		 * 2) render all to sub cameras (FBOs)
+		 * 3) render all to the main FBO, relative to MAIN_CAMERA
+		 * 4) render main FBO to the screen
+		 */
 		prepare();
 		renderModels();
 	}
@@ -78,7 +83,7 @@ public class RenderSystem extends SystemBase {
 			processEntity(entity);
 
 		modelShader.start();
-		modelShader.loadViewMatrix(MatrixMath.createViewMatrix(camera));
+		modelShader.loadViewMatrix(MatrixMath.createViewMatrix(mainCamera));
 		modelShader.loadLights(lights);
 		modelRenderer.render(preparedInstances);
 		modelShader.stop();
@@ -106,9 +111,6 @@ public class RenderSystem extends SystemBase {
 		if (light != null)
 			lights.add(light);
 
-		if (cameraMapper.hasComponent(entity)) // quite depricated bullshit: can work with no cameras, but it's ecs dude
-												// ;)
-			camera = cameraMapper.getComponent(entity);
 	}
 
 	private void prepare() {

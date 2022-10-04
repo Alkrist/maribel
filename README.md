@@ -62,10 +62,11 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 
 ## TODO:
 0. Fix all of the small TODO lists inside the project.
+a) fix particle system
+b) fix mipmapping
 
 6. Add Graphics via LWJGL 3.
 a) GUI system with constraints, with + without textures
-b) particles (instanced rendering)
 c) shadows
 d) point lights
 e) post porcessing effects

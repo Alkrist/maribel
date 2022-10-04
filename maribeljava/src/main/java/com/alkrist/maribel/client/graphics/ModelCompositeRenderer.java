@@ -66,6 +66,9 @@ public class ModelCompositeRenderer {
 
 		Texture texture = node.getTexture();
 		shader.loadSpecularProperties(node.getShineDamper(), node.getReflecivity());
+		//TODO: new stuff
+		shader.loadNumberOfRows(texture.getNumberOfRows());
+		shader.loadTextureOffset(node.getTextureXOffset(), node.getTextureYOffset());
 		if (node.isTransparent()) {
 			RenderSystem.disableCulling();
 		}
@@ -86,10 +89,5 @@ public class ModelCompositeRenderer {
 				instance.scale);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
-
-	//test method only, original see in Render System
-	/*public void prepare() {
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-	}*/
+	
 }

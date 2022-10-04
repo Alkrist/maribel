@@ -5,6 +5,7 @@ import java.util.List;
 import com.alkrist.maribel.client.graphics.Light;
 import com.alkrist.maribel.client.graphics.shader.ShaderBase;
 import com.alkrist.maribel.utils.math.Matrix4f;
+import com.alkrist.maribel.utils.math.Vector2f;
 import com.alkrist.maribel.utils.math.Vector3f;
 
 public class ModelShader extends ShaderBase{
@@ -19,6 +20,9 @@ public class ModelShader extends ShaderBase{
 	int loc_lightAttenuation[];
 	int loc_shineDamper;
 	int loc_reflectivity;
+	//TODO: new stuff
+	int loc_numberOfRows;
+	int loc_textureOffset;
 	
 	public ModelShader() {
 		super("static_vertex", "static_fragment");
@@ -39,6 +43,9 @@ public class ModelShader extends ShaderBase{
 			loc_lightColor[i] = super.getUniformLocation("lightColor["+i+"]");
 			loc_lightAttenuation[i] = super.getUniformLocation("attenuation["+i+"]");
 		}
+		//TODO: new stuff
+		loc_numberOfRows = super.getUniformLocation("numberOfRows");
+		loc_textureOffset = super.getUniformLocation("textureOffset");
 	}
 
 	@Override
@@ -76,5 +83,15 @@ public class ModelShader extends ShaderBase{
 	public void loadSpecularProperties(float shine, float reflect) {
 		super.loadFloat(loc_shineDamper, shine);
 		super.loadFloat(loc_reflectivity, reflect);
+	}
+	
+	//TODO: new stuff
+	public void loadNumberOfRows(int numberOfRows) {
+		super.loadFloat(loc_numberOfRows, numberOfRows);
+	}
+	
+	//TODO: new stuff
+	public void loadTextureOffset(float x, float y) {
+		super.loadVector2f(loc_textureOffset, new Vector2f(x,y));
 	}
 }

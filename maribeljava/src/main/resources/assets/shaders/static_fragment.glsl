@@ -39,6 +39,9 @@ void main(void){
 	totalDiffuse = max(totalDiffuse, 0.2);
 	
 	vec4 textureColor = texture(textureSampler, pass_texCoords);
+	if(textureColor.a < 0.3){
+		discard;
+	}
 	
 	out_Color = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0);
 }

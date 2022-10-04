@@ -29,6 +29,9 @@ public class Texture {
 	private int width;
 	private int height;
 	
+	//TODO: new stuff
+	private int numberOfRows = 1;
+	
 	private Texture() {
 		this.id = GL11.glGenTextures();
 	}
@@ -94,6 +97,16 @@ public class Texture {
 		return id;
 	}
 	
+	//TODO: new stuff
+	public int getNumberOfRows() {
+		return numberOfRows;
+	}
+	
+	//TODO: new stuff
+	public void setNumberOfRows(int numberOfRows) {
+		this.numberOfRows = numberOfRows;
+	}
+	
     public void setHeight(int height) {
         if (height > 0) {
             this.height = height;
@@ -144,7 +157,7 @@ public class Texture {
     /**
      * Load texture from file.
      *
-     * @param path File path of the texture
+     * @param path - File path of the texture
      *
      * @return Texture from specified file
      */
@@ -179,4 +192,20 @@ public class Texture {
 	        return tex;
     	}
     }
+    
+    /**
+     * TODO: new stuff.
+     * Load texture atlas from file.
+     * 
+     * @param path - File path of the texture
+     * @param numberOfRows - number of rows of the texture atlas
+     * 
+     * @return Texture object of the texture atlas
+     */
+    public static Texture loadTexture(String path, int numberOfRows) {
+    	Texture texture = loadTexture(path);
+    	texture.setNumberOfRows(numberOfRows);
+    	return texture;
+    }
+    
 }

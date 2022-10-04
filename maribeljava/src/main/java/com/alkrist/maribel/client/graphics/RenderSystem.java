@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.alkrist.maribel.client.graphics.model.Model;
 import com.alkrist.maribel.client.graphics.model.ModelComposite;
+import com.alkrist.maribel.client.graphics.particles.ParticleRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.ModelShader;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -20,8 +21,6 @@ import com.alkrist.maribel.utils.math.MatrixMath;
 import com.alkrist.maribel.utils.math.Vector3f;
 
 //TODO: add GUI support, improve GUI system itself.
-//TODO: add tests for this whole thing.
-//TODO: improve camera concept
 public class RenderSystem extends SystemBase {
 
 	private DisplayManager window;
@@ -30,6 +29,8 @@ public class RenderSystem extends SystemBase {
 	private ModelCompositeRenderer modelRenderer;
 	private ModelShader modelShader;
 
+	private ParticleRenderer particleRenderer;
+	
 	private Matrix4f projectionMatrix;
 
 	private ImmutableArrayList<Entity> entities;
@@ -42,15 +43,17 @@ public class RenderSystem extends SystemBase {
 	private List<Light> lights;
 	private ComponentMapper<Light> lightMapper;
 
-	public RenderSystem(DisplayManager manager) {
+	public RenderSystem(DisplayManager manager, BufferObjectLoader loader) {
 		super();
 		window = manager;
-		backgroundColor = new Vector3f(0,0,0);
+		backgroundColor = new Vector3f(0.3f,0.3f,0.3f);
 		
 		modelShader = new ModelShader();
 		Matrix4f projectionMatrix = MatrixMath.createProjectionMatrix(window.getWidth(), window.getHeight());
 
 		modelRenderer = new ModelCompositeRenderer(modelShader, projectionMatrix);
+		particleRenderer = new ParticleRenderer(loader, projectionMatrix);
+		
 		preparedInstances = new HashMap<ModelComposite, List<Transform>>();
 		transformMapper = ComponentMapper.getFor(Transform.class);
 		modelMapper = ComponentMapper.getFor(Model.class);
@@ -88,6 +91,8 @@ public class RenderSystem extends SystemBase {
 		modelRenderer.render(preparedInstances);
 		modelShader.stop();
 
+		particleRenderer.render(mainCamera);
+		
 		preparedInstances.clear();
 		lights.clear();
 	}

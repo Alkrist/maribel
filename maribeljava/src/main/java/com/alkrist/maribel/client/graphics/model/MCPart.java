@@ -19,6 +19,9 @@ public class MCPart {
 	private float reflecivity;
 	private boolean transparency;
 	
+	//TODO: new stuff
+	private int textureOffsetIndex = 0;
+	
 	/**
 	 * Model Composite Part constructor.
 	 * 
@@ -53,6 +56,18 @@ public class MCPart {
 		return reflecivity;
 	}
 
+	//TODO: new concept
+	public float getTextureXOffset() {
+		int column = textureOffsetIndex % texture.getNumberOfRows();
+		return (float) column / (float) texture.getNumberOfRows();
+	}
+	
+	//TODO: new concept
+	public float getTextureYOffset() {
+		int row = textureOffsetIndex / texture.getNumberOfRows();
+		return (float) row / (float) texture.getNumberOfRows();
+	}
+	
 	public boolean isTransparent() {
 		return transparency;
 	}
@@ -67,6 +82,14 @@ public class MCPart {
 
 	public String getName() {
 		return name;
+	}
+
+	public int getTextureOffsetIndex() {
+		return textureOffsetIndex;
+	}
+
+	public void setTextureOffsetIndex(int textureOffsetIndex) {
+		this.textureOffsetIndex = textureOffsetIndex;
 	}
 	
 }

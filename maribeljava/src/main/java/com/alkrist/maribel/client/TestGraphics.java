@@ -8,6 +8,9 @@ import com.alkrist.maribel.client.graphics.RenderSystem;
 import com.alkrist.maribel.client.graphics.Transform;
 import com.alkrist.maribel.client.graphics.model.Model;
 import com.alkrist.maribel.client.graphics.model.ModelComposite;
+import com.alkrist.maribel.client.graphics.particles.ParticleEffect;
+import com.alkrist.maribel.client.graphics.particles.ParticleSystem;
+import com.alkrist.maribel.client.graphics.texture.Texture;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.utils.Logging;
@@ -31,20 +34,33 @@ public class TestGraphics {
 		
 		
 		Engine engine = new Engine();
-		engine.addSystem(new RenderSystem(manager));
-		
+		engine.addSystem(new ParticleSystem());
+		engine.addSystem(new RenderSystem(manager, loader));
 		Entity e1 = engine.createEntity();
 		Entity e2 = engine.createEntity();
 		ModelComposite dragon = ModelComposite.loadFromMMC("dragon", loader);
 		ModelComposite tent = ModelComposite.loadFromMMC("tent", loader);
-		Transform transform = new Transform(new Vector3f(0,-5,-25), new Vector3f(0,0,0), 1);
-		Transform transform2 = new Transform(new Vector3f(0,0,-15), new Vector3f(0,20,0), 1);
-		e1.addComponent(new Model(dragon));
+		ModelComposite dog = ModelComposite.loadFromJson("doxie", loader);
+		ModelComposite fern1 = ModelComposite.loadFromJson("fern", loader);
+		fern1.getNode("fern").getTexture().setNumberOfRows(2);
+		fern1.getNode("fern").setTextureOffsetIndex(1);
+		ModelComposite fern2 = ModelComposite.loadFromJson("fern", loader);
+		fern2.getNode("fern").setTextureOffsetIndex(0);
+		Transform transform = new Transform(new Vector3f(0,-10,-20), new Vector3f(0,0,0), 1);
+		Transform transform2 = new Transform(new Vector3f(20,-10,-20), new Vector3f(0,90,0), 1);
+		e1.addComponent(new Model(dog));
 		e1.addComponent(transform);
-		e2.addComponent(new Model(tent));
+		e2.addComponent(new Model(fern1));
 		e2.addComponent(transform2);
 		
-		Light light1 = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
+		//******* PARTICLE TEST *******//
+		ParticleEffect pEffect = new ParticleEffect(Texture.loadTexture("particles\\fire", 8), 50, 25, 0.3f, 1, new Vector3f(20, 0, 0));
+		Entity e7 = engine.createEntity();
+		e7.addComponent(pEffect);
+		//*****************************//
+		
+		//Light light1 = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
+		Light light1 = new Light(new Vector3f(0,1000,0), new Vector3f(1,1,1));
 		Light light2 = new Light(new Vector3f(0,-20,0), new Vector3f(0,1,1), new Vector3f(1,0.1f, 0.002f));
 		Light light3 = new Light(new Vector3f(-20,0,0), new Vector3f(0,1,0), new Vector3f(1,0.1f, 0.002f));
 		Light light4 = new Light(new Vector3f(0,0,5), new Vector3f(1,0,1), new Vector3f(1,0.1f, 0.002f));
@@ -60,12 +76,13 @@ public class TestGraphics {
 		engine.addEntity(e1);
 		engine.addEntity(e2);
 		engine.addEntity(e3);
-		engine.addEntity(e4);
-		engine.addEntity(e5);
-		engine.addEntity(e6);
+		//engine.addEntity(e4);
+		//engine.addEntity(e5);
+		//engine.addEntity(e6);
+		engine.addEntity(e7);
 		
 		while(!manager.isCloseRequested()) {
-			transform.rotation.y +=0.1f;
+			transform.rotation.y +=0.02f;
 			Camera.MAIN_CAMERA.move();
 			engine.update(manager.deltaTime());
 			manager.updateWindow();

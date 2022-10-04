@@ -1,0 +1,11 @@
+{
+	"name": "dog",
+    "fern":{
+		"material": "SKIN",
+		"transparency": false,
+		"reflexivity": 0.1,
+		"shineDamper": 1,
+        "mesh": "doxie",
+        "texture": "dog"
+    }
+}

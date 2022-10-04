@@ -1,18 +1,27 @@
 package com.alkrist.maribel.client.graphics;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.logging.Level;
 
+import javax.imageio.ImageIO;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import com.alkrist.maribel.client.Settings;
+import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.Logging;
 import com.alkrist.maribel.utils.math.Vector2f;
 
@@ -50,7 +59,7 @@ public class DisplayManager {
 			Logging.getLogger().log(Level.SEVERE, "[GLFW]: Failed to crete window!");
 			System.exit(-1);
 		}
-
+        
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1);
 			IntBuffer pHeight = stack.mallocInt(1);
@@ -68,7 +77,7 @@ public class DisplayManager {
 			width = pWidth.get(0);
 			height = pHeight.get(0);
 		}
-
+        
 		// Resize callback - happen on resize
 		GLFW.glfwSetWindowSizeCallback(window, new GLFWWindowSizeCallback() {
 			@Override
@@ -83,7 +92,7 @@ public class DisplayManager {
 		if (Settings.CURRENT.vsyncEnabled) {
 			GLFW.glfwSwapInterval(1);
 		}
-
+        
 		GLFW.glfwMakeContextCurrent(window);
 		GLFW.glfwShowWindow(window);
 		InputHandler.init(window);
@@ -92,7 +101,7 @@ public class DisplayManager {
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glViewport(0, 0, width, height);
 	}
-
+	
 	/**
 	 * 
 	 * @return current display width

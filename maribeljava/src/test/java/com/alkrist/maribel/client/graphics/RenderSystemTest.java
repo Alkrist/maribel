@@ -23,7 +23,7 @@ public class RenderSystemTest {
 		manager.createWindow("RenderSysTest");
 		loader = new BufferObjectLoader();
 		engine = new Engine();
-		engine.addSystem(new RenderSystem(manager));
+		engine.addSystem(new RenderSystem(manager, loader));
 	}
 	
 	@Test

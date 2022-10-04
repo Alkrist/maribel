@@ -25,8 +25,8 @@ public class Light implements Component {
 	 * Constructor for infinite light. Attenuation will be set to (1,0,0), which is
 	 * unlimited.
 	 * 
-	 * @param position
-	 * @param color
+	 * @param position - light position
+	 * @param color - light color
 	 */
 	public Light(Vector3f position, Vector3f color) {
 		this.position = position;
@@ -37,9 +37,10 @@ public class Light implements Component {
 	 * Constructor for point light with attenuation. Keep in mind that (1,0,0)
 	 * attenuation will make it infinite.
 	 * 
-	 * @param position
-	 * @param color
-	 * @param attenuation
+	 * @param position - light position
+	 * @param color - light color
+	 * @param attenuation - the attenuation factor: A = attenuation.x + attenuation.y * d + attenuation * d^2
+	 * where d = distance from a light position
 	 */
 	public Light(Vector3f position, Vector3f color, Vector3f attenuation) {
 		this.position = position;

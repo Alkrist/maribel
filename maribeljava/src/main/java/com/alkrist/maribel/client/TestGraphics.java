@@ -1,11 +1,16 @@
 package com.alkrist.maribel.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.alkrist.maribel.client.graphics.BufferObjectLoader;
 import com.alkrist.maribel.client.graphics.Camera;
 import com.alkrist.maribel.client.graphics.DisplayManager;
 import com.alkrist.maribel.client.graphics.Light;
 import com.alkrist.maribel.client.graphics.RenderSystem;
 import com.alkrist.maribel.client.graphics.Transform;
+import com.alkrist.maribel.client.graphics.gui.GUIFrame;
+import com.alkrist.maribel.client.graphics.gui.GUIRenderer;
 import com.alkrist.maribel.client.graphics.model.Model;
 import com.alkrist.maribel.client.graphics.model.ModelComposite;
 import com.alkrist.maribel.client.graphics.particles.ParticleEffect;
@@ -14,7 +19,9 @@ import com.alkrist.maribel.client.graphics.texture.Texture;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.utils.Logging;
+import com.alkrist.maribel.utils.math.Vector2f;
 import com.alkrist.maribel.utils.math.Vector3f;
+import com.alkrist.maribel.utils.math.Vector4f;
 
 /**
  * REMOVE THIS FUCKING CLASS LATER!!!
@@ -31,7 +38,6 @@ public class TestGraphics {
 		DisplayManager manager = new DisplayManager();
 		manager.createWindow("test");
 		BufferObjectLoader loader = new BufferObjectLoader();
-		
 		
 		Engine engine = new Engine();
 		engine.addSystem(new ParticleSystem());
@@ -54,7 +60,7 @@ public class TestGraphics {
 		e2.addComponent(transform2);
 		
 		//******* PARTICLE TEST *******//
-		ParticleEffect pEffect = new ParticleEffect(Texture.loadTexture("particles\\fire", 8), 50, 5, -0.1f, 1, new Vector3f(20, 0, 0), 2);
+		ParticleEffect pEffect = new ParticleEffect(Texture.loadTexture("particles\\sparks", 8), 50, 5, 0, 1, new Vector3f(20, 0, 0), 1);
 		Entity e7 = engine.createEntity();
 		e7.addComponent(pEffect);
 		//*****************************//
@@ -81,10 +87,18 @@ public class TestGraphics {
 		//engine.addEntity(e6);
 		engine.addEntity(e7);
 		
+		
+		// ***** GUI render alpha test ***** //
+		GUIRenderer guiRenderer = new GUIRenderer(loader, manager);
+		GUIFrame testGui = new GUIFrame(new Vector4f(0,1,0,1), new Vector2f(0.7f,0.7f), new Vector2f(0.2f, 0.2f), 0.5f, new Vector4f(0,0,0,1), 0.5f);
+		List<GUIFrame> frameList = new ArrayList<GUIFrame>();
+		frameList.add(testGui);
+		
 		while(!manager.isCloseRequested()) {
 			transform.rotation.y +=0.02f;
 			Camera.MAIN_CAMERA.move();
 			engine.update(manager.deltaTime());
+			guiRenderer.render(frameList);
 			manager.updateWindow();
 		}manager.destroyWindow();
 		

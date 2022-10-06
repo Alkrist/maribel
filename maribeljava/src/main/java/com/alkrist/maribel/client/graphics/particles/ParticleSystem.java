@@ -89,7 +89,8 @@ public class ParticleSystem extends SystemBase {
 	private void emitParticle(ParticleEffect effect, Vector3f center) {
 		float dirX = (float) (Math.random() * 2f - 1f);
 		float dirZ = (float) (Math.random() * 2f - 1f);
-		Vector3f velocity = new Vector3f(dirX, 1, dirZ);
+		float dirY = (float) (Math.random() * 2f - 1f);
+		Vector3f velocity = new Vector3f(dirX, dirY, dirZ);
 		velocity.normalise();
 		velocity.scale(effect.speed);
 		new Particle(effect.texture, new Vector3f(center.x, center.y, center.z), velocity, effect.gravityComplient,

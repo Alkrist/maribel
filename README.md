@@ -64,6 +64,7 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 0. Fix all of the small TODO lists inside the project.
 a) improve GUI system, make it system, not a bullshit
 b) fix mipmapping
+c) color filtering for GUI borders and edges
 
 6. Add Graphics via LWJGL 3.
 a) GUI system with constraints, with + without textures

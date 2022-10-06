@@ -54,7 +54,7 @@ public class TestGraphics {
 		e2.addComponent(transform2);
 		
 		//******* PARTICLE TEST *******//
-		ParticleEffect pEffect = new ParticleEffect(Texture.loadTexture("particles\\fire", 8), 50, 25, 0.3f, 1, new Vector3f(20, 0, 0));
+		ParticleEffect pEffect = new ParticleEffect(Texture.loadTexture("particles\\fire", 8), 50, 5, -0.1f, 1, new Vector3f(20, 0, 0), 2);
 		Entity e7 = engine.createEntity();
 		e7.addComponent(pEffect);
 		//*****************************//

@@ -93,7 +93,7 @@ public class ParticleSystem extends SystemBase {
 		velocity.normalise();
 		velocity.scale(effect.speed);
 		new Particle(effect.texture, new Vector3f(center.x, center.y, center.z), velocity, effect.gravityComplient,
-				effect.lifeLength, 0, 1);
+				effect.lifeLength, 0, effect.scale);
 	}
 
 }

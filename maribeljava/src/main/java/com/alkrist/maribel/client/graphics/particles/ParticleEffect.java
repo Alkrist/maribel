@@ -18,6 +18,7 @@ public class ParticleEffect implements Component {
 	public float gravityComplient;
 	public float lifeLength;
 	public Vector3f position;
+	public float scale;
 
 	// TODO:think of how to get rid of texture object in sake of Server-Client
 	// architecture
@@ -34,13 +35,14 @@ public class ParticleEffect implements Component {
 	 * @param position         - particle generator position
 	 */
 	public ParticleEffect(Texture texture, float pps, float speed, float gravityComplient, float lifeLength,
-			Vector3f position) {
+			Vector3f position, float scale) {
 		this.pps = pps;
 		this.speed = speed;
 		this.gravityComplient = gravityComplient;
 		this.lifeLength = lifeLength;
 		this.texture = texture;
 		this.position = position;
+		this.scale = scale;
 	}
 
 }

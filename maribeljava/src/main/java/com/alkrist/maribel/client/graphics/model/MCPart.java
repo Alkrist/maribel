@@ -12,6 +12,7 @@ public class MCPart {
 
 	private Mesh mesh;
 	private Texture texture;
+	private Texture normalMap;
 	
 	private String name;
 	private String material;
@@ -42,6 +43,30 @@ public class MCPart {
 		this.transparency = transparency;
 		this.shineDamper = shineDamper;
 		this.reflecivity = reflecivity;
+		this.normalMap = null;
+	}
+	
+	/**
+	 * Model Composite Part constructor.
+	 * 
+	 * @param mesh - {@link Mesh} of this part
+	 * @param texture - {@link Texture} of this part
+	 * @param name - name of this part
+	 * @param shineDamper - shine damper value of this part, range from 0 to 1
+	 * @param reflecivity - reflectivity value of this part, range from 0 to 1
+	 * @param material - material value of this part, is a string
+	 * @param transparency - transparency value of this part, true - transparent, false - not.
+	 */
+	public MCPart(Mesh mesh, Texture texture, Texture normalMap, String name, 
+			float shineDamper, float reflecivity, String material, boolean transparency) {
+		this.mesh = mesh;
+		this.texture = texture;
+		this.name = name;
+		this.material = material;
+		this.transparency = transparency;
+		this.shineDamper = shineDamper;
+		this.reflecivity = reflecivity;
+		this.normalMap = normalMap;
 	}
 	
 	public String getMaterial() {
@@ -80,6 +105,10 @@ public class MCPart {
 		return texture;
 	}
 
+	public Texture getNormalMap() {
+		return normalMap;
+	}
+	
 	public String getName() {
 		return name;
 	}

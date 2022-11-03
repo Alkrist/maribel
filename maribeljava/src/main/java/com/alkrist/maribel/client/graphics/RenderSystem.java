@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import com.alkrist.maribel.client.graphics.model.Model;
 import com.alkrist.maribel.client.graphics.model.ModelComposite;
 import com.alkrist.maribel.client.graphics.particles.ParticleRenderer;
+import com.alkrist.maribel.client.graphics.shader.shaders.MMCShader;
 import com.alkrist.maribel.client.graphics.shader.shaders.ModelShader;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -28,6 +29,8 @@ public class RenderSystem extends SystemBase {
 	
 	private ModelCompositeRenderer modelRenderer;
 	private ModelShader modelShader;
+	private MMCRenderer mmcRenderer;
+	private MMCShader mmcShader;
 
 	private ParticleRenderer particleRenderer;
 	
@@ -49,9 +52,12 @@ public class RenderSystem extends SystemBase {
 		backgroundColor = new Vector3f(0.3f,0.3f,0.3f);
 		
 		modelShader = new ModelShader();
+		mmcShader = new MMCShader();
+		
 		Matrix4f projectionMatrix = MatrixMath.createProjectionMatrix(window.getWidth(), window.getHeight());
 
 		modelRenderer = new ModelCompositeRenderer(modelShader, projectionMatrix);
+		mmcRenderer = new MMCRenderer(mmcShader, projectionMatrix);
 		particleRenderer = new ParticleRenderer(loader, projectionMatrix);
 		
 		preparedInstances = new HashMap<ModelComposite, List<Transform>>();
@@ -85,12 +91,19 @@ public class RenderSystem extends SystemBase {
 		for (Entity entity : entities)
 			processEntity(entity);
 
-		modelShader.start();
+		/*modelShader.start();
 		modelShader.loadViewMatrix(MatrixMath.createViewMatrix(mainCamera));
 		modelShader.loadLights(lights);
 		modelRenderer.render(preparedInstances);
-		modelShader.stop();
+		modelShader.stop();*/
 
+		mmcShader.start();
+		Matrix4f viewMatrix = MatrixMath.createViewMatrix(mainCamera);
+		mmcShader.loadLights(lights, viewMatrix);
+		mmcShader.loadViewMatrix(viewMatrix);
+		mmcRenderer.render(preparedInstances);
+		mmcShader.stop();
+		
 		particleRenderer.render(mainCamera);
 		
 		preparedInstances.clear();

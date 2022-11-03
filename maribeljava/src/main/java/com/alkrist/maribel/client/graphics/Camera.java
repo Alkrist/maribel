@@ -43,10 +43,16 @@ public class Camera implements Component{
 			position.x += 0.01f;
 		}
 		if(InputHandler.keyDown(GLFW.GLFW_KEY_Q)) {
-			roll -= 1f;
+			pitch -= 0.1f;
 		}
 		if(InputHandler.keyDown(GLFW.GLFW_KEY_E)) {
-			roll += 1f;
+			pitch += 0.1f;
+		}
+		if(InputHandler.keyDown(GLFW.GLFW_KEY_R)) {
+			yaw -= 0.1f;
+		}
+		if(InputHandler.keyDown(GLFW.GLFW_KEY_T)) {
+			yaw += 0.1f;
 		}
 	}
 	

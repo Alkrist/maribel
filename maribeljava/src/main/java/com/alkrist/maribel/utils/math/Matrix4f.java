@@ -14,20 +14,15 @@ import java.nio.FloatBuffer;
 public class Matrix4f extends Matrix {
 
 	/*
-	 * | m00 m01 m02 m03 | 
-	 * | m10 m11 m12 m13 | 
-	 * | m20 m21 m22 m23 | 
-	 * | m30 m31 m32 m33 |
+	 * | m00 m01 m02 m03 | | m10 m11 m12 m13 | | m20 m21 m22 m23 | | m30 m31 m32 m33
+	 * |
 	 */
 
 	public float m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33;
 
 	/**
-	 * Construct a new matrix, initialized to the identity. 
-	 * | m00 m01 m02 m03 | 
-	 * | m10 m11 m12 m13 | 
-	 * | m20 m21 m22 m23 | 
-	 * | m30 m31 m32 m33 |
+	 * Construct a new matrix, initialized to the identity. | m00 m01 m02 m03 | |
+	 * m10 m11 m12 m13 | | m20 m21 m22 m23 | | m30 m31 m32 m33 |
 	 */
 	public Matrix4f() {
 		super();
@@ -35,11 +30,8 @@ public class Matrix4f extends Matrix {
 	}
 
 	/**
-	 * Constructor. 
-	 * | m00 m01 m02 m03 | 
-	 * | m10 m11 m12 m13 | 
-	 * | m20 m21 m22 m23 | 
-	 * | m30 m31 m32 m33 |
+	 * Constructor. | m00 m01 m02 m03 | | m10 m11 m12 m13 | | m20 m21 m22 m23 | |
+	 * m30 m31 m32 m33 |
 	 * 
 	 * @param src - source matrix
 	 */

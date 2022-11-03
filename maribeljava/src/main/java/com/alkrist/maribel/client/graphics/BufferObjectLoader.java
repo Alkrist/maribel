@@ -32,6 +32,19 @@ public class BufferObjectLoader {
 		return new Mesh(vaoID, indices.length);		
 	}
 	
+	public Mesh loadToVAO(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {		
+		int vaoID = createVAO();
+		
+		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0, 3, vertices);
+		storeDataInAttributeList(1, 2, textureCoords);
+		storeDataInAttributeList(2, 3, normals);
+		storeDataInAttributeList(3, 3, normals);
+		unbindVAO();
+		
+		return new Mesh(vaoID, indices.length);		
+	}
+	
 	public Mesh loadToVAO(float[] positions, int dimensions) {
 		int vaoID = createVAO();
 		this.storeDataInAttributeList(0, dimensions, positions);

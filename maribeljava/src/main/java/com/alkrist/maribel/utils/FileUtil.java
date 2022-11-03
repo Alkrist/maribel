@@ -98,6 +98,13 @@ public class FileUtil {
 		else
 			return getAssetsPath() + "models/";
 	}
+	
+	public static String getSoundsPath() {
+		if (isWindows())
+			return getAssetsPath() + "sounds\\";
+		else
+			return getAssetsPath() + "sounds/";
+	}
 
 	private static String getUserPath() {
 		return System.getProperty("user.home");

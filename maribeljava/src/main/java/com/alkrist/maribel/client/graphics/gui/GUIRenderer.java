@@ -39,14 +39,15 @@ public class GUIRenderer {
 			
 			float pxPositionX = manager.getWidth()/2 + gui.position.x * (manager.getWidth()/2);
 			float pxPositionY = manager.getHeight()/2 + gui.position.y * (manager.getHeight()/2);
-			float cornerRadiusPx = (float)(manager.getWidth() / manager.getHeight()) * 1000 *(gui.scale.x * gui.scale.y) * gui.smoothCornerScale;
-			shader.loadCornerRadius(cornerRadiusPx);
-			shader.loadFramePixelPosition(new Vector2f(pxPositionX, pxPositionY));
+			shader.loadFrameValues(new Vector2f(pxPositionX, pxPositionY), 
+					new Vector2f(gui.scale.x * manager.getWidth(), gui.scale.y * manager.getHeight()));
 			
-			float borderSizePx = (float)(manager.getWidth() / manager.getHeight()) * 200 *(gui.scale.x * gui.scale.y) * gui.borderScale;
+			float cornerRadiusPx = (float)(manager.getWidth() / manager.getHeight()) * 40 * gui.smoothCornerScale;
+			shader.loadCornerRadius(cornerRadiusPx);
+			
+			float borderSizePx = (float)(manager.getWidth() / manager.getHeight()) * 20 * gui.borderScale;
 			shader.loadBorderProperties(borderSizePx, gui.borderColor);
 			
-			shader.loadFramePixelSize(new Vector2f(gui.scale.x * manager.getWidth(), gui.scale.y * manager.getHeight()));
 			shader.loadHasTexture(gui.isTextured());
 			if(gui.isTextured()) {
 				GL13.glActiveTexture(GL13.GL_TEXTURE0);

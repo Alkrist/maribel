@@ -152,19 +152,25 @@ public class ModelComposite {
 			          reflex = jsonObject.getJSONObject(key).getFloat("reflexivity");
 			          shine = jsonObject.getJSONObject(key).getFloat("shineDamper");
 			          
-			          Mesh mesh = OBJLoader.loadObjModel(modelPath, loader);
+			          Mesh mesh = OBJLoader.loadOBJmodel(modelPath, loader);
+			          
 			          if(mesh == null) {
 			        	  Logging.getLogger().log(Level.WARNING, "Failed to load model, mesh null");
 			        	  return null;
 			          }
-			          
+
 			          Texture texture = Texture.loadTexture(texturePath);
 			          if (texture == null) {
 			        	  Logging.getLogger().log(Level.WARNING, "Failed to load model, texture null");
 			        	  return null;
 			          }
 			          
-			          mc.setNode(new MCPart(mesh, texture, key, shine, reflex, material, trans));
+			          Texture normalMap = Texture.loadTexture(texturePath+"_n");
+			          if(normalMap == null) {
+			        	  mc.setNode(new MCPart(mesh, texture, key, shine, reflex, material, trans));
+			          }else {
+			        	  mc.setNode(new MCPart(mesh, texture, normalMap, key, shine, reflex, material, trans));
+			          }
 			    }
 				
 			}
@@ -381,7 +387,7 @@ public class ModelComposite {
 				normalsArray, 
 				indicesArray, 
 				nodeName, 
-				textureName, 
+				textureName,
 				shineDamper, 
 				reflexivity, 
 				isTransparent, 
@@ -402,9 +408,23 @@ public class ModelComposite {
 			String texName, float shineDamper, float reflexivity, boolean transparency, String material, BufferObjectLoader loader) {
 		Mesh mesh = loader.loadToVAO(vertices, textureCoords, normals, indices);
 		Texture texture = Texture.loadTexture(texName);
+		Texture normalMap = Texture.loadTexture(texName+"_n");
+		
+		if(texture == null) {
+			Logging.getLogger().log(Level.WARNING, "Failed to load model, texture null");
+      	  	return null;
+		}
 		
 		if(mesh!=null) {
-			return new MCPart(mesh, texture, name, shineDamper, reflexivity, material, transparency);
-		}else throw new IllegalArgumentException("mesh load failure");
+			if(normalMap != null) {
+				return new MCPart(mesh, texture, normalMap, name, shineDamper, reflexivity, material, transparency);
+			}else {
+				return new MCPart(mesh, texture, name, shineDamper, reflexivity, material, transparency);
+			}
+			
+		}else {
+			Logging.getLogger().log(Level.WARNING, "Failed to load model, mesh null");
+      	  	return null;
+		}
 	}
 }

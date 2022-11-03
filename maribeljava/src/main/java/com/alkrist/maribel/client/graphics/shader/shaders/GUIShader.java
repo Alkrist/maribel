@@ -49,11 +49,8 @@ public class GUIShader extends ShaderBase{
 		super.loadMatrix4f(loc_transform, transform);
 	}
 	
-	public void loadFramePixelPosition(Vector2f position) {
+	public void loadFrameValues(Vector2f position, Vector2f size) {
 		super.loadVector2f(loc_framePixelPosition, position);
-	}
-	
-	public void loadFramePixelSize(Vector2f size) {
 		super.loadVector2f(loc_framePixelSize, size);
 	}
 	

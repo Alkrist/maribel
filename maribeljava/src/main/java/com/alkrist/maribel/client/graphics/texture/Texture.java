@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
@@ -13,6 +14,7 @@ import org.lwjgl.system.MemoryStack;
 
 import com.alkrist.maribel.client.Settings;
 import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.Logging;
 
 /**
  * This class holds information about a texture and
@@ -178,8 +180,8 @@ public class Texture {
 	            //STBImage.stbi_set_flip_vertically_on_load(true);
 	            image = STBImage.stbi_load(FileUtil.getTexturesPath()+path+".png", w, h, comp, 4);
 	            if (image == null) {
-	                throw new RuntimeException("Failed to load a texture file!"
-	                                           + System.lineSeparator() + STBImage.stbi_failure_reason());
+	            	Logging.getLogger().log(Level.WARNING, "Failed to load texture file");
+	          	  	return null;
 	            }
 	
 	            /* Get width and height of image */

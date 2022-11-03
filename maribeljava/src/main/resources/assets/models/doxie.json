@@ -3,7 +3,7 @@
     "fern":{
 		"material": "SKIN",
 		"transparency": false,
-		"reflexivity": 0.1,
+		"reflexivity": 0,
 		"shineDamper": 1,
         "mesh": "doxie",
         "texture": "dog"

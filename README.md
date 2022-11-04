@@ -71,7 +71,6 @@ a) GUI system with constraints, with + without textures
 c) shadows
 e) post porcessing effects
 f) fonts
-g) optional normal maps (checked on texture load)
 h) graphics improvement (mipmaps, antialiasing etc.)
 i) transparency
 j) fog effect

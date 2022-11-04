@@ -53,16 +53,17 @@ public class TestGraphics {
 		//ModelComposite tent = ModelComposite.loadFromMMC("tent", loader);
 		ModelComposite dog = ModelComposite.loadFromJson("doxie", loader);
 		ModelComposite boulder = ModelComposite.loadFromJson("boulder", loader);
-		//ModelComposite fern1 = ModelComposite.loadFromJson("fern", loader);
-		//fern1.getNode("fern").getTexture().setNumberOfRows(2);
-		//fern1.getNode("fern").setTextureOffsetIndex(1);
-		//ModelComposite fern2 = ModelComposite.loadFromJson("fern", loader);
-		//fern2.getNode("fern").setTextureOffsetIndex(0);
+		ModelComposite fern1 = ModelComposite.loadFromJson("fern", loader);
+		fern1.getNode("fern").getTexture().setNumberOfRows(2);
+		fern1.getNode("fern").setTextureOffsetIndex(1);
+		ModelComposite fern2 = ModelComposite.loadFromJson("fern", loader);
+		fern2.getNode("fern").setTextureOffsetIndex(0);
 		Transform transform = new Transform(new Vector3f(0,-10,-20), new Vector3f(0,0,0), 1);
 		Transform transform2 = new Transform(new Vector3f(20,-10,-20), new Vector3f(0,90,0), 1);
+		Transform transform3 = new Transform(new Vector3f(30,-10,-20), new Vector3f(0,90,0), 1);
 		e1.addComponent(new Model(dog));
 		e1.addComponent(transform);
-		//e2.addComponent(new Model(fern1));
+		e2.addComponent(new Model(fern1));
 		e2.addComponent(transform2);
 		
 		//******* PARTICLE TEST *******//
@@ -81,17 +82,19 @@ public class TestGraphics {
 		Entity e5 = engine.createEntity();
 		Entity e6 = engine.createEntity();
 		e3.addComponent(light1);
+		e3.addComponent(new Model(fern2));
+		e3.addComponent(transform3);
 		e4.addComponent(light2);
 		e5.addComponent(light3);
 		e6.addComponent(light4);
 		
 		engine.addEntity(e1);
-		//engine.addEntity(e2);
+		engine.addEntity(e2);
 		engine.addEntity(e3);
 		//engine.addEntity(e4);
 		//engine.addEntity(e5);
 		//engine.addEntity(e6);
-		engine.addEntity(e7);
+		//engine.addEntity(e7);
 		
 		
 		// ***** GUI render alpha test ***** //
@@ -102,7 +105,7 @@ public class TestGraphics {
 		
 		while(!manager.isCloseRequested()) {
 			
-			//transform.rotation.y +=0.02f;
+			transform.rotation.y +=0.02f;
 			Camera.MAIN_CAMERA.move();
 			engine.update(manager.deltaTime());
 			guiRenderer.render(frameList);

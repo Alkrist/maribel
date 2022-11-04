@@ -58,17 +58,26 @@ public class MMCRenderer {
 
 		Texture texture = node.getTexture();
 		Texture normalMap = node.getNormalMap();
-		
+			
 		shader.loadSpecularProperties(node.getShineDamper(), node.getReflecivity());
 		shader.loadNumberOfRows(texture.getNumberOfRows());
 		shader.loadTextureOffset(node.getTextureXOffset(), node.getTextureYOffset());
 		if (node.isTransparent()) {
 			RenderSystem.disableCulling();
 		}
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalMap.getTextureId());
+		if (normalMap != null) {
+			shader.loadHasNormalMap(true);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalMap.getTextureId());
+		}
+			
+		else {
+			shader.loadHasNormalMap(false);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
+		}
 	}
 	
 	private void unbindModel() {

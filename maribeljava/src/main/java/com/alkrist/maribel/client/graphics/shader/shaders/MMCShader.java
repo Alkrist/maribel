@@ -25,6 +25,7 @@ private static final int MAX_LIGHTS = 4;
 	private int loc_textureOffset;
 	private int loc_modelTexture;
 	private int loc_normalMap;
+	private int loc_hasNormalMap;
 	
 	public MMCShader() {
 		super("mmc_normal_vertex", "mmc_normal_fragment");
@@ -51,6 +52,7 @@ private static final int MAX_LIGHTS = 4;
 		loc_textureOffset = super.getUniformLocation("textureOffset");
 		loc_modelTexture = super.getUniformLocation("modelTexture");
 		loc_normalMap = super.getUniformLocation("normalMap");
+		loc_hasNormalMap = super.getUniformLocation("hasNormalMap");
 	}
 
 	@Override
@@ -64,6 +66,10 @@ private static final int MAX_LIGHTS = 4;
 	public void connectTextureUnits() {
 		super.loadInt(loc_modelTexture, 0);
 		super.loadInt(loc_normalMap, 1);
+	}
+	
+	public void loadHasNormalMap(boolean hasNormalMap) {
+		super.loadBoolean(loc_hasNormalMap, hasNormalMap);
 	}
 	
 	public void loadSpecularProperties(float shine, float reflect) {

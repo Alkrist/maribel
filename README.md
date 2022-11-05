@@ -73,7 +73,6 @@ e) post porcessing effects
 f) fonts
 h) graphics improvement (mipmaps, antialiasing etc.)
 i) transparency
-j) fog effect
 
 7. Add Models.
 a) add animations

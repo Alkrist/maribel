@@ -1,25 +1,33 @@
 #version 400 core
 
+//model
 in vec3 position;
 in vec2 textureCoords;
 in vec3 normal;
 in vec3 tangent;
 
+//model
 out vec2 pass_textureCoords;
 out vec3 toLightVector[4];
 out vec3 toCameraVector;
 out vec3 surfaceNormal; //in case normal map isn't used
 out float pass_hasNormalMap;
 
+//fog
+out float visibility;
+
+//model
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[4];
-
-uniform float numberOfRows;
 uniform vec2 textureOffset;
-
+uniform float numberOfRows;
 uniform float hasNormalMap;
+
+//fog
+uniform float density;
+uniform float gradient;
 
 void main(void){
 
@@ -66,4 +74,10 @@ void main(void){
 
 		toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 	}
+
+
+	//FOG
+	float distance = length(positionRelativeToCamera.xyz);
+	visibility = exp(-pow((distance * density), gradient));
+	visibility = clamp(visibility, 0.0, 1.0);
 }

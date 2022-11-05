@@ -45,6 +45,7 @@ public class RenderSystem extends SystemBase {
 
 	private List<Light> lights;
 	private ComponentMapper<Light> lightMapper;
+	
 
 	public RenderSystem(DisplayManager manager, BufferObjectLoader loader) {
 		super();
@@ -101,6 +102,10 @@ public class RenderSystem extends SystemBase {
 		Matrix4f viewMatrix = MatrixMath.createViewMatrix(mainCamera);
 		mmcShader.loadLights(lights, viewMatrix);
 		mmcShader.loadViewMatrix(viewMatrix);
+		//TODO: remove later
+		mmcShader.loadBackgroundColor(backgroundColor.x, backgroundColor.y, backgroundColor.z);
+		//TODO: remove later
+		mmcShader.loadFogEffect(0.007f, 1.5f);
 		mmcRenderer.render(preparedInstances);
 		mmcShader.stop();
 		

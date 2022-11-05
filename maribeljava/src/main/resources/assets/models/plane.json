@@ -1,0 +1,11 @@
+{
+	"name": "plane",
+    "body":{
+		"material": "METAL",
+		"transparency": false,
+		"reflexivity": 0.8,
+		"shineDamper": 0.5,
+        "mesh": "a6m",
+        "texture": "a6m2"
+    }
+}

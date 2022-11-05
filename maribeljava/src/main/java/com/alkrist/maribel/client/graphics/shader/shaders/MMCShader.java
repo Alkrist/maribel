@@ -26,6 +26,9 @@ private static final int MAX_LIGHTS = 4;
 	private int loc_modelTexture;
 	private int loc_normalMap;
 	private int loc_hasNormalMap;
+	private int loc_density;
+	private int loc_gradient;
+	private int loc_skyColor;
 	
 	public MMCShader() {
 		super("mmc_normal_vertex", "mmc_normal_fragment");
@@ -53,6 +56,10 @@ private static final int MAX_LIGHTS = 4;
 		loc_modelTexture = super.getUniformLocation("modelTexture");
 		loc_normalMap = super.getUniformLocation("normalMap");
 		loc_hasNormalMap = super.getUniformLocation("hasNormalMap");
+		
+		loc_density = super.getUniformLocation("density");
+		loc_gradient = super.getUniformLocation("gradient");
+		loc_skyColor = super.getUniformLocation("skyColor");
 	}
 
 	@Override
@@ -63,6 +70,15 @@ private static final int MAX_LIGHTS = 4;
 		super.bindAttribute(3, "tangent");
 	}
 
+	public void loadBackgroundColor(float r, float g, float b) {
+		super.loadVector3f(loc_skyColor, new Vector3f(r, g, b));
+	}
+	
+	public void loadFogEffect(float density, float gradient) {
+		super.loadFloat(loc_gradient, gradient);
+		super.loadFloat(loc_density, density);
+	}
+	
 	public void connectTextureUnits() {
 		super.loadInt(loc_modelTexture, 0);
 		super.loadInt(loc_normalMap, 1);

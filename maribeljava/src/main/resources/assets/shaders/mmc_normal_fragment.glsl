@@ -1,20 +1,27 @@
 #version 400 core
 
+//model
 in vec2 pass_textureCoords;
 in vec3 toLightVector[4];
 in vec3 toCameraVector;
 in vec3 surfaceNormal; //in case normal map isn't used
 in float pass_hasNormalMap;
 
+//fog
+in float visibility;
+
 out vec4 out_Color;
 
+//model
 uniform sampler2D modelTexture;
 uniform sampler2D normalMap;
-
 uniform vec3 lightColor[4];
 uniform vec3 attenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
+
+//fog
+uniform vec3 skyColor;
 
 void main(void){
 
@@ -60,10 +67,15 @@ void main(void){
 
 	totalDiffuse = max(totalDiffuse, 0.2);
 
+
+	//TEXTURE AND TRANSPARENCY
 	vec4 textureColor = texture(modelTexture, pass_textureCoords);
 	if(textureColor.a < 0.3){
 		discard;
 	}
 
 	out_Color = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0);
+
+	//FOG
+	out_Color = mix(vec4(skyColor, 1.0), out_Color, visibility);
 }

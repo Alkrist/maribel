@@ -53,6 +53,7 @@ public class TestGraphics {
 		//ModelComposite tent = ModelComposite.loadFromMMC("tent", loader);
 		ModelComposite dog = ModelComposite.loadFromJson("doxie", loader);
 		ModelComposite boulder = ModelComposite.loadFromJson("boulder", loader);
+		ModelComposite plane = ModelComposite.loadFromJson("plane", loader);
 		ModelComposite fern1 = ModelComposite.loadFromJson("fern", loader);
 		fern1.getNode("fern").getTexture().setNumberOfRows(2);
 		fern1.getNode("fern").setTextureOffsetIndex(1);
@@ -61,7 +62,7 @@ public class TestGraphics {
 		Transform transform = new Transform(new Vector3f(0,-10,-20), new Vector3f(0,0,0), 1);
 		Transform transform2 = new Transform(new Vector3f(20,-10,-20), new Vector3f(0,90,0), 1);
 		Transform transform3 = new Transform(new Vector3f(30,-10,-20), new Vector3f(0,90,0), 1);
-		e1.addComponent(new Model(dog));
+		e1.addComponent(new Model(plane));
 		e1.addComponent(transform);
 		e2.addComponent(new Model(fern1));
 		e2.addComponent(transform2);

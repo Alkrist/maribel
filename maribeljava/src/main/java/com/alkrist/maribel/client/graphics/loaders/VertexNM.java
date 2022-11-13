@@ -1,4 +1,4 @@
-package com.alkrist.maribel.client.graphics.model;
+package com.alkrist.maribel.client.graphics.loaders;
 
 import java.util.ArrayList;
 import java.util.List;

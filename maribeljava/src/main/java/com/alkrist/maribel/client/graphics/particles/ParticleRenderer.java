@@ -11,8 +11,8 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
 
-import com.alkrist.maribel.client.graphics.BufferObjectLoader;
 import com.alkrist.maribel.client.graphics.Camera;
+import com.alkrist.maribel.client.graphics.loaders.ResourceLoader;
 import com.alkrist.maribel.client.graphics.model.Mesh;
 import com.alkrist.maribel.client.graphics.shader.shaders.ParticleShader;
 import com.alkrist.maribel.client.graphics.texture.Texture;
@@ -40,15 +40,15 @@ public class ParticleRenderer {
 	private int pointer = 0;
 
 	private ParticleShader shader;
-	private BufferObjectLoader loader;
+	private ResourceLoader loader;
 
 	/**
 	 * Particle Renderer constructor.
 	 * 
-	 * @param loader           - {@link BufferObjectLoader}
+	 * @param loader           - {@link ResourceLoader}
 	 * @param projectionMatrix
 	 */
-	public ParticleRenderer(BufferObjectLoader loader, Matrix4f projectionMatrix) {
+	public ParticleRenderer(ResourceLoader loader, Matrix4f projectionMatrix) {
 		this.loader = loader;
 		this.vbo = loader.createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
 		quad = loader.loadToVAO(VERTICES, 2);
@@ -200,5 +200,15 @@ public class ParticleRenderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
+	}
+	
+	public void updateProjectionMatrix(Matrix4f projectionMatrix) {
+		if(shader.isStarted())
+			shader.loadProjectionMatrix(projectionMatrix);
+		else {
+			shader.start();
+			shader.loadProjectionMatrix(projectionMatrix);
+			shader.stop();
+		}
 	}
 }

@@ -1,7 +1,7 @@
 package com.alkrist.maribel.utils.math;
 
-import com.alkrist.maribel.client.Settings;
 import com.alkrist.maribel.client.graphics.Camera;
+import com.alkrist.maribel.client.settings.Settings;
 
 /**
  * This class contains static methods with matrices and vectors that are used

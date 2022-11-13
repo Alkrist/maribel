@@ -6,13 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import com.alkrist.maribel.client.Settings;
 import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.Logging;
 
@@ -31,7 +34,6 @@ public class Texture {
 	private int width;
 	private int height;
 	
-	//TODO: new stuff
 	private int numberOfRows = 1;
 	
 	private Texture() {
@@ -80,6 +82,10 @@ public class Texture {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
 	}
     
+    public void unbind() {
+    	GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+    }
+    
     /**
      * Delete the texture.
      */
@@ -99,23 +105,21 @@ public class Texture {
 		return id;
 	}
 	
-	//TODO: new stuff
 	public int getNumberOfRows() {
 		return numberOfRows;
 	}
 	
-	//TODO: new stuff
 	public void setNumberOfRows(int numberOfRows) {
 		this.numberOfRows = numberOfRows;
 	}
 	
-    public void setHeight(int height) {
+    private void setHeight(int height) {
         if (height > 0) {
             this.height = height;
         }
     }
     
-    public void setWidth(int width) {
+    private void setWidth(int width) {
         if (width > 0) {
             this.width = width;
         }
@@ -139,20 +143,12 @@ public class Texture {
 
         texture.bind();
 
-        /*if(Settings.CURRENT.mipmapEnabled) {
-    		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-    		texture.setParameter(GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
-    		texture.setParameter(GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
-    		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -1);
-    	}*/
+        //texture.uploadData(GL11.GL_RGBA8, width, height, GL11.GL_RGBA, data);
+        allocateTexture2D(GL30.GL_RGBA8, width, height, GL11.GL_RGBA, data);
+        repeat();
+        trilinearFilter();
         
-        texture.setParameter(GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-        texture.setParameter(GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-        texture.setParameter(GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-        texture.setParameter(GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-        
-        texture.uploadData(GL11.GL_RGBA8, width, height, GL11.GL_RGBA, data);
-
+        texture.unbind();
         return texture;
     }
     
@@ -169,14 +165,11 @@ public class Texture {
     	}else {
     		ByteBuffer image;
 	        int width, height;
-	        
 	        try (MemoryStack stack = MemoryStack.stackPush()) {
-	            /* Prepare image buffers */
 	            IntBuffer w = stack.mallocInt(1);
 	            IntBuffer h = stack.mallocInt(1);
 	            IntBuffer comp = stack.mallocInt(1);
 	
-	            /* Load image */
 	            //STBImage.stbi_set_flip_vertically_on_load(true);
 	            image = STBImage.stbi_load(FileUtil.getTexturesPath()+path+".png", w, h, comp, 4);
 	            if (image == null) {
@@ -184,7 +177,6 @@ public class Texture {
 	          	  	return null;
 	            }
 	
-	            /* Get width and height of image */
 	            width = w.get();
 	            height = h.get();
 	        }
@@ -196,7 +188,6 @@ public class Texture {
     }
     
     /**
-     * TODO: new stuff.
      * Load texture atlas from file.
      * 
      * @param path - File path of the texture
@@ -210,4 +201,52 @@ public class Texture {
     	return texture;
     }
     
+    public static void nearestFilter() {
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+    }
+    
+    public static void bilinearFilter() {
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+    }
+    
+    public static void trilinearFilter() {
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+    	GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+    }
+    
+    public static void anisotropicFilter(int id) {
+    	if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
+    		float maxfilterLevel = GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+    		GL11.glTexParameterf(id, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, maxfilterLevel);
+    	}else {
+    		//TODO: log anisotropic unsupported error
+    	}
+    }
+    
+    public static void clampToEdge() {
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+    }
+    
+    public void clampToBorder() {
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
+    }
+    
+    public static void repeat() {
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+    }
+    
+    public static void mirroredRepeat() {
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL14.GL_MIRRORED_REPEAT);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL14.GL_MIRRORED_REPEAT);
+    }
+    
+    public static void allocateTexture2D(int internalFormat, int width, int height, int format, ByteBuffer data) {
+    	GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL11.GL_UNSIGNED_BYTE, data);
+    }
 }

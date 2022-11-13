@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import com.alkrist.maribel.client.graphics.BufferObjectLoader;
 import com.alkrist.maribel.client.graphics.DisplayManager;
+import com.alkrist.maribel.client.graphics.loaders.ResourceLoader;
 import com.alkrist.maribel.client.graphics.model.Mesh;
 import com.alkrist.maribel.client.graphics.shader.shaders.GUIShader;
 import com.alkrist.maribel.utils.math.MatrixMath;
@@ -20,7 +20,7 @@ public class GUIRenderer {
 	private GUIShader shader;
 	private DisplayManager manager;
 	
-	public GUIRenderer(BufferObjectLoader loader, DisplayManager manager) {
+	public GUIRenderer(ResourceLoader loader, DisplayManager manager) {
 		float[] positions = {-1, 1, -1, -1, 1, 1, 1, -1};
 		this.quad = loader.loadToVAO(positions, 2);
 		this.shader = new GUIShader();

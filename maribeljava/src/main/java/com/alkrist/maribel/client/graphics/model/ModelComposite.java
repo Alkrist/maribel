@@ -16,7 +16,8 @@ import java.util.logging.Level;
 
 import org.json.JSONObject;
 
-import com.alkrist.maribel.client.graphics.BufferObjectLoader;
+import com.alkrist.maribel.client.graphics.loaders.OBJLoader;
+import com.alkrist.maribel.client.graphics.loaders.ResourceLoader;
 import com.alkrist.maribel.client.graphics.texture.Texture;
 import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.Logging;
@@ -119,7 +120,7 @@ public class ModelComposite {
 	 * @param loader - loader to read JSON
 	 * @return new Model Composite
 	 */
-	public static ModelComposite loadFromJson(String filename, BufferObjectLoader loader) {
+	public static ModelComposite loadFromJson(String filename) {
 		
 		try {
 			
@@ -152,7 +153,7 @@ public class ModelComposite {
 			          reflex = jsonObject.getJSONObject(key).getFloat("reflexivity");
 			          shine = jsonObject.getJSONObject(key).getFloat("shineDamper");
 			          
-			          Mesh mesh = OBJLoader.loadOBJmodel(modelPath, loader);
+			          Mesh mesh = OBJLoader.loadOBJmodel(modelPath);
 			          
 			          if(mesh == null) {
 			        	  Logging.getLogger().log(Level.WARNING, "Failed to load model, mesh null");
@@ -192,7 +193,7 @@ public class ModelComposite {
 	 * @param loader - loader to read MMC file
 	 * @return new Model Composite
 	 */
-	public static ModelComposite loadFromMMC(String filename, BufferObjectLoader loader) {
+	public static ModelComposite loadFromMMC(String filename) {
 		FileReader fr = null;
 		
 		try {
@@ -284,8 +285,7 @@ public class ModelComposite {
 								shineDamper, 
 								reflexivity, 
 								isTransparent, 
-								material, 
-								loader);
+								material);
 						
 						//Set node in current model
 						model.setNode(node);
@@ -391,8 +391,7 @@ public class ModelComposite {
 				shineDamper, 
 				reflexivity, 
 				isTransparent, 
-				material, 
-				loader);
+				material);
 		
 		//Set node in current model
 		model.setNode(node);
@@ -405,8 +404,8 @@ public class ModelComposite {
     }
 	
 	private static MCPart makeNode(float[] vertices, float[] textureCoords, float[] normals, int[] indices, String name,
-			String texName, float shineDamper, float reflexivity, boolean transparency, String material, BufferObjectLoader loader) {
-		Mesh mesh = loader.loadToVAO(vertices, textureCoords, normals, indices);
+			String texName, float shineDamper, float reflexivity, boolean transparency, String material) {
+		Mesh mesh = ResourceLoader.loadToVAO(vertices, textureCoords, normals, indices);
 		Texture texture = Texture.loadTexture(texName);
 		Texture normalMap = Texture.loadTexture(texName+"_n");
 		

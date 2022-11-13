@@ -23,6 +23,8 @@ public abstract class ShaderBase {
 	private int vertexShaderID; // ID of the vertex shader compiled code
 	private int fragmentShaderID; // ID for the fragment shader compiled code
 
+	private boolean started = false;
+	
 	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
 	/**
@@ -116,13 +118,19 @@ public abstract class ShaderBase {
 	// start the shader usage
 	public void start() {
 		GL20.glUseProgram(programID);
+		started = true;
 	}
 
 	// stop it
 	public void stop() {
 		GL20.glUseProgram(0);
+		started = false;
 	}
 
+	public boolean isStarted() {
+		return started;
+	}
+	
 	// remove the shaders created and the program created -- used in the end to
 	// release memory
 	public void cleanUp() {

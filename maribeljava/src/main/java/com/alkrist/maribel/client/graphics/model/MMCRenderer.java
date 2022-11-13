@@ -1,4 +1,4 @@
-package com.alkrist.maribel.client.graphics;
+package com.alkrist.maribel.client.graphics.model;
 
 import java.util.List;
 import java.util.Map;
@@ -8,36 +8,27 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import com.alkrist.maribel.client.graphics.model.MCPart;
-import com.alkrist.maribel.client.graphics.model.Mesh;
-import com.alkrist.maribel.client.graphics.model.ModelComposite;
-import com.alkrist.maribel.client.graphics.shader.shaders.ModelShader;
+import com.alkrist.maribel.client.graphics.RenderSystem;
+import com.alkrist.maribel.client.graphics.Transform;
+import com.alkrist.maribel.client.graphics.shader.shaders.MMCShader;
 import com.alkrist.maribel.client.graphics.texture.Texture;
 import com.alkrist.maribel.utils.math.Matrix4f;
 import com.alkrist.maribel.utils.math.MatrixMath;
 
-/**
- * Represents an instance of Maribel Model Composite format.
- * 
- * This format is a graph of Root, which has a collection of Nodes. Each Node
- * represents a single textured mesh with name and a set of properties.
- * 
- * @author Mikhail
- *
- */
-public class ModelCompositeRenderer {
+public class MMCRenderer {
 
-	private ModelShader shader;
-
-	public ModelCompositeRenderer(ModelShader shader, Matrix4f projectionMatrix) {
+	private MMCShader shader;
+	
+	public MMCRenderer(MMCShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
-
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.connectTextureUnits();
 		shader.stop();
 	}
-
-	public void render(Map<ModelComposite, List<Transform>> instances) {
+	
+	public void render(Map<ModelComposite, List<Transform>> instances, Matrix4f shadowMatrix) {
+		
 		for (ModelComposite model : instances.keySet()) {
 			for (String nodeName : model.getNodeNames()) {
 				MCPart node = model.getNode(nodeName);
@@ -56,37 +47,61 @@ public class ModelCompositeRenderer {
 			}
 		}
 	}
-
+	
 	private void bindModel(MCPart node) {
 		Mesh mesh = node.getMesh();
 		GL30.glBindVertexArray(mesh.getVaoID());
 		GL20.glEnableVertexAttribArray(0); // vertices
 		GL20.glEnableVertexAttribArray(1); // texture coords
 		GL20.glEnableVertexAttribArray(2); // normals
+		GL20.glEnableVertexAttribArray(3); // tangents
 
 		Texture texture = node.getTexture();
+		Texture normalMap = node.getNormalMap();
+			
 		shader.loadSpecularProperties(node.getShineDamper(), node.getReflecivity());
 		shader.loadNumberOfRows(texture.getNumberOfRows());
 		shader.loadTextureOffset(node.getTextureXOffset(), node.getTextureYOffset());
 		if (node.isTransparent()) {
 			RenderSystem.disableCulling();
 		}
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
+		if (normalMap != null) {
+			shader.loadHasNormalMap(true);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalMap.getTextureId());
+		}
+			
+		else {
+			shader.loadHasNormalMap(false);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
+		}
 	}
-
+	
 	private void unbindModel() {
 		RenderSystem.enableCulling();
 		GL20.glDisableVertexAttribArray(0); // vertices
 		GL20.glDisableVertexAttribArray(1); // texture coords
 		GL20.glDisableVertexAttribArray(2); // normals
+		GL20.glDisableVertexAttribArray(3); // tangents
 		GL30.glBindVertexArray(0);
 	}
-
+	
 	private void prepareInstance(Transform instance) {
 		Matrix4f transformationMatrix = MatrixMath.createTransformationMatrix(instance.position, instance.rotation,
 				instance.scale);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 	
+	public void updateProjectionMatrix(Matrix4f projectionMatrix) {
+		if(shader.isStarted())
+			shader.loadProjectionMatrix(projectionMatrix);
+		else {
+			shader.start();
+			shader.loadProjectionMatrix(projectionMatrix);
+			shader.stop();
+		}
+	}
 }

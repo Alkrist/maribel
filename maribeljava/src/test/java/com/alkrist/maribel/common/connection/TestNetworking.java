@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.alkrist.maribel.api.MaribelRegistry;
 import com.alkrist.maribel.client.Client;
-import com.alkrist.maribel.client.Settings;
+import com.alkrist.maribel.client.settings.Settings;
 import com.alkrist.maribel.common.connection.bridge.LocalBridge;
 import com.alkrist.maribel.common.connection.bridge.RemoteBridge;
 import com.alkrist.maribel.common.connection.packet.Packet;

@@ -1,5 +1,6 @@
 package com.alkrist.maribel.api;
 
+import com.alkrist.maribel.client.graphics.RenderSystem;
 import com.alkrist.maribel.common.connection.packet.PacketRegistry;
 import com.alkrist.maribel.common.connection.packet.packets.PacketClientTick;
 import com.alkrist.maribel.common.connection.packet.packets.PacketEntity;
@@ -7,6 +8,7 @@ import com.alkrist.maribel.common.connection.packet.packets.PacketLoginReply;
 import com.alkrist.maribel.common.connection.packet.packets.PacketLoginRequest;
 import com.alkrist.maribel.common.connection.packet.packets.PacketLogout;
 import com.alkrist.maribel.common.connection.packet.packets.PacketTick;
+import com.alkrist.maribel.common.event.EventManager;
 
 /**
  * A class to register packets and listeners on PreInit stage.
@@ -42,7 +44,5 @@ public class MaribelRegistry {
 	 * 
 	 * Right syntax is EventManager.registerEvents(new EventSubclass(), Owner.class);
 	 */
-	public static void registerListeners() {
-		//TODO: add listeners
-	}
+	public static void registerListeners() {}
 }

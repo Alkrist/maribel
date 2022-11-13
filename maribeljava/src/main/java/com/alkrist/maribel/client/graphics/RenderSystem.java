@@ -7,28 +7,33 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
+import com.alkrist.maribel.client.graphics.loaders.ResourceLoader;
+import com.alkrist.maribel.client.graphics.model.MMCRenderer;
 import com.alkrist.maribel.client.graphics.model.Model;
 import com.alkrist.maribel.client.graphics.model.ModelComposite;
 import com.alkrist.maribel.client.graphics.particles.ParticleRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.MMCShader;
-import com.alkrist.maribel.client.graphics.shader.shaders.ModelShader;
+import com.alkrist.maribel.client.graphics.shadows.ShadowMapMaster;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.common.ecs.Family;
 import com.alkrist.maribel.common.ecs.SystemBase;
+import com.alkrist.maribel.common.event.EventHandler;
+import com.alkrist.maribel.common.event.Listener;
 import com.alkrist.maribel.utils.ImmutableArrayList;
 import com.alkrist.maribel.utils.math.Matrix4f;
 import com.alkrist.maribel.utils.math.MatrixMath;
 import com.alkrist.maribel.utils.math.Vector3f;
 
 //TODO: add GUI support, improve GUI system itself.
-public class RenderSystem extends SystemBase {
+//TODO: update projectionMatrix when resized
+public class RenderSystem extends SystemBase implements Listener{
 
 	private DisplayManager window;
 	private Vector3f backgroundColor;
 	
-	private ModelCompositeRenderer modelRenderer;
-	private ModelShader modelShader;
+	private ShadowMapMaster shadowMapMaster;
+	
 	private MMCRenderer mmcRenderer;
 	private MMCShader mmcShader;
 
@@ -47,17 +52,15 @@ public class RenderSystem extends SystemBase {
 	private ComponentMapper<Light> lightMapper;
 	
 
-	public RenderSystem(DisplayManager manager, BufferObjectLoader loader) {
+	public RenderSystem(DisplayManager manager, ResourceLoader loader) {
 		super();
 		window = manager;
-		backgroundColor = new Vector3f(0.3f,0.3f,0.3f);
+		backgroundColor = new Vector3f(0.529f,0.843f,1f);
 		
-		modelShader = new ModelShader();
 		mmcShader = new MMCShader();
 		
-		Matrix4f projectionMatrix = MatrixMath.createProjectionMatrix(window.getWidth(), window.getHeight());
+		Matrix4f projectionMatrix = manager.getProjectionMatrix();
 
-		modelRenderer = new ModelCompositeRenderer(modelShader, projectionMatrix);
 		mmcRenderer = new MMCRenderer(mmcShader, projectionMatrix);
 		particleRenderer = new ParticleRenderer(loader, projectionMatrix);
 		
@@ -68,6 +71,8 @@ public class RenderSystem extends SystemBase {
 		mainCamera = Camera.MAIN_CAMERA;
 		lightMapper = ComponentMapper.getFor(Light.class);
 		lights = new ArrayList<Light>();
+		
+		shadowMapMaster = new ShadowMapMaster(mainCamera, window);
 	}
 
 	@Override
@@ -83,21 +88,23 @@ public class RenderSystem extends SystemBase {
 		 * 2) render all to sub cameras (FBOs)
 		 * 3) render all to the main FBO, relative to MAIN_CAMERA
 		 * 4) render main FBO to the screen
+		 * 5) clean up
 		 */
 		prepare();
+		prepareEntities();
 		renderModels();
+		particleRenderer.render(mainCamera);
+		
+		clearance();
 	}
-
+	
+	@EventHandler
+	public void onWindowResizeEvent(WindowResizeEvent event) {
+		this.projectionMatrix = event.getProjectionMatrix();
+		mmcRenderer.updateProjectionMatrix(projectionMatrix);
+	}
+	
 	private void renderModels() {
-		for (Entity entity : entities)
-			processEntity(entity);
-
-		/*modelShader.start();
-		modelShader.loadViewMatrix(MatrixMath.createViewMatrix(mainCamera));
-		modelShader.loadLights(lights);
-		modelRenderer.render(preparedInstances);
-		modelShader.stop();*/
-
 		mmcShader.start();
 		Matrix4f viewMatrix = MatrixMath.createViewMatrix(mainCamera);
 		mmcShader.loadLights(lights, viewMatrix);
@@ -106,15 +113,20 @@ public class RenderSystem extends SystemBase {
 		mmcShader.loadBackgroundColor(backgroundColor.x, backgroundColor.y, backgroundColor.z);
 		//TODO: remove later
 		mmcShader.loadFogEffect(0.007f, 1.5f);
-		mmcRenderer.render(preparedInstances);
+		mmcRenderer.render(preparedInstances, shadowMapMaster.getToShadowMapSpaceMatrix());
 		mmcShader.stop();
-		
-		particleRenderer.render(mainCamera);
-		
+	}
+
+	private void prepareEntities() {
+		for (Entity entity : entities)
+			processEntity(entity);
+	}
+	
+	private void clearance() {
 		preparedInstances.clear();
 		lights.clear();
 	}
-
+	
 	private void processEntity(Entity entity) {
 		if (modelMapper.hasComponent(entity) && transformMapper.hasComponent(entity)) {
 			Model model = modelMapper.getComponent(entity);

@@ -2,6 +2,7 @@ package com.alkrist.maribel.client;
 
 import java.util.logging.Level;
 
+import com.alkrist.maribel.client.settings.Settings;
 import com.alkrist.maribel.common.event.EventManager;
 import com.alkrist.maribel.common.event.events.CleanupEvent;
 import com.alkrist.maribel.common.loader.MasterLoader;

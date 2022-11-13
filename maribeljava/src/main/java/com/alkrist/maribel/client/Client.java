@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 
+import com.alkrist.maribel.client.settings.Settings;
 import com.alkrist.maribel.client.updatable.scene.GameScene;
 import com.alkrist.maribel.client.updatable.scene.SceneBase;
 import com.alkrist.maribel.common.connection.bridge.LocalBridge;

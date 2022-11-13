@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.alkrist.maribel.client.settings.Settings;
 import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.Logging;
 

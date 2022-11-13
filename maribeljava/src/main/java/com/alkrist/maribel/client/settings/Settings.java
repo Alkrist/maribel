@@ -1,4 +1,4 @@
-package com.alkrist.maribel.client;
+package com.alkrist.maribel.client.settings;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,21 +22,24 @@ import com.alkrist.maribel.utils.Logging;
  *
  */
 public class Settings {
+	
 	public static final Settings CURRENT = new Settings();
+	
+	public String username;
+	public int port;
 	
 	public final float FOV = 70;
 	public final float NEAR_PLANE = 0.1f;
 	public final float FAR_PLANE = 1000; 
 	
-	private Settings() {}
 	
-	public String username;
-	public int port;
-	
-	/*GRAPHICS*/
 	public boolean vsyncEnabled;
 	public boolean fullscreen;
 	public boolean mipmapEnabled;
+	public int width;
+	public int height;
+	
+	protected Settings() {}
 	
 	/**
 	 * Init singleton, load values from properties file or use defaults.
@@ -115,6 +118,8 @@ public class Settings {
 		vsyncEnabled = Boolean.valueOf(prop.getProperty("vsync", "false"));
 		fullscreen = Boolean.valueOf(prop.getProperty("fullscreen_mode", "false"));
 		mipmapEnabled = Boolean.valueOf(prop.getProperty("mipmap", "true"));
+		width = Integer.valueOf(prop.getProperty("width", "1280"));
+		height = Integer.valueOf(prop.getProperty("height", "720"));
 	}
 	
 	private void saveProperties(Properties prop) {
@@ -123,5 +128,7 @@ public class Settings {
 		prop.setProperty("vsync", String.valueOf(vsyncEnabled));
 		prop.setProperty("fullscreen_mode", String.valueOf(fullscreen));
 		prop.setProperty("mipmap", String.valueOf(mipmapEnabled));
+		prop.setProperty("width", String.valueOf(width));
+		prop.setProperty("height", String.valueOf(height));
 	}
 }

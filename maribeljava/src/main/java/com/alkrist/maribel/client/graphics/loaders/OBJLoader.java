@@ -1,4 +1,4 @@
-package com.alkrist.maribel.client.graphics.model;
+package com.alkrist.maribel.client.graphics.loaders;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alkrist.maribel.client.graphics.BufferObjectLoader;
+import com.alkrist.maribel.client.graphics.model.Mesh;
 import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.math.Vector2f;
 import com.alkrist.maribel.utils.math.Vector3f;
@@ -30,7 +30,7 @@ public class OBJLoader {
 	 * @param loader   - loader
 	 * @return raw mesh
 	 */
-	public static Mesh loadOBJmodel(String fileName, BufferObjectLoader loader) {
+	public static Mesh loadOBJmodel(String fileName) {
 		FileReader isr = null;
 		File objFile = new File(FileUtil.getModelsPath() + fileName + ".obj");
 		try {
@@ -93,7 +93,7 @@ public class OBJLoader {
 				tangentsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
 
-		return loader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
+		return ResourceLoader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
 	}
 
 	// NEW

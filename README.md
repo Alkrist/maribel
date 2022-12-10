@@ -2,7 +2,7 @@
 ![alt text](https://github.com/Alkrist/maribel/blob/master/logo.png)
 game engine API, based on the ECS approach split for Server and Client. Every object in the game is represented as Entity with a set of Components, which later re updted in
 Systems. Every Entity is created based on Game Object which has no use in the game on its own and server just as a factory for entities.
-### Version naimng idea:
+### Version naming:
 for Maribel - YYYYMMDD, Year - Month - Day. 
 
 ## Goals
@@ -61,37 +61,30 @@ Connection is established locally, via shared memory or remotely, via the UDP. S
 Server is in charge of level loading, updating and saving. Holds no models nor textures, but world data and player data.
 
 ## TODO:
-0. Fix all of the small TODO lists inside the project.
-a) improve GUI system, make it system, not a bullshit
-c) color filtering for GUI borders and edges
-d) implement image -> texture -> material concept
-e) deal with the light sources
-f) add proper main camera movement as system
-g) make proper rendering which is not replated on time. update is update, render is render
 
-6. Add Graphics via LWJGL 3.
-a) GUI system with constraints, with + without textures
-c) shadows
-e) post porcessing effects
-f) fonts
-h) graphics improvement (mipmaps, antialiasing etc.)
-i) transparency
+1. LWJGL 3 render engine.
+* model rendering pipeline
+* GUI system with constraints, with + without textures
+* parallel split shadow mapping
+* FXAA
+* post porcessing effects
+* fonts
+* Anisotropic filtering
+* transparency
 
-7. Add Models.
-a) add animations
+2. Models.
+* test MMC load
+* add mesh generator
+* add animations
 
-8. Add Sounds via OpenAL.
-a) 2D sound (general sound effect)
-b) 3D sound (point sound)
+3. OpenAL sound engine.
+* 2D sound (general sound effect)
+* 3D sound (point sound)
 
-9. Add Commands.
-a) chat with typing text
-b) server-side command processor
-c) access levels
+4. JBullet Physics Engine
+* ???
 
-10. Physics
-a) gravity
-b) acceleration
-c) ragdoll
-d) collision boxes
-e) collision meshes
+5. Add Commands.
+* chat with typing text
+* server-side command processor
+* access levels

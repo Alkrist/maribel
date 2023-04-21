@@ -2,25 +2,24 @@ package com.alkrist.maribel.client.graphics.gui;
 
 import java.util.List;
 
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import com.alkrist.maribel.client.graphics.DisplayManager;
-import com.alkrist.maribel.client.graphics.loaders.ResourceLoader;
-import com.alkrist.maribel.client.graphics.model.Mesh;
-import com.alkrist.maribel.client.graphics.shader.shaders.GUIShader;
+import com.alkrist.maribel.graphics.model.Mesh;
+import com.alkrist.maribel.graphics.model.ResourceLoader;
+import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.utils.math.MatrixMath;
-import com.alkrist.maribel.utils.math.Vector2f;
 
 public class GUIRenderer {
 
-	private final Mesh quad;
+	/*private final Mesh quad;
 	private GUIShader shader;
-	private DisplayManager manager;
+	private GLWindow manager;
 	
-	public GUIRenderer(ResourceLoader loader, DisplayManager manager) {
+	public GUIRenderer(ResourceLoader loader, GLWindow manager) {
 		float[] positions = {-1, 1, -1, -1, 1, 1, 1, -1};
 		this.quad = loader.loadToVAO(positions, 2);
 		this.shader = new GUIShader();
@@ -51,7 +50,7 @@ public class GUIRenderer {
 			shader.loadHasTexture(gui.isTextured());
 			if(gui.isTextured()) {
 				GL13.glActiveTexture(GL13.GL_TEXTURE0);
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTexture().getTextureId());
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTexture().getId());
 			}
 			shader.loadTransformation(MatrixMath.createTransformationMatrix(gui.position, gui.scale));
 			GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
@@ -65,5 +64,5 @@ public class GUIRenderer {
 	
 	public void cleanUp() {
 		shader.cleanUp();
-	}
+	}*/
 }

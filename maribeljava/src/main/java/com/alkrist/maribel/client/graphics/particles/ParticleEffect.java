@@ -1,8 +1,7 @@
 package com.alkrist.maribel.client.graphics.particles;
 
-import com.alkrist.maribel.client.graphics.texture.Texture;
 import com.alkrist.maribel.common.ecs.Component;
-import com.alkrist.maribel.utils.math.Vector3f;
+import com.alkrist.maribel.graphics.texture.Texture2D;
 
 /**
  * Represents one particle effect. Keeps data about particle effect behavior as
@@ -13,7 +12,7 @@ import com.alkrist.maribel.utils.math.Vector3f;
  */
 public class ParticleEffect implements Component {
 
-	public float pps;
+	/*public float pps;
 	public float speed;
 	public float gravityComplient;
 	public float lifeLength;
@@ -22,7 +21,7 @@ public class ParticleEffect implements Component {
 
 	// TODO:think of how to get rid of texture object in sake of Server-Client
 	// architecture
-	public Texture texture;
+	public Texture2D texture;*/
 
 	/**
 	 * Particle effect constructor.
@@ -34,7 +33,7 @@ public class ParticleEffect implements Component {
 	 * @param lifeLength       - how long the particle can live
 	 * @param position         - particle generator position
 	 */
-	public ParticleEffect(Texture texture, float pps, float speed, float gravityComplient, float lifeLength,
+	/*public ParticleEffect(Texture2D texture, float pps, float speed, float gravityComplient, float lifeLength,
 			Vector3f position, float scale) {
 		this.pps = pps;
 		this.speed = speed;
@@ -43,6 +42,6 @@ public class ParticleEffect implements Component {
 		this.texture = texture;
 		this.position = position;
 		this.scale = scale;
-	}
+	}*/
 
 }

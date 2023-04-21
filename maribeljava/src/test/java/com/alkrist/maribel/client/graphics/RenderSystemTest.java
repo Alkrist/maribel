@@ -4,27 +4,27 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.alkrist.maribel.client.graphics.loaders.ResourceLoader;
 import com.alkrist.maribel.client.settings.Settings;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
+import com.alkrist.maribel.graphics.model.ResourceLoader;
+import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.utils.Logging;
 
 public class RenderSystemTest {
 
-	private static DisplayManager manager;
+	private static GLWindow manager;
 	private static ResourceLoader loader;
 	private static Engine engine;
 	
 	@BeforeAll
 	public static void initMaribel() {
 		Logging.initLogger();
-		Settings.CURRENT.load();
-		manager = new DisplayManager();
+		Settings.load();
+		manager = new GLWindow();
 		manager.init("RenderSysTest", "system\\icon32");
 		loader = new ResourceLoader();
 		engine = new Engine();
-		engine.addSystem(new RenderSystem(manager, loader));
 	}
 	
 	@Test
@@ -37,6 +37,6 @@ public class RenderSystemTest {
 	@AfterAll
 	public static void unloadMaribel() {
 		manager.destroyWindow();
-		Settings.CURRENT.save();
+		Settings.save();
 	}
 }

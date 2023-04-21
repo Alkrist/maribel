@@ -1,0 +1,6 @@
+{
+	"dog":{
+		"mesh": doxie,
+		"material": dog
+	}
+}

@@ -20,7 +20,7 @@ public class TestNetworking {
 	@BeforeAll
 	public static void start() {
 		Logging.initLogger();
-		Settings.CURRENT.load();
+		Settings.load();
 
 		MaribelRegistry.registerPackets();
 		PacketRegistry.registerPacket(new PacketTest());
@@ -34,7 +34,7 @@ public class TestNetworking {
 		assertNotNull(Client.getServer().getConnection().getClients());
 		assertNotNull(Client.getSide().getBridge());
 		
-		Packet packet = new PacketTest(PacketRegistry.getIDFor("TEST"), Settings.CURRENT.username, "I love you, Server!");
+		Packet packet = new PacketTest(PacketRegistry.getIDFor("TEST"), Settings.CORE.username, "I love you, Server!");
 		assertNotNull(packet);
 		if(Client.getSide().isLocal()) {
 			((LocalBridge)Client.getSide().getBridge()).send(Client.getSide().getBridge().coder.encode(packet));
@@ -43,7 +43,7 @@ public class TestNetworking {
 			
 		else
 			((RemoteBridge)Client.getSide().getBridge()).send(Client.getSide().getBridge().coder.encode(packet), 
-					Client.getSide().getServerAddress(), Settings.CURRENT.port);
+					Client.getSide().getServerAddress(), Settings.CORE.port);
 	}
 	
 	@AfterAll

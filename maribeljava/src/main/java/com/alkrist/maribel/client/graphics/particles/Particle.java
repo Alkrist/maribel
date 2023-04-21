@@ -5,10 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alkrist.maribel.client.graphics.Camera;
-import com.alkrist.maribel.client.graphics.texture.Texture;
-import com.alkrist.maribel.utils.math.Vector2f;
-import com.alkrist.maribel.utils.math.Vector3f;
+import com.alkrist.maribel.graphics.context.Camera;
+import com.alkrist.maribel.graphics.texture.Texture2D;
 
 /**
  * This class represents a single particle. Also it keeps a list of all
@@ -19,7 +17,7 @@ import com.alkrist.maribel.utils.math.Vector3f;
  */
 public class Particle {
 
-	private static Map<Texture, List<Particle>> allParticles = new HashMap<Texture, List<Particle>>();
+	/*private static Map<Texture2D, List<Particle>> allParticles = new HashMap<Texture2D, List<Particle>>();
 
 	public Vector3f position;
 	public Vector3f velocity;
@@ -30,7 +28,7 @@ public class Particle {
 	public float scale;
 
 	// This should be texture atlas in order to make particle change over time
-	private Texture texture;
+	private Texture2D texture;
 
 	private Vector2f texOffset1 = new Vector2f();
 	private Vector2f texOffset2 = new Vector2f();
@@ -50,7 +48,7 @@ public class Particle {
 	 * @param rotation      - particle rotation
 	 * @param scale         - particle scale
 	 */
-	protected Particle(Texture texture, Vector3f position, Vector3f velocity, float gravityEffect, float lifeLength,
+	/*protected Particle(Texture2D texture, Vector3f position, Vector3f velocity, float gravityEffect, float lifeLength,
 			float rotation, float scale) {
 		this.texture = texture;
 		this.position = position;
@@ -60,7 +58,7 @@ public class Particle {
 		this.rotation = rotation;
 		this.scale = scale;
 		registerParticle();
-	}
+	}*/
 
 	/**
 	 * Updates this particle's transform and state.
@@ -68,7 +66,7 @@ public class Particle {
 	 * @param deltaTime
 	 * @return if this particle should be deleted
 	 */
-	protected boolean update(double deltaTime) {
+	/*protected boolean update(double deltaTime) {
 		// TODO: replace -80 by the gravity variable later
 		velocity.y += -80 * gravityEffect * deltaTime;
 		Vector3f change = new Vector3f(velocity.x, velocity.y, velocity.z);
@@ -99,9 +97,9 @@ public class Particle {
 		setTextureOffset(texOffset1, index1);
 		setTextureOffset(texOffset2, index2); // TODO: ????? - is this right?
 	}
-
-	protected float getDistance(Camera camera) {
-		return Vector3f.sub(camera.position, position, null).lengthSquared();
+*/
+	/*protected float getDistance(Camera camera) {
+		return Vector3f.sub(camera.getPosition(), position, null).lengthSquared();
 	}
 
 	private void registerParticle() {
@@ -111,9 +109,9 @@ public class Particle {
 			allParticles.put(texture, list);
 		}
 		list.add(this);
-	}
+	}*/
 
-	protected float getBlend() {
+	/*protected float getBlend() {
 		return blend;
 	}
 
@@ -129,7 +127,7 @@ public class Particle {
 	 * 
 	 * @return list of all particles on the render engine.
 	 */
-	public static Map<Texture, List<Particle>> getAllParticles() {
+	/*public static Map<Texture2D, List<Particle>> getAllParticles() {
 		return allParticles;
-	}
+	}*/
 }

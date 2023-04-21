@@ -1,6 +1,5 @@
 package com.alkrist.maribel.api;
 
-import com.alkrist.maribel.client.graphics.RenderSystem;
 import com.alkrist.maribel.common.connection.packet.PacketRegistry;
 import com.alkrist.maribel.common.connection.packet.packets.PacketClientTick;
 import com.alkrist.maribel.common.connection.packet.packets.PacketEntity;

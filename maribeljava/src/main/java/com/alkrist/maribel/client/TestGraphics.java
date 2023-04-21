@@ -1,34 +1,23 @@
 package com.alkrist.maribel.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.joml.Vector3f;
 
-import org.lwjgl.glfw.GLFW;
-
-import com.alkrist.maribel.client.audio.AudioManager;
-import com.alkrist.maribel.client.audio.AudioSource;
-import com.alkrist.maribel.client.graphics.Camera;
-import com.alkrist.maribel.client.graphics.DisplayManager;
-import com.alkrist.maribel.client.graphics.InputHandler;
-import com.alkrist.maribel.client.graphics.Light;
-import com.alkrist.maribel.client.graphics.RenderSystem;
-import com.alkrist.maribel.client.graphics.Transform;
-import com.alkrist.maribel.client.graphics.gui.GUIFrame;
-import com.alkrist.maribel.client.graphics.gui.GUIRenderer;
-import com.alkrist.maribel.client.graphics.loaders.ResourceLoader;
-import com.alkrist.maribel.client.graphics.model.Model;
-import com.alkrist.maribel.client.graphics.model.ModelComposite;
-import com.alkrist.maribel.client.graphics.particles.ParticleEffect;
-import com.alkrist.maribel.client.graphics.particles.ParticleSystem;
-import com.alkrist.maribel.client.graphics.texture.Texture;
+import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
+import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
 import com.alkrist.maribel.client.settings.Settings;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
-import com.alkrist.maribel.common.event.EventManager;
+import com.alkrist.maribel.graphics.components.OpaqueModelRenderer;
+import com.alkrist.maribel.graphics.components.Renderable;
+import com.alkrist.maribel.graphics.components.Transform;
+import com.alkrist.maribel.graphics.context.GLContext;
+import com.alkrist.maribel.graphics.model.GenericModelShader;
+import com.alkrist.maribel.graphics.model.Model;
+import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
+import com.alkrist.maribel.graphics.platform.GLWindow;
+import com.alkrist.maribel.graphics.render.parameter.CCW;
+import com.alkrist.maribel.graphics.systems.RenderSystem;
 import com.alkrist.maribel.utils.Logging;
-import com.alkrist.maribel.utils.math.Vector2f;
-import com.alkrist.maribel.utils.math.Vector3f;
-import com.alkrist.maribel.utils.math.Vector4f;
 
 /**
  * REMOVE THIS FUCKING CLASS LATER!!!
@@ -41,82 +30,43 @@ public class TestGraphics {
 
 	public static void main(String[] args) {
 		Logging.initLogger();
-		Settings.CURRENT.load();	
-		DisplayManager manager = new DisplayManager();
-		manager.init("test", "system\\icon32");
-		ResourceLoader loader = new ResourceLoader();
+		Settings.load();	
+		
+		GLContext.create("test", "system\\icon32");
+		GLWindow window = GLContext.getWindow();
+
+		Model dog = ModelCompositeLoader.loadFromJson("dog");
+		
+		Transform dogTransform = new Transform(new Vector3f(0,-10,-60), new Vector3f(0,0,0), 1);
+		//Renderable dogRenderable = new Renderable(dog.getChild("dog").getMesh(), dog.getChild("dog").getMaterial());
+		Renderable dogRenderable = new Renderable(dog.getChild("dog").getMesh(), dog.getChild("dog").getMaterial());
+		TestShader shader = TestShader.getInstance();
+		GenericModelShader gms = GenericModelShader.getInstance();
+		
+		TestRenderer renderer = new TestRenderer(new CCW(), shader);
+		OpaqueModelRenderer omRenderer = new OpaqueModelRenderer(new CCW(), gms);
 		
 		Engine engine = new Engine();
-		engine.addSystem(new ParticleSystem());
-		RenderSystem renderEngine = new RenderSystem(manager, loader);
-		EventManager.registerEvents(renderEngine, null);
-		engine.addSystem(renderEngine);
+		engine.addSystem(new RenderSystem());
+		
 		Entity e1 = engine.createEntity();
-		Entity e2 = engine.createEntity();
-		//ModelComposite dragon = ModelComposite.loadFromMMC("dragon", loader);
-		//ModelComposite tent = ModelComposite.loadFromMMC("tent", loader);
-		ModelComposite dog = ModelComposite.loadFromJson("doxie");
-		ModelComposite boulder = ModelComposite.loadFromJson("boulder");
-		ModelComposite plane = ModelComposite.loadFromJson("plane");
-		ModelComposite fern1 = ModelComposite.loadFromJson("fern");
-		fern1.getNode("fern").getTexture().setNumberOfRows(2);
-		fern1.getNode("fern").setTextureOffsetIndex(1);
-		Transform transform = new Transform(new Vector3f(0,-10,-20), new Vector3f(0,0,0), 1);
-		Transform transform2 = new Transform(new Vector3f(20,-10,-20), new Vector3f(0,90,0), 1);
-		Transform transform3 = new Transform(new Vector3f(0,-10,0), new Vector3f(0,0,0), 5);
-		e1.addComponent(new Model(dog));
-		e1.addComponent(transform);
-		e2.addComponent(new Model(fern1));
-		e2.addComponent(transform2);
-		
-		//******* PARTICLE TEST *******//
-		ParticleEffect pEffect = new ParticleEffect(Texture.loadTexture("particles\\sparks", 8), 50, 10, 0, 1, new Vector3f(20, 0, 0), 1);
-		Entity e7 = engine.createEntity();
-		e7.addComponent(pEffect);
-		//*****************************//
-		
-		//Light light1 = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
-		Light light1 = new Light(new Vector3f(100000,150000,-100000), new Vector3f(1,1,1));
-		Light light2 = new Light(new Vector3f(0,-20,0), new Vector3f(0,1,1), new Vector3f(1,0.1f, 0.002f));
-		Light light3 = new Light(new Vector3f(-20,0,0), new Vector3f(0,1,0), new Vector3f(1,0.1f, 0.002f));
-		Light light4 = new Light(new Vector3f(0,0,5), new Vector3f(1,0,1), new Vector3f(1,0.1f, 0.002f));
-		Entity e3 = engine.createEntity();
-		Entity e4 = engine.createEntity();
-		Entity e5 = engine.createEntity();
-		Entity e6 = engine.createEntity();
-		e3.addComponent(light1);
-		e4.addComponent(new Model(plane));
-		e4.addComponent(transform3);
-		e5.addComponent(light3);
-		e6.addComponent(light4);
-		
+		e1.addComponent(dogRenderable);
+		e1.addComponent(dogTransform);
+		e1.addComponent(omRenderer);
 		engine.addEntity(e1);
-		engine.addEntity(e2);
-		engine.addEntity(e3);
-		engine.addEntity(e4);
-		//engine.addEntity(e5);
-		//engine.addEntity(e6);
-		//engine.addEntity(e7);
 		
-		
-		// ***** GUI render alpha test ***** //
-		GUIRenderer guiRenderer = new GUIRenderer(loader, manager);
-		GUIFrame testGui = new GUIFrame(new Vector4f(0,1,0,1), new Vector2f(0.7f,0.7f), new Vector2f(0.2f, 0.2f), 0.5f, new Vector4f(0,0,0,1), 0.1f);
-		List<GUIFrame> frameList = new ArrayList<GUIFrame>();
-		frameList.add(testGui);
-		
-		while(!manager.isCloseRequested()) {
+		while(!window.isCloseRequested()) {
 			
-			if(InputHandler.keyPressed(GLFW.GLFW_KEY_F11))
-					manager.switchWindowMode();
+			GLContext.getInput().update();
+			GLContext.getMainCamera().update();
 			
-			transform.rotation.y +=0.02f;
-			Camera.MAIN_CAMERA.move();
-			engine.update(manager.deltaTime());
-			//guiRenderer.render(frameList);
-			manager.updateWindow();
-		}manager.destroyWindow();
+			dogTransform.rotate(0, 0.1f, 0);
+			engine.update(0);
+			
+			window.updateWindow();
+		}window.destroyWindow();
 		
-		Settings.CURRENT.save();
+		GLContext.finish();
+		Settings.save();
 	}
 }

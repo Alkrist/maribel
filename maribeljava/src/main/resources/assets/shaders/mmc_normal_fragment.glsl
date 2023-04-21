@@ -17,6 +17,9 @@ uniform sampler2D modelTexture;
 uniform sampler2D normalMap;
 uniform vec3 lightColor[4];
 uniform vec3 attenuation[4];
+
+uniform float lightIntensity[4];
+
 uniform float shineDamper;
 uniform float reflectivity;
 
@@ -55,18 +58,17 @@ void main(void){
 
 			vec3 unitLightVector = normalize(toLightVector[i]);
 			float nDotl = dot(unitNormal, unitLightVector);
-			float brightness = max(nDotl, 0.0);
+			float brightness = max(nDotl, 0.0) * lightIntensity[i];;
 			vec3 lightDirection = -unitLightVector;
 			vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
 			float specularFactor = dot(reflectedLightDirection, unitToCameraVector);
 			specularFactor = max(specularFactor, 0.0);
 			float dampedFactor = pow(specularFactor, shineDamper);
 			totalDiffuse = totalDiffuse + (brightness * lightColor[i])/attFactor;
+
 			totalSpecular = totalSpecular + (dampedFactor * reflectivity * lightColor[i])/attFactor;
 		}
-
-	totalDiffuse = max(totalDiffuse, 0.2);
-
+	totalDiffuse = max(totalDiffuse, 0.04);
 
 	//TEXTURE AND TRANSPARENCY
 	vec4 textureColor = texture(modelTexture, pass_textureCoords);

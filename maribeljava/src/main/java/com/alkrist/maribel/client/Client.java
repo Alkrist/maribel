@@ -114,7 +114,7 @@ public class Client {
 		internalServer = new Server();
 		if(!internalServer.loadWorld())
 			Logging.getLogger().log(Level.SEVERE, "Failed to load the world");
-		mySide = new ClientSide(Settings.CURRENT.username);
+		mySide = new ClientSide(Settings.CORE.username);
 		createLocalConnection();
 		login();
 	}
@@ -127,7 +127,7 @@ public class Client {
 			return;
 		}
 			
-		mySide = new ClientSide(Settings.CURRENT.username);
+		mySide = new ClientSide(Settings.CORE.username);
 		createLocalConnection();
 		login();
 	}
@@ -139,7 +139,7 @@ public class Client {
 	public static void connectMultiplayer(String host) {
 		//TODO: add hostname option with default port
 		String args[] = host.split(":", 2);
-		mySide = new ClientSide(Settings.CURRENT.username);
+		mySide = new ClientSide(Settings.CORE.username);
 		
 		try {
 			mySide.init(args[0], Integer.valueOf(args[1]));
@@ -165,16 +165,16 @@ public class Client {
 		
 			/*DEBUG*/System.out.println("Starting remote client...");
 			try {
-				mySide.init("localhost", Settings.CURRENT.port);
+				mySide.init("localhost", Settings.CORE.port);
 			}catch(Exception e) {
-				Logging.getLogger().log(Level.SEVERE, "failed to change localclient to global on localhost at port "+Settings.CURRENT.port, e);
+				Logging.getLogger().log(Level.SEVERE, "failed to change localclient to global on localhost at port "+Settings.CORE.port, e);
 				//TODO: quit the game or change back to local
 				mySide = null;
 				return;
 			}
 		
 			/*DEBUG*/System.out.println("Starting remote server...");
-			internalServer.getConnection().init(Settings.CURRENT.port);
+			internalServer.getConnection().init(Settings.CORE.port);
 			internalServer.getConnection().getBridge().start();
 		
 			login();
@@ -224,7 +224,7 @@ public class Client {
 		mySide.getBridge().start();
 		
 		if(mySide.isLocal()) {
-			if(internalServer.getConnection().addClient(new LocalClient(Settings.CURRENT.username, internalServer.getConnection()))) {
+			if(internalServer.getConnection().addClient(new LocalClient(Settings.CORE.username, internalServer.getConnection()))) {
 				Logging.getLogger().log(Level.INFO, "Locally logged in successfuly.");
 				if(!(Updater.getActiveElement() instanceof GameScene))
 					Updater.setActiveElement(getScene(GameScene.class));

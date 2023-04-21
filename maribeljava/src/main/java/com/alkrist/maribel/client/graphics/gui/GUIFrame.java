@@ -1,8 +1,9 @@
 package com.alkrist.maribel.client.graphics.gui;
 
-import com.alkrist.maribel.client.graphics.texture.Texture;
-import com.alkrist.maribel.utils.math.Vector2f;
-import com.alkrist.maribel.utils.math.Vector4f;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
+
+import com.alkrist.maribel.graphics.texture.Texture2D;
 
 /**
  * This class represents a basic GUI element for rendering. It has 2 states:
@@ -23,7 +24,7 @@ public class GUIFrame {
 	public Vector4f borderColor;
 	public float borderScale;
 	public float smoothCornerScale;
-	private Texture texture;
+	private Texture2D texture;
 
 	/**
 	 * Textured GUI Frame.
@@ -36,7 +37,7 @@ public class GUIFrame {
 	public GUIFrame(String texName, Vector2f position, Vector2f scale) {
 		this.position = position;
 		this.scale = scale;
-		this.texture = Texture.loadTexture(texName);
+		//this.texture = Texture.loadTexture(texName);
 		this.color = new Vector4f(0, 0, 0, 0);
 		this.smoothCornerScale = 0;
 		this.borderColor = new Vector4f(0, 0, 0, 0);
@@ -56,7 +57,7 @@ public class GUIFrame {
 	public GUIFrame(String texName, Vector2f position, Vector2f scale, float smoothCornerScale) {
 		this.position = position;
 		this.scale = scale;
-		this.texture = Texture.loadTexture(texName);
+		//this.texture = Texture.loadTexture(texName);
 		this.color = new Vector4f(0, 0, 0, 0);
 		this.smoothCornerScale = smoothCornerScale;
 		this.borderColor = new Vector4f(0, 0, 0, 0);
@@ -80,7 +81,7 @@ public class GUIFrame {
 			float borderScale) {
 		this.position = position;
 		this.scale = scale;
-		this.texture = Texture.loadTexture(texName);
+		//this.texture = Texture.loadTexture(texName);
 		this.color = new Vector4f(0, 0, 0, 0);
 		this.smoothCornerScale = smoothCornerScale;
 		this.borderColor = new Vector4f(0, 0, 0, 0);
@@ -150,7 +151,7 @@ public class GUIFrame {
 		return texture != null;
 	}
 
-	public Texture getTexture() {
+	public Texture2D getTexture() {
 		return texture;
 	}
 }

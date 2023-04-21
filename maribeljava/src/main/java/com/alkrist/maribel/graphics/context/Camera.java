@@ -1,0 +1,146 @@
+package com.alkrist.maribel.graphics.context;
+
+import org.joml.FrustumIntersection;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
+
+import com.alkrist.maribel.graphics.platform.InputHandler;
+
+public class Camera {
+	
+	private Vector3f position;
+	
+	private float pitch;
+	private float yaw;
+	private float roll;
+	
+	private Matrix4f projectionMatrix;
+	
+	private Matrix4f viewMatrix;
+	
+	private final Matrix4f projectionViewMatrix;
+	private FrustumIntersection frustumIntersection;
+	
+	
+	 
+	
+	public Camera(Vector3f position, float pitch, float yaw, float roll) {
+		setPosition(position);
+		this.pitch = pitch;
+		this.yaw = yaw;
+		this.roll = roll;
+		
+		viewMatrix = new Matrix4f();
+		projectionViewMatrix = new Matrix4f();
+		frustumIntersection = new FrustumIntersection();
+	}
+	
+	public void init() {
+		//setProjectionMatrix(GLContext.getConfig().fovY, width, height, GLContext.getConfig().NEAR_PLANE, GLContext.getConfig().FAR_PLANE);
+		updateViewMatrix();
+		//viewMatrix = MatrixMath.createViewMatrix(position, pitch, yaw, roll);
+		updateFrustum();
+	}
+	
+	//TODO: change camera update method based on type, this is just a TEST METHOD!!!
+	public void update() {
+		
+		InputHandler input = GLContext.getInput();
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_Q)) {
+			roll -= 0.1f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_E)) {
+			roll += 0.1f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_W)) {
+			position.z += 0.1f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_S)) {
+			position.z -= 0.1f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_A)) {
+			position.x -= 0.1f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_D)) {
+			position.x += 0.1f;
+		}
+		
+		updateViewMatrix();
+		//viewMatrix = MatrixMath.createViewMatrix(position, pitch, yaw, roll);
+		updateFrustum();
+	}
+	
+	
+	public boolean insideFrustum(Vector3f center, float boundingRadius) {
+		return frustumIntersection.testSphere(center, boundingRadius);
+	}
+	
+	public void setProjectionMatrix(float fovY, int width, int height, float zNear, float zFar) {
+		//setWidthHeight(width, height);
+		//this.projectionMatrix = MatrixMath.createProjectionMatrix(width, height, zNear, zFar, fovY);
+		projectionMatrix = new Matrix4f();
+		this.projectionMatrix.perspective(fovY, ((float) width / (float) height), zNear, zFar);
+	}
+	
+	public void setViewMatrix(Matrix4f viewMatrix) {
+		this.viewMatrix = viewMatrix;
+	}
+	
+	public void setProjectionMatrix(Matrix4f projectionMatrix) {
+		this.projectionMatrix = projectionMatrix;
+	}
+	
+	public void setPosition(Vector3f position) {
+		this.position = position;
+	}
+	
+	public Vector3f getPosition() {
+		return position;
+	}
+	
+	public Matrix4f getViewMatrix() {
+		return viewMatrix;
+	}
+	
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
+	
+	public float getPitch() {
+		return pitch;
+	}
+	
+	public float getYaw() {
+		return yaw;
+	}
+	
+	public float getRoll() {
+		return roll;
+	}
+	
+	private Matrix4f updateViewMatrix() {
+		viewMatrix.identity();
+		
+		viewMatrix.rotate((float)Math.toRadians(pitch), new Vector3f(1,0,0));
+		viewMatrix.rotate((float)Math.toRadians(yaw), new Vector3f(0,1,0));
+		viewMatrix.rotate((float)Math.toRadians(roll), new Vector3f(0,0,1));
+		
+		viewMatrix.translate(-position.x, -position.y, -position.z);
+		
+		return viewMatrix;
+	}
+	
+	private void updateFrustum() {
+		projectionViewMatrix.set(projectionMatrix);
+		projectionViewMatrix.mul(viewMatrix);
+		
+		frustumIntersection.set(projectionViewMatrix);
+	}
+}

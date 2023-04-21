@@ -18,7 +18,7 @@ public class Maribel {
 		
 		try {
 			
-			Settings.CURRENT.load();
+			Settings.load();
 			loader.preInit(); //Setup some components needed for loading
 			loader.load(); //Background game loading process
 			Updater.update(0); //Actual game loop TODO: add deltatime from rendering

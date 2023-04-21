@@ -4,14 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.alkrist.maribel.client.graphics.Camera;
-import com.alkrist.maribel.client.graphics.texture.Texture;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.common.ecs.Family;
 import com.alkrist.maribel.common.ecs.SystemBase;
+import com.alkrist.maribel.graphics.texture.Texture2D;
 import com.alkrist.maribel.utils.ImmutableArrayList;
-import com.alkrist.maribel.utils.math.Vector3f;
 
 /**
  * Particle System. This system is in charge of: updating particles,
@@ -22,13 +20,19 @@ import com.alkrist.maribel.utils.math.Vector3f;
  */
 public class ParticleSystem extends SystemBase {
 
-	private ComponentMapper<ParticleEffect> particleEffectMapper;
-	private ImmutableArrayList<Entity> entities;
+	@Override
+	public void update(double deltaTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/*private ComponentMapper<ParticleEffect> particleEffectMapper;
+	private ImmutableArrayList<Entity> entities;*/
 
 	/**
 	 * Particle System constructor. Takes no arguments.
 	 */
-	public ParticleSystem() {
+	/*public ParticleSystem() {
 		super();
 		particleEffectMapper = ComponentMapper.getFor(ParticleEffect.class);
 	}
@@ -42,7 +46,7 @@ public class ParticleSystem extends SystemBase {
 	public void update(double deltaTime) {
 
 		// Update existing particles first
-		Iterator<Entry<Texture, List<Particle>>> mapIterator = Particle.getAllParticles().entrySet().iterator();
+		Iterator<Entry<Texture2D, List<Particle>>> mapIterator = Particle.getAllParticles().entrySet().iterator();
 		while (mapIterator.hasNext()) {
 			List<Particle> list = mapIterator.next().getValue();
 
@@ -64,7 +68,7 @@ public class ParticleSystem extends SystemBase {
 		for (Entity entity : entities) {
 			generateParticles(particleEffectMapper.getComponent(entity), deltaTime);
 		}
-	}
+	}*/
 
 	/**
 	 * Generates particles based on the {@link ParticleEffect}.
@@ -72,7 +76,7 @@ public class ParticleSystem extends SystemBase {
 	 * @param effect    - particle effect
 	 * @param deltaTime
 	 */
-	public void generateParticles(ParticleEffect effect, double deltaTime) {
+	/*public void generateParticles(ParticleEffect effect, double deltaTime) {
 		double particlesToSpawn = effect.pps * deltaTime;
 		int count = (int) Math.floor(particlesToSpawn);
 		float partialParticle = (float) (particlesToSpawn % 1);
@@ -95,6 +99,6 @@ public class ParticleSystem extends SystemBase {
 		velocity.scale(effect.speed);
 		new Particle(effect.texture, new Vector3f(center.x, center.y, center.z), velocity, effect.gravityComplient,
 				effect.lifeLength, 0, effect.scale);
-	}
+	}*/
 
 }

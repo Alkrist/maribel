@@ -11,17 +11,14 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
 
-import com.alkrist.maribel.client.graphics.Camera;
-import com.alkrist.maribel.client.graphics.loaders.ResourceLoader;
-import com.alkrist.maribel.client.graphics.model.Mesh;
-import com.alkrist.maribel.client.graphics.shader.shaders.ParticleShader;
-import com.alkrist.maribel.client.graphics.texture.Texture;
-import com.alkrist.maribel.utils.math.Matrix4f;
+import com.alkrist.maribel.graphics.context.Camera;
+import com.alkrist.maribel.graphics.model.Mesh;
+import com.alkrist.maribel.graphics.model.ResourceLoader;
+import com.alkrist.maribel.graphics.texture.Texture2D;
 import com.alkrist.maribel.utils.math.MatrixMath;
-import com.alkrist.maribel.utils.math.Vector3f;
 
 /**
- * Particle render class. Called in {@link RenderSystem}. This class is in
+ * Particle render class. Called in {@link RenderSystemOld}. This class is in
  * charge of performing instanced rendering of all {@link Particle} on the
  * render engine.
  * 
@@ -30,7 +27,7 @@ import com.alkrist.maribel.utils.math.Vector3f;
  */
 public class ParticleRenderer {
 
-	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
+	/*private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
 	private static final int MAX_INSTANCES = 10000;
 	private static final int INSTANCE_DATA_LENGTH = 21;
 	private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH);
@@ -40,7 +37,7 @@ public class ParticleRenderer {
 	private int pointer = 0;
 
 	private ParticleShader shader;
-	private ResourceLoader loader;
+	private ResourceLoader loader;*/
 
 	/**
 	 * Particle Renderer constructor.
@@ -48,7 +45,7 @@ public class ParticleRenderer {
 	 * @param loader           - {@link ResourceLoader}
 	 * @param projectionMatrix
 	 */
-	public ParticleRenderer(ResourceLoader loader, Matrix4f projectionMatrix) {
+	/*public ParticleRenderer(ResourceLoader loader, Matrix4f projectionMatrix) {
 		this.loader = loader;
 		this.vbo = loader.createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
 		quad = loader.loadToVAO(VERTICES, 2);
@@ -62,20 +59,20 @@ public class ParticleRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-	}
+	}*/
 
 	/**
 	 * Renders all particles relative to camera. Keep in mind, that this method does
 	 * NOT update particles, just renders!
 	 * 
-	 * @param camera - {@link Camera} object
+	 * @param camera - {@link CameraOld} object
 	 */
-	public void render(Camera camera) {
-		Map<Texture, List<Particle>> particles = Particle.getAllParticles();
-		Matrix4f viewMatrix = MatrixMath.createViewMatrix(camera);
+	/*public void render(Camera camera) {
+		Map<Texture2D, List<Particle>> particles = Particle.getAllParticles();
+		Matrix4f viewMatrix = MatrixMath.createViewMatrix(camera.getPosition(), camera.getPitch(), camera.getYaw(), camera.getRoll());
 		prepare();
 
-		for (Texture texture : particles.keySet()) {
+		for (Texture2D texture : particles.keySet()) {
 			bindTexture(texture);
 
 			List<Particle> particleList = particles.get(texture);
@@ -93,9 +90,9 @@ public class ParticleRenderer {
 		finishRendering();
 	}
 
-	private void bindTexture(Texture texture) {
+	private void bindTexture(Texture2D texture) {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getId());
 
 		shader.loadNumberOfRows(texture.getNumberOfRows());
 	}
@@ -193,22 +190,21 @@ public class ParticleRenderer {
 		}
 		list.remove(i);
 		list.add(attemptPos, item);
-	}
+	}*/
 
 	/**
 	 * Shader clean up.
 	 */
-	public void cleanUp() {
+	/*public void cleanUp() {
 		shader.cleanUp();
-	}
+	}*/
 	
-	public void updateProjectionMatrix(Matrix4f projectionMatrix) {
+	/*public void updateProjectionMatrix(Matrix4f projectionMatrix) {
 		if(shader.isStarted())
 			shader.loadProjectionMatrix(projectionMatrix);
 		else {
 			shader.start();
 			shader.loadProjectionMatrix(projectionMatrix);
 			shader.stop();
-		}
-	}
+		}*/
 }

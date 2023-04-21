@@ -16,6 +16,8 @@ out float pass_hasNormalMap;
 //fog
 out float visibility;
 
+out vec4 shadowCoords;
+
 //model
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;

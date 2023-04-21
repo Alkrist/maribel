@@ -1,0 +1,18 @@
+{
+	"doxie":{
+		"mesh": doxie,
+		"material": dog,
+		"fern":{
+			"mesh":fern,
+			"material":dog,
+			"plane":{
+				"mesh":plane,
+				"material":dog
+			},
+			"tree":{
+				"mesh": tree,
+				"material":dog
+			}
+		}
+	}
+}

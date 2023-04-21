@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.alkrist.maribel.common.ecs.Component;
+import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.utils.Bits;
@@ -27,6 +28,8 @@ import com.alkrist.maribel.utils.Bits;
  */
 public class EntityProxy implements Component{
 
+	//TODO: remove entity chains
+	
 	private HashMap<Integer, Entity> entities; //Links with their IDs
 	
 	private Bits proxyBits; //entity ids stored on client's world proxy

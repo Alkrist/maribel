@@ -28,25 +28,25 @@ public class SettingsTest {
 	
 	@Test
 	public void settingsLoadTest() {
-		Settings.CURRENT.load();
-		assertEquals(Settings.CURRENT.port, 1331);
-		assertEquals(Settings.CURRENT.username, "Maribel");
+		Settings.load();
+		assertEquals(Settings.CORE.port, 1331);
+		assertEquals(Settings.CORE.username, "Maribel");
 		
-		Settings.CURRENT.port = 2222;
-		Settings.CURRENT.username = "test";
+		Settings.CORE.port = 2222;
+		Settings.CORE.username = "test";
 		
-		Settings.CURRENT.save();
+		Settings.save();
 		
-		Settings.CURRENT.load();
-		assertEquals(Settings.CURRENT.port, 2222);
-		assertEquals(Settings.CURRENT.username, "test");
+		Settings.load();
+		assertEquals(Settings.CORE.port, 2222);
+		assertEquals(Settings.CORE.username, "test");
 		
-		Settings.CURRENT.save();
+		Settings.save();
 	}
 	
 	@AfterAll
 	public static void createDamnConfigFile() {
-		Settings.CURRENT.load();
-		Settings.CURRENT.save();
+		Settings.load();
+		Settings.save();
 	}
 }

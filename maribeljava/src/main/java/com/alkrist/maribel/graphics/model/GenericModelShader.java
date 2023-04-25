@@ -43,7 +43,8 @@ public class GenericModelShader extends ShaderProgram{
 		addUniform("material.emission");
 		
 		addUniform("projectionMatrix");
-		addUniform("viewModelMatrix");
+		addUniform("viewMatrix");
+		addUniform("modelMatrix");
 		
 		/*for(int i=0; i<6; i++) {
 			addUniform("frustumPlanes["+i+"]");
@@ -53,13 +54,11 @@ public class GenericModelShader extends ShaderProgram{
 	public void updateUniforms(Entity e) {
 		Renderable renderable = renderableComponentMapper.getComponent(e);
 		Transform transform = transformComponentMapper.getComponent(e);
-		
 		Matrix4f viewMatrix = GLContext.getMainCamera().getViewMatrix();
-		Matrix4f vmMatrix = MatrixMath.createTransformationMatrix(transform.position, transform.rotation, transform.scale);
-		//Vector4f frustumPlanes[] = MatrixMath.createFrustumPlanes(GLContext.getMainCamera().getProjectionMatrix(), viewMatrix, vmMatrix);
-		viewMatrix.mul(vmMatrix, viewMatrix);
+		Matrix4f modelMatrix = MatrixMath.createTransformationMatrix(transform.position, transform.rotation, transform.scale);
 		
-		setUniform("viewModelMatrix", viewMatrix);
+		setUniform("viewMatrix", viewMatrix);
+		setUniform("modelMatrix", modelMatrix);
 		setUniform("projectionMatrix", GLContext.getMainCamera().getProjectionMatrix());
 		
 		/*for(int i=0; i<6; i++) {

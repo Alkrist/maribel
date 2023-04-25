@@ -17,6 +17,8 @@ public class GraphicsConfig extends ConfigBase{
 	public int width;
 	public int height;
 	public SamplerFilter samplerFilter;
+	public int shadowMapResolution;
+	public boolean isShadowMapsEnabled;
 	
 	public GraphicsConfig() {}
 	
@@ -35,6 +37,8 @@ public class GraphicsConfig extends ConfigBase{
 		}
 		width = Integer.valueOf(prop.getProperty("width", "1280"));
 		height = Integer.valueOf(prop.getProperty("height", "720"));
+		shadowMapResolution = Integer.valueOf(prop.getProperty("shadowmap_resolution", "2048"));
+		isShadowMapsEnabled = Boolean.valueOf(prop.getProperty("shadowmap_enabled", "true"));
 	}
 
 	@Override
@@ -50,6 +54,8 @@ public class GraphicsConfig extends ConfigBase{
 		}
 		prop.setProperty("width", String.valueOf(width));
 		prop.setProperty("height", String.valueOf(height));
+		prop.setProperty("shadowmap_resolution", String.valueOf(shadowMapResolution));
+		prop.setProperty("shadowmap_enabled", String.valueOf(isShadowMapsEnabled));
 	}
 
 }

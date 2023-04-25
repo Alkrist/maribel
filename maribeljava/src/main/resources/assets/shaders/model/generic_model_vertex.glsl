@@ -6,7 +6,8 @@ layout (location = 2) in vec3 normal;
 layout (location = 3) in vec3 tangent;
 
 uniform mat4 projectionMatrix;
-uniform mat4 viewModelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
 //uniform vec4 frustumPlanes[6];
 
 out vec3 normal_FS;
@@ -17,9 +18,11 @@ out vec3 position_FS;
 
 void main(void){
 
-	vec4 positionRelativeToCamera = viewModelMatrix * vec4(position,1.0);
-	vec4 worldPos = projectionMatrix * positionRelativeToCamera;
-	gl_Position = worldPos;
+	mat4 viewModelMatrix = viewMatrix * modelMatrix;
+	vec4 outWorldPosition = modelMatrix * vec4(position, 1.0);
+	vec4 outViewPosition  = viewMatrix * outWorldPosition;
+
+	gl_Position   = projectionMatrix * outViewPosition;
 
 
 	//FRUSTUM PLANES
@@ -38,11 +41,11 @@ void main(void){
 
 	bitangent_FS = normalize(cross(norm, tang));
 
-
+	//TODO: fix normal maps according to new matrix calculations
 	//OTHERS
 	normal_FS = norm;
 	tangent_FS = tang;
 	textureCoords_FS = textureCoords;
-	position_FS = worldPos.xyz;
+	position_FS = outViewPosition.xyz;
 }
 

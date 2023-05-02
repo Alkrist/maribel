@@ -2,6 +2,8 @@ package com.alkrist.maribel.graphics.systems;
 
 import static org.lwjgl.opengl.GL11.glFinish;
 import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
@@ -14,6 +16,7 @@ import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.context.GraphicsConfig;
+import com.alkrist.maribel.graphics.deferred.DeferredLighting;
 import com.alkrist.maribel.graphics.platform.GLUtil;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
@@ -33,6 +36,8 @@ public class RenderSystem extends SystemBase{
 	private FBO primarySceneFBO;
 	private ParallelSplitShadowMapsFBO pssmFBO;
 	
+	private DeferredLighting deferredLighting;
+	
 	private static final ComponentMapper<TestRenderer> testRendererMapper = ComponentMapper.getFor(TestRenderer.class);
 	private static final ComponentMapper<OpaqueModelRenderer> opaqueModelRendererMapper = ComponentMapper.getFor(OpaqueModelRenderer.class);
 	private static final ComponentMapper<OpaqueModelShadowRenderer> opaqueModelShadowMapper = ComponentMapper.getFor(OpaqueModelShadowRenderer.class);
@@ -48,6 +53,7 @@ public class RenderSystem extends SystemBase{
 		createPrimarySceneFBO();
 		pssmFBO = new ParallelSplitShadowMapsFBO();
 		PSSMCamera.init();
+		deferredLighting = new DeferredLighting(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
 	}
 	
 	@Override
@@ -73,7 +79,7 @@ public class RenderSystem extends SystemBase{
 		GLUtil.clearScreen();
 		primarySceneFBO.unbind();
 		pssmFBO.getFbo().bind();
-		GLUtil.clearScreen();
+		glClear(GL_DEPTH_BUFFER_BIT);
 		pssmFBO.getFbo().unbind();
 		
 		
@@ -107,7 +113,16 @@ public class RenderSystem extends SystemBase{
 		
 		primarySceneFBO.unbind();
 		
-		fullScreenQuad.setTexture(primarySceneFBO.getAttachmentTexture(Attachment.COLOR));
+		//===================================//
+		//        RENDER DEFERRED LIGHTING   //
+		//===================================//
+		deferredLighting.render(primarySceneFBO.getAttachmentTexture(Attachment.COLOR),
+				primarySceneFBO.getAttachmentTexture(Attachment.POSITION),
+				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
+				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM),
+				pssmFBO.getDepthMap());
+		
+		fullScreenQuad.setTexture(deferredLighting.getDeferredSceneTexture());
 		fullScreenQuad.render();
 		
 	}

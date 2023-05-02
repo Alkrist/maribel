@@ -1,0 +1,6 @@
+{
+	"plane":{
+		"mesh": sample_plane,
+		"material": sample_scene
+	}
+}

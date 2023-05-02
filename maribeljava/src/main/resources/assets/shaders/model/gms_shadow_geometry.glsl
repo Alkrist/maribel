@@ -1,16 +1,19 @@
 #version 430
 
-layout(triangles, invocations = 6) in;
+layout(triangles, invocations = 5) in;
 
 layout(triangle_strip, max_vertices = 3) out;
 
 uniform mat4 modelMatrix;
-uniform mat4 projectionViewMatrices[3];
+uniform mat4 projectionViewMatrices[6];
 
 void main() {
 
-	gl_Layer = gl_InvocationID;
-	gl_Position = projectionViewMatrices[gl_InvocationID] * modelMatrix * gl_Position;
+	for(int i = 0; i < 5; i++){
+		gl_Position = projectionViewMatrices[gl_InvocationID] * modelMatrix * gl_in[i].gl_Position;
+		gl_Layer = gl_InvocationID;
+		EmitVertex();
+	}
 
 	EndPrimitive();
 }

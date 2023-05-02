@@ -185,6 +185,7 @@ public abstract class ShaderProgram {
 
 	public void updateUniforms(Texture texture) {}
 	
+	public void updateUniforms() {}
 	//TODO: add more update uniforms, depending on purpose
 	
 	

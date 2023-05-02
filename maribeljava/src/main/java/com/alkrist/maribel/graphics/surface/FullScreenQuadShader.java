@@ -24,6 +24,7 @@ public class FullScreenQuadShader extends ShaderProgram{
 		
 		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"quad\\fullscreen_VS.glsl"));
 		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"quad\\fullscreen_FS.glsl"));
+		//addGeometryShader(readShaderFromFile(FileUtil.getShadersPath()+"quad\\biba.glsl"));
 		compileShader();
 		
 		addUniform("texture");

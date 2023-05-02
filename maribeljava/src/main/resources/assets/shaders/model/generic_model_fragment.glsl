@@ -26,7 +26,7 @@ void main(void){
 
 	//NORMAL MAP
 	mat3 TBN = mat3(tangent_FS, normal_FS, bitangent_FS);
-	vec3 normal = normalize(2*(texture(material.normalmap, textureCoords_FS).rbg)-1);
+	vec3 normal = normalize(2*(texture(material.normalmap, textureCoords_FS).rgb)-1);
 	normal = normalize(TBN * normal);
 
 
@@ -37,6 +37,6 @@ void main(void){
 	//FINAL
 	albedo_out = vec4(albedo,1);
 	worldPosition_out = vec4(position_FS,1);
-	normal_out = vec4(normal.xzy,1);
+	normal_out = vec4(normal.xyz,1);
 	specularEmission_out = vec4(material.shininess,material.emission,0,1);
 }

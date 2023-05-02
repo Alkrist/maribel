@@ -16,12 +16,6 @@ import static org.lwjgl.opengl.GL11.glFrontFace;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL13.GL_SAMPLE_ALPHA_TO_COVERAGE;
 import static org.lwjgl.opengl.GL20.GL_POINT_SPRITE;
-import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE0;
-import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE1;
-import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE2;
-import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE3;
-import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE4;
-import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE5;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_SRGB;
 import static org.lwjgl.opengl.GL32.GL_PROGRAM_POINT_SIZE;
 import static org.lwjgl.opengl.GL32.GL_SAMPLE_MASK;
@@ -50,7 +44,7 @@ public class GLUtil {
 	}
 
 	public static void clearScreen() {
-		glClearColor(0.0f,0.0f,0.0f,1.0f);
+		glClearColor(0f,0f,0f,1.0f);
 		glClearDepth(1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}

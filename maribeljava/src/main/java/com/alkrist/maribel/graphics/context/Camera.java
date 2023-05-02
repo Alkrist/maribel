@@ -18,8 +18,11 @@ public class Camera {
 	private Matrix4f projectionMatrix;
 	
 	private Matrix4f viewMatrix;
+	private Matrix4f invViewMatirx;
 	
-	private final Matrix4f projectionViewMatrix;
+	private Matrix4f projectionViewMatrix;
+	private Matrix4f invProjectionMatrix;
+	
 	private FrustumIntersection frustumIntersection;
 	
 	
@@ -32,7 +35,9 @@ public class Camera {
 		this.roll = roll;
 		
 		viewMatrix = new Matrix4f();
+		invViewMatirx = new Matrix4f();
 		projectionViewMatrix = new Matrix4f();
+		invProjectionMatrix = new Matrix4f();
 		frustumIntersection = new FrustumIntersection();
 	}
 	
@@ -87,6 +92,8 @@ public class Camera {
 		//this.projectionMatrix = MatrixMath.createProjectionMatrix(width, height, zNear, zFar, fovY);
 		projectionMatrix = new Matrix4f();
 		this.projectionMatrix.perspective(fovY, ((float) width / (float) height), zNear, zFar);
+		
+		this.invProjectionMatrix.set(projectionMatrix).invert();
 	}
 	
 	public void setViewMatrix(Matrix4f viewMatrix) {
@@ -109,8 +116,16 @@ public class Camera {
 		return viewMatrix;
 	}
 	
+	public Matrix4f getInvertedViewMatrix() {
+		return invViewMatirx;
+	}
+	
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
+	}
+	
+	public Matrix4f getInvertedProjectionMatrix() {
+		return invProjectionMatrix;
 	}
 	
 	public float getPitch() {
@@ -133,6 +148,8 @@ public class Camera {
 		viewMatrix.rotate((float)Math.toRadians(roll), new Vector3f(0,0,1));
 		
 		viewMatrix.translate(-position.x, -position.y, -position.z);
+		
+		this.invViewMatirx.set(viewMatrix).invert();
 		
 		return viewMatrix;
 	}

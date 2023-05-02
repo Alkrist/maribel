@@ -9,14 +9,20 @@ import com.alkrist.maribel.graphics.context.GLContext;
 
 public class PSSMCamera {
 
-	public static final int PSSM_SPLITS = 3;
+	public static final int PSSM_SPLITS = 5;
+	private static final float[] SPLIT_DISTANCES = {
+			0.02f,
+			0.04f,
+			0.1f,
+			0.5f,
+			1f
+	};
 	
 	private static Matrix4f[] projectionViewMatrices;
-	private static float[] splitDistances;
+	
 	
 	public static void init() {
 		projectionViewMatrices = new Matrix4f[PSSM_SPLITS];
-		splitDistances = new float[PSSM_SPLITS];
 	}
 	
 	public static void update(DirectionalLight sourceLight) {
@@ -24,35 +30,12 @@ public class PSSMCamera {
 		Matrix4f projectionMatrix = GLContext.getMainCamera().getProjectionMatrix();
 		
 		Vector4f lightPos = new Vector4f(sourceLight.getPosition(), 0);
-		
-		float cascadeSplitLambda = 0.95f;
-		
-		float[] cascadeSplits = new float[PSSM_SPLITS];
-		
-		float nearClip = projectionMatrix.perspectiveNear();
-		float farClip = projectionMatrix.perspectiveFar();
-		float clipRange = farClip - nearClip;
-		
-		float minZ = nearClip;
-        float maxZ = nearClip + clipRange;
-        
-        float range = maxZ - minZ;
-        float ratio = maxZ / minZ;
-        
-        //Calculate split depths based on view frustum
-        for (int i = 0; i < PSSM_SPLITS; i++) {
-            float p = (i + 1) / (float) (PSSM_SPLITS);
-            float log = (float) (minZ * java.lang.Math.pow(ratio, p));
-            float uniform = minZ + range * p;
-            float d = cascadeSplitLambda * (log - uniform) + uniform;
-            cascadeSplits[i] = (d - nearClip) / clipRange;
-        }
         
         //Calculate orthographic projection matrix for each split
         float lastSplitDist = 0.0f;
 		for(int i = 0; i < PSSM_SPLITS; i++) {
 			
-			float splitDist = cascadeSplits[i];
+			float splitDist = SPLIT_DISTANCES[i];
 			
 			Vector3f[] frustumCorners = new Vector3f[]{
                     new Vector3f(-1.0f, 1.0f, -1.0f),
@@ -103,11 +86,10 @@ public class PSSMCamera {
             Matrix4f lightOrthoMatrix = new Matrix4f().ortho(minExtents.x, maxExtents.x, 
             		minExtents.y, maxExtents.y, 0.0f, maxExtents.z - minExtents.z, true);
             
-            //Store split distance and matrix values in array
-            splitDistances[i] = (nearClip + splitDist * clipRange) * -1.0f;
+            //Store matrix values in array
             projectionViewMatrices[i] = lightOrthoMatrix.mul(lightViewMatrix);
             
-            lastSplitDist = cascadeSplits[i];
+            lastSplitDist = SPLIT_DISTANCES[i];
 		}
 	}
 	
@@ -116,6 +98,6 @@ public class PSSMCamera {
 	}
 	
 	public static float[] getSplitDistances() {
-		return splitDistances;
+		return SPLIT_DISTANCES;
 	}
 }

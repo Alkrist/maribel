@@ -41,11 +41,11 @@ void main(void){
 
 	bitangent_FS = normalize(cross(norm, tang));
 
-	//TODO: fix normal maps according to new matrix calculations
+	//TODO: fix normal maps according to new matrix calculations,fix position in deferred lighting
 	//OTHERS
 	normal_FS = norm;
 	tangent_FS = tang;
 	textureCoords_FS = textureCoords;
-	position_FS = outViewPosition.xyz;
+	position_FS = outWorldPosition.xyz;
 }
 

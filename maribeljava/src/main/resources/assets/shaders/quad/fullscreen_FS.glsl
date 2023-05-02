@@ -1,8 +1,8 @@
 #version 330
 
 in vec2 textureCoords;
-
 layout(location = 0) out vec4 out_Color;
+
 
 uniform sampler2D texture;
 

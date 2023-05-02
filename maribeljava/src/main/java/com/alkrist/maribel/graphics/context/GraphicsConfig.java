@@ -8,7 +8,7 @@ import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 public class GraphicsConfig extends ConfigBase{
 
 	public final float NEAR_PLANE = 0.1f;
-	public final float FAR_PLANE = 1000; 
+	public final float FAR_PLANE = 10000; 
 	
 	
 	public float fovY;

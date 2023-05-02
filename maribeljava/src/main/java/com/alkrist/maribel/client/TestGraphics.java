@@ -12,6 +12,7 @@ import com.alkrist.maribel.graphics.components.OpaqueModelShadowRenderer;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.light.DirectionalLight;
+import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
@@ -19,6 +20,7 @@ import com.alkrist.maribel.graphics.model.Model;
 import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
+import com.alkrist.maribel.graphics.render.parameter.DefaultRenderParameter;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.systems.RenderSystem;
@@ -33,6 +35,8 @@ import com.alkrist.maribel.utils.Logging;
  */
 public class TestGraphics {
 
+	public static DirectionalLight sun = new DirectionalLight(new Vector3f(-10000, 10000, 0), new Vector3f(1,1,1), 0.7f);
+	public static PointLight light1 = new PointLight(new Vector3f(-2, 10, -40), new Vector3f(0,0,1), 0.5f, 1, 0.01f, 0.002f);
 	public static void main(String[] args) {
 		Logging.initLogger();
 		Settings.load();	
@@ -41,10 +45,10 @@ public class TestGraphics {
 		GLWindow window = GLContext.getWindow();
 
 		Model dog = ModelCompositeLoader.loadFromJson("dog");
-		Model sampleScene = ModelCompositeLoader.loadFromJson("sample_scene");
+		Model sampleScene = ModelCompositeLoader.loadFromJson("sample_plane");
 		
-		Transform dogTransform = new Transform(new Vector3f(0, 1.5f,-60), new Vector3f(0,0,0), 1);
-		Transform sampleSceneTransform = new Transform(new Vector3f(0,-20,-60), new Vector3f(0,0,0), 1);
+		Transform dogTransform = new Transform(new Vector3f(0, -4,-60), new Vector3f(0,0,0), 2);
+		Transform sampleSceneTransform = new Transform(new Vector3f(0,-5,-60), new Vector3f(0,0,0), 2);
 		
 		Renderable dogRenderable = new Renderable(dog.getChild("dog").getMesh(), dog.getChild("dog").getMaterial());
 		Renderable sampleSceneRenderable = new Renderable(sampleScene.getChild("plane").getMesh(), sampleScene.getChild("plane").getMaterial());
@@ -73,9 +77,6 @@ public class TestGraphics {
 		e2.addComponent(omRenderer);
 		e2.addComponent(shadowRenderer);
 		engine.addEntity(e2);
-		
-		
-		DirectionalLight sun = new DirectionalLight(new Vector3f(100000, 10000, 10000), new Vector3f(1,1,1), 5);
 		
 		while(!window.isCloseRequested()) {
 			

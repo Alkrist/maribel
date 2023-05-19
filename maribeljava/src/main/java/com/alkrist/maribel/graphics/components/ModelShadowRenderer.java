@@ -10,9 +10,9 @@ import com.alkrist.maribel.graphics.render.ElementsRenderer;
 import com.alkrist.maribel.graphics.render.RenderParameter;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 
-public class OpaqueModelShadowRenderer extends ElementsRenderer implements Component{
+public class ModelShadowRenderer extends ElementsRenderer implements Component{
 
-	public OpaqueModelShadowRenderer(RenderParameter config, ShaderProgram shader) {
+	public ModelShadowRenderer(RenderParameter config, ShaderProgram shader) {
 		super(config, shader);
 	}
 

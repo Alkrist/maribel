@@ -1,0 +1,6 @@
+{
+	"plane":{
+		"mesh": "transparent",
+		"material": "glass"
+	}
+}

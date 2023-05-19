@@ -8,7 +8,7 @@ layout (binding = 2, rgba16f) uniform readonly image2DMS albedoSampler;
 layout (binding = 3, rgba32f) uniform readonly image2DMS worldPositionSampler;
 layout (binding = 4, rgba16f) uniform readonly image2DMS normalSampler;
 layout (binding = 5, rgba16f) uniform readonly image2DMS specular_emission_diffuse_ssao_bloom_Sampler;
-
+layout (binding = 6, r16f) uniform readonly image2D ssaoBlurImage;
 
 const int SHADOW_MAP_RESOLUTION = 4096;
 const int SHADOW_VARIANCE_HIGH_QUALITY[5] = int[5](2,2,4,4,11);
@@ -32,23 +32,31 @@ struct DirectionLight
     float intensity;
 };
 
-struct PointLight {
+struct PointLight
+{
     vec3 position;
     vec3 color;
     float intensity;
     Attenuation att;
 };
 
+struct SpotLight
+{
+	PointLight pl;
+	vec3 conedir;
+	float cutoff;
+};
+
 
 uniform DirectionLight dirLight;
 uniform PointLight pointLight;
+uniform SpotLight spotLight;
 
 uniform sampler2DArray pssm;
 const int shadowsQuality = 2;
 uniform mat4 projViewMatrices[5];
 uniform float splitDistances[5];
 uniform mat4 viewMatrix;
-
 
 
 float calculateFogFactor(float dist, float sightRangeFactor) {
@@ -74,29 +82,9 @@ vec3 calculateLightColor(vec3 normal, vec3 position, vec3 to_light_dir, vec3 lig
 	specularFactor = pow(specularFactor, emission);
 	specularColor = light_intensity  * specularFactor * reflectance * lightColor;
 
+	//diffuse + specular
 	return (diffuseColor + specularColor);
 }
-
-vec3 diffuse(vec3 normal, vec3 to_light_dir, vec3 lightColor, float light_intensity){
-	vec3 diffuseColor = vec3(0);
-	float diffuseFactor = max(dot(normal, to_light_dir), 0.0);
-
-	diffuseColor =  lightColor * diffuseFactor * light_intensity;
-	diffuseColor = max(diffuseColor, 0.02);
-
-	return diffuseColor;
-}
-
-vec3 specular(vec3 position, vec3 to_light_dir, vec3 lightColor, vec3 normal, float emission, float reflectance, float light_intensity){
-	vec3 camera_direction = normalize(-position);
-	vec3 from_light_dir = -to_light_dir;
-	vec3 reflected_light = normalize(reflect(from_light_dir, normal));
-	float specularFactor = max(dot(camera_direction, reflected_light), 0.0);
-	specularFactor = pow(specularFactor, emission);
-
-	return light_intensity  * specularFactor * reflectance * lightColor;
-}
-
 
 vec3 calculateDirectionalLight(vec3 position, vec3 normal, DirectionLight light, float reflectance, float emission){
 	return calculateLightColor(normal, position, normalize(light.direction),
@@ -115,6 +103,21 @@ vec3 calculatePointLight(vec3 position, vec3 normal, PointLight light, float ref
 	    light.att.exponent * distance * distance;
 
 	return lightColor / attenuationInv;
+}
+
+vec3 calculateSpotLight(vec3 position, vec3 normal, SpotLight light, float reflectance, float emission){
+	 vec3 light_direction = light.pl.position - position;
+	 vec3 to_light_dir  = normalize(light_direction);
+	 vec3 from_light_dir  = -to_light_dir;
+	 float spot_alfa = dot(from_light_dir, normalize(light.conedir));
+
+	 vec3 lightColor = vec3(0);
+	 if (spot_alfa > light.cutoff){
+		 lightColor = calculatePointLight(position, normal, light.pl, reflectance, emission);
+		 lightColor *= (1.0 - (1.0 - spot_alfa)/(1.0 - light.cutoff));
+	 }
+
+	 return lightColor;
 }
 
 float varianceShadow(vec3 projCoords, int split, int kernels){
@@ -220,6 +223,12 @@ void main(void){
 		finalColor += calculatePointLight(position,
 				normalize(normal.xyz),
 				pointLight,
+				specular_emission_diffuse_ssao_bloom.r,
+				specular_emission_diffuse_ssao_bloom.g);
+
+		finalColor += calculateSpotLight(position,
+				normalize(normal.xyz),
+				spotLight,
 				specular_emission_diffuse_ssao_bloom.r,
 				specular_emission_diffuse_ssao_bloom.g);
 

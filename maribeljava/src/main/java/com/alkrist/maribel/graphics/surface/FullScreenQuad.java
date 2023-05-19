@@ -22,9 +22,9 @@ public class FullScreenQuad {
 	private RenderParameter config;
 	
 	
-	public FullScreenQuad() {
+	public FullScreenQuad(RenderParameter param) {
 		shader = FullScreenQuadShader.getInstance();
-		config = new CCW();
+		config = param;
 		
 		float[] positions = {-1, 1, -1, -1, 1, 1, 1, -1};
 

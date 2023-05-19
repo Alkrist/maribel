@@ -19,6 +19,9 @@ public class GraphicsConfig extends ConfigBase{
 	public SamplerFilter samplerFilter;
 	public int shadowMapResolution;
 	public boolean isShadowMapsEnabled;
+	public boolean isSSAOEnabled;
+	public boolean isMultisamplingEnabled;
+	public int multisampleSamplesCount;
 	
 	public GraphicsConfig() {}
 	
@@ -39,6 +42,9 @@ public class GraphicsConfig extends ConfigBase{
 		height = Integer.valueOf(prop.getProperty("height", "720"));
 		shadowMapResolution = Integer.valueOf(prop.getProperty("shadowmap_resolution", "2048"));
 		isShadowMapsEnabled = Boolean.valueOf(prop.getProperty("shadowmap_enabled", "true"));
+		isSSAOEnabled = Boolean.valueOf(prop.getProperty("ssao_enabled", "true"));
+		isMultisamplingEnabled = Boolean.valueOf(prop.getProperty("mulitsampling_enabled", "true"));
+		multisampleSamplesCount = Integer.valueOf(prop.getProperty("multisample_count", "2"));
 	}
 
 	@Override
@@ -56,6 +62,9 @@ public class GraphicsConfig extends ConfigBase{
 		prop.setProperty("height", String.valueOf(height));
 		prop.setProperty("shadowmap_resolution", String.valueOf(shadowMapResolution));
 		prop.setProperty("shadowmap_enabled", String.valueOf(isShadowMapsEnabled));
+		prop.setProperty("ssao_enabled", String.valueOf(isSSAOEnabled));
+		prop.setProperty("mulitsampling_enabled", String.valueOf(isMultisamplingEnabled));
+		prop.setProperty("multisample_count", String.valueOf(multisampleSamplesCount));
 	}
 
 }

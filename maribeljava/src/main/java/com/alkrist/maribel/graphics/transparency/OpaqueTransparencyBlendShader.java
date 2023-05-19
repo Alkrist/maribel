@@ -27,16 +27,18 @@ public class OpaqueTransparencyBlendShader extends ShaderProgram{
 		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"transparency\\opaque_transparency_blend.comp"));
 		compileShader();
 		
+		addUniform("width");
+		addUniform("height");
 		addUniform("transparencyAlphaMap");
 		addUniform("opaqueSceneDepthMap");
 		addUniform("transparencyLayerDepthMap");
-		//addUniform("width");
-		//addUniform("height");
 	}
 	
 	public void updateUniforms(Texture alphaMap, Texture opaqueDepthMap, Texture transparencyDepthMap) {
-		//setUniform("width", GLContext.getWindow().getWidth());
-		//setUniform("height", GLContext.getWindow().getHeight());
+		float w = GLContext.getWindow().getWidth();
+		float h = GLContext.getWindow().getHeight();
+		setUniform("width", w);
+		setUniform("height", h);
 		glActiveTexture(GL_TEXTURE5);
 		alphaMap.bind();
 		setUniform("transparencyAlphaMap", 5);

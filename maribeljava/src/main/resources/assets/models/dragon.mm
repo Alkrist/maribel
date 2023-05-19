@@ -1,5 +1,5 @@
-n glass
-dm transparent
+n dragon
+dm glass
 hs 1
 ws 1
 wm 3

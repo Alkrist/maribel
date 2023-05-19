@@ -11,8 +11,8 @@ layout(binding = 3) uniform sampler2DMS opaqueSceneDepthMap;
 layout(binding = 4) uniform sampler2D transparencyLayerDepthMap;
 layout(binding = 5) uniform sampler2D transparencyAlphaMap;
 
-const float width = 1280;
-const float height = 720;
+uniform float width;
+uniform float height;
 
 void main(void){
 	ivec2 computeCoord = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
@@ -31,6 +31,5 @@ void main(void){
 	else{
 		rgba = transparencyColor * alpha + opaqueColor * (1-alpha);
 	}
-
 	imageStore(finalColor_out, computeCoord, rgba);
 }

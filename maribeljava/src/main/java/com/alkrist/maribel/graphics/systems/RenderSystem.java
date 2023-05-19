@@ -1,9 +1,7 @@
 package com.alkrist.maribel.graphics.systems;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glFinish;
 import static org.lwjgl.opengl.GL11.glViewport;
 
@@ -92,7 +90,11 @@ public class RenderSystem extends SystemBase{
 	
 	@Override
 	public void removedFromEngine() {
-		// TODO Auto-generated method stub
+		opaqueSceneRenderList = null;
+		transparentSceneRenderList = null;
+		shadowSceneRenderList = null;
+		glFinish();
+		glViewport(0,0,config.width,config.height);
 	}
 	
 	@Override
@@ -199,6 +201,8 @@ public class RenderSystem extends SystemBase{
 		fullScreenQuad.setTexture(opaqueTransparencyBlending.getBlendedSceneTexture());
 		fullScreenQuad.render();
 		
+		//TODO: render GUI
+		glViewport(0,0,config.width,config.height);
 	}
 	
 	private void createSceneFBOs() {

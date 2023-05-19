@@ -53,14 +53,18 @@ public class TestGraphics {
 		Model dog = ModelCompositeLoader.loadFromJson("dog");
 		Model sampleScene = ModelCompositeLoader.loadFromJson("sample_plane");
 		Model glass = ModelCompositeLoader.loadFromJson("transparent");
+		Model dragon = ModelCompositeLoader.loadFromJson("dragon");
 		
 		Transform dogTransform = new Transform(new Vector3f(0, -4,-60), new Vector3f(0,0,0), 2);
 		Transform sampleSceneTransform = new Transform(new Vector3f(0,-5,-60), new Vector3f(0,0,0), 2);
+		Transform sampleSceneTransform2 = new Transform(new Vector3f(0,10,-100), new Vector3f(90,0,0), 3);
 		Transform glassTransform = new Transform(new Vector3f(0, 0,-40), new Vector3f(0,0,0), 2);
+		Transform dragonTransform = new Transform(new Vector3f(0, -3,-10), new Vector3f(0,0,0), 1.5f);
 		
 		Renderable dogRenderable = new Renderable(dog.getChild("dog").getMesh(), dog.getChild("dog").getMaterial());
 		Renderable sampleSceneRenderable = new Renderable(sampleScene.getChild("plane").getMesh(), sampleScene.getChild("plane").getMaterial());
 		Renderable glassRenderable = new Renderable(glass.getChild("plane").getMesh(), glass.getChild("plane").getMaterial());
+		Renderable dragonRenderable = new Renderable(dragon.getChild("body").getMesh(), dragon.getChild("body").getMaterial());
 		
 		TestShader shader = TestShader.getInstance();
 		GenericModelShader gms = GenericModelShader.getInstance();
@@ -95,6 +99,17 @@ public class TestGraphics {
 		e3.addComponent(transparentRenderer);
 		engine.addEntity(e3);
 		
+		Entity e4 = engine.createEntity();
+		e4.addComponent(dragonTransform);
+		e4.addComponent(dragonRenderable);
+		e4.addComponent(transparentRenderer);
+		engine.addEntity(e4);
+		
+		Entity e5 = engine.createEntity();
+		e5.addComponent(sampleSceneRenderable);
+		e5.addComponent(sampleSceneTransform2);
+		e5.addComponent(omRenderer);
+		engine.addEntity(e5);
 		
 		while(!window.isCloseRequested()) {
 			

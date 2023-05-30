@@ -141,6 +141,7 @@ public class RenderSystem extends SystemBase{
 		
 		primarySceneFBO.unbind();
 		
+		//TODO: render also specular emissive diffusion attributes for lighting and normal maps
 		//===================================//
 		//     RENDER TRANSPARENT OBJECTS    //
 		//===================================//
@@ -177,7 +178,8 @@ public class RenderSystem extends SystemBase{
 				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
 				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM),
 				pssmFBO.getDepthMap(),
-				ssao.getBlurSceneTexture());
+				ssao.getBlurSceneTexture(),
+				sampleCoverage.getSampleCoverageMask());
 		
 		//===================================//
 		//   BLEND OPAQUE/TRANSPARENT SCENE  //

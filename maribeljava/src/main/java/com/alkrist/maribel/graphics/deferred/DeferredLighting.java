@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL15.GL_WRITE_ONLY;
 import static org.lwjgl.opengl.GL30.GL_RGBA16F;
 import static org.lwjgl.opengl.GL30.GL_RGBA32F;
 import static org.lwjgl.opengl.GL30.GL_R16F;
+import static org.lwjgl.opengl.GL30.GL_R8;
 import static org.lwjgl.opengl.GL42.glBindImageTexture;
 import static org.lwjgl.opengl.GL43.glDispatchCompute;
 
@@ -36,7 +37,7 @@ public class DeferredLighting {
 	}
 	
 	public void render(Texture albedo, Texture position, Texture normal, Texture specularEmissionDiffuseSSAOBloom,
-			Texture pssm, Texture ssaoBlurScene) {
+			Texture pssm, Texture ssaoBlurScene, Texture sampleCoverageMask) {
 		glFinish();
 		shader.bind();
 		glBindImageTexture(0, deferredSceneTexture.getId(), 0, false, 0, GL_WRITE_ONLY, GL_RGBA16F);
@@ -44,6 +45,7 @@ public class DeferredLighting {
 		glBindImageTexture(3, position.getId(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
 		glBindImageTexture(4, normal.getId(), 0, false, 0, GL_READ_ONLY, GL_RGBA16F);
 		glBindImageTexture(5, specularEmissionDiffuseSSAOBloom.getId(), 0, false, 0, GL_READ_ONLY, GL_RGBA16F);
+		glBindImageTexture(6, sampleCoverageMask.getId(), 0, false, 0, GL_READ_ONLY, GL_R8);
 		shader.updateUniforms(pssm);
 		if (GLContext.getConfig().isSSAOEnabled)
 			glBindImageTexture(6, ssaoBlurScene.getId(), 0, false, 0, GL_READ_ONLY, GL_R16F);

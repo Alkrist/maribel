@@ -17,12 +17,12 @@ import com.alkrist.maribel.graphics.components.light.DirectionalLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.components.light.SpotLight;
 import com.alkrist.maribel.graphics.context.GLContext;
+import com.alkrist.maribel.graphics.filter.FilterNode;
 import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
 import com.alkrist.maribel.graphics.model.Model;
 import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
-import com.alkrist.maribel.graphics.render.parameter.AlphaBlendingSrcAlpha;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
@@ -38,7 +38,7 @@ import com.alkrist.maribel.utils.Logging;
  */
 public class TestGraphics {
 
-	public static DirectionalLight sun = new DirectionalLight(new Vector3f(-10000, 10000, 0), new Vector3f(1,1,1), 0.7f);
+	public static DirectionalLight sun = new DirectionalLight(new Vector3f(1, 10000, 1000), new Vector3f(1,1,1), 0.7f);
 	public static PointLight light1 = new PointLight(new Vector3f(-2, 10, -40), new Vector3f(0,0,1), 0.5f, 1, 0.01f, 0.002f);
 	public static SpotLight light2 = new SpotLight(new Vector3f(0, 15, 0), new Vector3f(1,0,1),
 			2f, 1, 0.01f, 0.002f, new Vector3f(-2, 10, -40), 45);
@@ -49,15 +49,15 @@ public class TestGraphics {
 		
 		GLContext.create("test", "system\\icon32");
 		GLWindow window = GLContext.getWindow();
-
+		
 		Model dog = ModelCompositeLoader.loadFromJson("dog");
 		Model sampleScene = ModelCompositeLoader.loadFromJson("sample_plane");
 		Model glass = ModelCompositeLoader.loadFromJson("transparent");
 		Model dragon = ModelCompositeLoader.loadFromJson("dragon");
 		
 		Transform dogTransform = new Transform(new Vector3f(0, -4,-60), new Vector3f(0,0,0), 2);
-		Transform sampleSceneTransform = new Transform(new Vector3f(0,-5,-60), new Vector3f(0,0,0), 2);
-		Transform sampleSceneTransform2 = new Transform(new Vector3f(0,10,-100), new Vector3f(90,0,0), 3);
+		Transform sampleSceneTransform = new Transform(new Vector3f(0,-5,-60), new Vector3f(0,1,0), 2);
+		Transform sampleSceneTransform2 = new Transform(new Vector3f(0,-30,-60), new Vector3f(0,1,0), 3);
 		Transform glassTransform = new Transform(new Vector3f(0, 0,-40), new Vector3f(0,0,0), 2);
 		Transform dragonTransform = new Transform(new Vector3f(0, -3,-10), new Vector3f(0,0,0), 1.5f);
 		
@@ -97,18 +97,21 @@ public class TestGraphics {
 		e3.addComponent(glassTransform);
 		e3.addComponent(glassRenderable);
 		e3.addComponent(transparentRenderer);
+		e3.addComponent(shadowRenderer);
 		engine.addEntity(e3);
 		
 		Entity e4 = engine.createEntity();
 		e4.addComponent(dragonTransform);
 		e4.addComponent(dragonRenderable);
 		e4.addComponent(transparentRenderer);
+		e4.addComponent(shadowRenderer);
 		engine.addEntity(e4);
 		
 		Entity e5 = engine.createEntity();
 		e5.addComponent(sampleSceneRenderable);
 		e5.addComponent(sampleSceneTransform2);
 		e5.addComponent(omRenderer);
+		e5.addComponent(shadowRenderer);
 		engine.addEntity(e5);
 		
 		while(!window.isCloseRequested()) {

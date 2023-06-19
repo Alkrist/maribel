@@ -42,7 +42,7 @@ public class GLWindow {
 	private static int fullscreen_height;
 	private static int windowed_width;
 	private static int windowed_height;
-
+	
 	// Current window size
 	private int width;
 	private int height;

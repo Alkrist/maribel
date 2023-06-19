@@ -1,6 +1,8 @@
 package com.alkrist.maribel.client;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
@@ -17,7 +19,6 @@ import com.alkrist.maribel.graphics.components.light.DirectionalLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.components.light.SpotLight;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.filter.FilterNode;
 import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
 import com.alkrist.maribel.graphics.model.Model;
@@ -27,6 +28,13 @@ import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.systems.RenderSystem;
+import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
+import com.alkrist.maribel.graphics.texture.Texture2D;
+import com.alkrist.maribel.graphics.ui.UIColorPanel;
+import com.alkrist.maribel.graphics.ui.UIElement;
+import com.alkrist.maribel.graphics.ui.UITexturePanel;
+import com.alkrist.maribel.graphics.ui.WindowCanvas;
 import com.alkrist.maribel.utils.Logging;
 
 /**
@@ -76,6 +84,15 @@ public class TestGraphics {
 		ModelShadowRenderer shadowRenderer = new ModelShadowRenderer(new ShadowRenderParameter(), gmss);
 		TransparentModelRenderer transparentRenderer = new TransparentModelRenderer(new CCW(), ts);
 		
+		
+		WindowCanvas wCanvas = new WindowCanvas();
+		UIElement colorPanel = new UIColorPanel(new Vector2f(0f, 0f), new Vector4f(1, 1, 1, 1f), new Vector2f(0.5f, 0.5f));
+		UIElement texturePanel = new UITexturePanel(new Vector2f(0.5f, 0.5f), 
+				new Texture2D("testui.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new Vector2f(0.5f, 0.6f));
+		
+		wCanvas.addUIElement(colorPanel);
+		colorPanel.addChild(texturePanel);
+		
 		Engine engine = new Engine();
 		engine.addSystem(new RenderSystem());
 		
@@ -114,15 +131,18 @@ public class TestGraphics {
 		e5.addComponent(shadowRenderer);
 		engine.addEntity(e5);
 		
+		Entity canvasEntity = engine.createEntity();
+		canvasEntity.addComponent(wCanvas);
+		engine.addEntity(canvasEntity);
+		
 		while(!window.isCloseRequested()) {
 			
 			GLContext.getInput().update();
 			GLContext.getMainCamera().update();
 			PSSMCamera.update(sun);
-			
+				
 			dogTransform.rotate(0, 0.1f, 0);
 			engine.update(0);
-			
 			window.updateWindow();
 		}window.destroyWindow();
 		

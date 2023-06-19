@@ -31,6 +31,7 @@ import com.alkrist.maribel.graphics.target.FBO.Attachment;
 import com.alkrist.maribel.graphics.target.OffScreenFBO;
 import com.alkrist.maribel.graphics.target.TransparencyFBO;
 import com.alkrist.maribel.graphics.transparency.OpaqueTransparencyBlending;
+import com.alkrist.maribel.graphics.ui.WindowCanvas;
 import com.alkrist.maribel.utils.ImmutableArrayList;
 
 public class RenderSystem extends SystemBase{
@@ -60,10 +61,12 @@ public class RenderSystem extends SystemBase{
 	private static final ComponentMapper<OpaqueModelRenderer> opaqueModelRendererMapper = ComponentMapper.getFor(OpaqueModelRenderer.class);
 	private static final ComponentMapper<ModelShadowRenderer> opaqueModelShadowMapper = ComponentMapper.getFor(ModelShadowRenderer.class);
 	private static final ComponentMapper<TransparentModelRenderer> transparentRendererMapper = ComponentMapper.getFor(TransparentModelRenderer.class);
+	private static final ComponentMapper<WindowCanvas> windowUIMapper = ComponentMapper.getFor(WindowCanvas.class);
 	
 	private ImmutableArrayList<Entity> opaqueSceneRenderList;
 	private ImmutableArrayList<Entity> transparentSceneRenderList;
 	private ImmutableArrayList<Entity> shadowSceneRenderList;
+	private ImmutableArrayList<Entity> windowCanvases;
 	
 	public RenderSystem() {
 		super();
@@ -85,6 +88,8 @@ public class RenderSystem extends SystemBase{
 		opaqueSceneRenderList = engine.getEntitiesOf(Family.one(OpaqueModelRenderer.class, TestRenderer.class).all(Transform.class, Renderable.class).get());
 		transparentSceneRenderList = engine.getEntitiesOf(Family.all(Transform.class, Renderable.class, TransparentModelRenderer.class).get());
 		shadowSceneRenderList = engine.getEntitiesOf(Family.all(ModelShadowRenderer.class, Transform.class, Renderable.class).get());
+		windowCanvases = engine.getEntitiesOf(Family.all(WindowCanvas.class).get());
+		
 		glFinish();
 	}
 	
@@ -203,7 +208,11 @@ public class RenderSystem extends SystemBase{
 		fullScreenQuad.setTexture(opaqueTransparencyBlending.getBlendedSceneTexture());
 		fullScreenQuad.render();
 		
-		//TODO: render GUI
+		
+		for(Entity e: windowCanvases) {
+			windowUIMapper.getComponent(e).render();
+		}
+		
 		glViewport(0,0,config.width,config.height);
 	}
 	

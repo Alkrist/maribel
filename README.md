@@ -63,14 +63,10 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 ## TODO:
 
 1. LWJGL 3 render engine.
-* model rendering pipeline
-* GUI system with constraints, with + without textures
-* parallel split shadow mapping
+* GUI system with constraints, with + without textures, screen and world UIs
 * FXAA
-* post porcessing effects
+* post porcessing effects pipeline
 * fonts
-* Anisotropic filtering
-* transparency
 
 2. Models.
 * test MMC load

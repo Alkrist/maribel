@@ -69,8 +69,7 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 * fonts
 
 2. Models.
-* test MMC load
-* add mesh generator
+* test MMC load, test MMC complex trees, make obj->mmc converter
 * add animations
 
 3. OpenAL sound engine.

@@ -51,6 +51,7 @@ public class TestGraphics {
 	public static SpotLight light2 = new SpotLight(new Vector3f(0, 15, 0), new Vector3f(1,0,1),
 			2f, 1, 0.01f, 0.002f, new Vector3f(-2, 10, -40), 45);
 	
+	//after setup commit
 	public static void main(String[] args) {
 		Logging.initLogger();
 		Settings.load();	

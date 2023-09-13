@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.joml.Vector2f;
 
+import com.alkrist.maribel.graphics.ui.UIConstraint.ConstraintType;
+import com.alkrist.maribel.graphics.ui.UIConstraint.OffsetFrom;
+
 
 public abstract class UIElement {
 	
@@ -12,11 +15,12 @@ public abstract class UIElement {
 	private UIElement parent;
 	
 	protected Vector2f position;
+	protected UIConstraint posXconstraint;
+	protected UIConstraint posYconstraint;
 	
-	public UIElement(Vector2f position) {
+	public UIElement() {
 		this.parent = null;
 		this.children = null;
-		this.position = position;
 	}
 	
 	public void addChild(UIElement child) {
@@ -52,6 +56,14 @@ public abstract class UIElement {
 	
 	public void setPosition(Vector2f position) {
 		this.position = position;
+	}
+	
+	public void setXConstraint(UIConstraint constraint) {
+		this.posXconstraint = constraint;
+	}
+	
+	public void setYConstraint(UIConstraint constraint) {
+		this.posYconstraint = constraint;
 	}
 	
 	public void render() {

@@ -98,7 +98,8 @@ public class TestGraphics {
 		//Test post processing pipeline
 		ContrastProperty contrastProp = new ContrastProperty(new Vector3f(1f), new Vector3f(1f));
 		
-		PostProcessingVolume ppeVolume1 = new PostProcessingVolume.PPEComponentBuilder().addEffectContrast(contrastProp).get();
+		PostProcessingVolume ppeVolume1 = new PostProcessingVolume.PPEComponentBuilder(0.1f).addEffectContrast(contrastProp).get();
+		
 		Engine engine = new Engine();
 		engine.addSystem(new RenderSystem());
 		
@@ -115,6 +116,7 @@ public class TestGraphics {
 		e2.addComponent(sampleSceneTransform);
 		e2.addComponent(omRenderer);
 		e2.addComponent(shadowRenderer);
+		
 		engine.addEntity(e2);
 		
 		Entity e3 = engine.createEntity();
@@ -122,6 +124,7 @@ public class TestGraphics {
 		e3.addComponent(glassRenderable);
 		e3.addComponent(transparentRenderer);
 		e3.addComponent(shadowRenderer);
+		
 		engine.addEntity(e3);
 		
 		Entity e4 = engine.createEntity();
@@ -129,6 +132,7 @@ public class TestGraphics {
 		e4.addComponent(dragonRenderable);
 		e4.addComponent(transparentRenderer);
 		e4.addComponent(shadowRenderer);
+		
 		engine.addEntity(e4);
 		
 		Entity e5 = engine.createEntity();
@@ -136,6 +140,7 @@ public class TestGraphics {
 		e5.addComponent(sampleSceneTransform2);
 		e5.addComponent(omRenderer);
 		e5.addComponent(shadowRenderer);
+		
 		engine.addEntity(e5);
 		
 		Entity canvasEntity = engine.createEntity();

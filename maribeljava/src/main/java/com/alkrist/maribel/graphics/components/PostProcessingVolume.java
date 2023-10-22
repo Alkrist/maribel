@@ -1,5 +1,6 @@
 package com.alkrist.maribel.graphics.components;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,11 @@ public class PostProcessingVolume implements Component{
 	private Bits effectBits;
 	private Map<Integer,PPEProperty> effectProperties;
 	
-	private PostProcessingVolume(Bits effectBits, Map<Integer, PPEProperty> props) {
+	private Float weight;
+	
+	private PostProcessingVolume(float weight, Bits effectBits, Map<Integer, PPEProperty> props) {
+		
+		this.weight = weight;
 		
 		this.effectBits = effectBits;
 		this.effectProperties = props;
@@ -28,12 +33,34 @@ public class PostProcessingVolume implements Component{
 		return effectBits.get(id);
 	}
 	
+	public Float getWeight() {
+		return weight;
+	}
+	
+	public void setWeight(float weight) {
+		weight = Math.max(0, weight);
+		weight = Math.min(weight, 1);
+		
+		this.weight = weight;
+	}
+	
+	public boolean isEnabled() {
+		return weight > 0;
+	}
+	
 	public static class PPEComponentBuilder {
+		
+		private float weight;
 		
 		private Map<Integer, PPEProperty> props;
 		private Bits effectBits;
 		
-		public PPEComponentBuilder() {
+		public PPEComponentBuilder(float weight) {
+			
+			weight = Math.max(0, weight);
+			weight = Math.min(weight, 1);
+			this.weight = weight;
+			
 			props = new HashMap<Integer, PPEProperty>();
 			effectBits = new Bits();
 		}
@@ -47,7 +74,14 @@ public class PostProcessingVolume implements Component{
 		//Add more effects here
 		
 		public PostProcessingVolume get() {
-			return new PostProcessingVolume(effectBits, props);
+			return new PostProcessingVolume(weight, effectBits, props);
 		}
+	}
+	
+	public static class PPEVolumeComparator implements Comparator<PostProcessingVolume> {
+	    @Override
+	    public int compare(PostProcessingVolume o1, PostProcessingVolume o2) {
+	        return o1.getWeight().compareTo(o2.getWeight());
+	    }
 	}
 }

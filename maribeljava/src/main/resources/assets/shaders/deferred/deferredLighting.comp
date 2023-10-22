@@ -9,6 +9,7 @@ layout (binding = 3, rgba32f) uniform readonly image2DMS worldPositionSampler;
 layout (binding = 4, rgba16f) uniform readonly image2DMS normalSampler;
 layout (binding = 5, rgba16f) uniform readonly image2DMS specular_emission_diffuse_ssao_bloom_Sampler;
 layout (binding = 6, r16f) uniform readonly image2D ssaoBlurImage;
+layout (binding = 7, r8) uniform readonly image2D sampleCoverageMask;
 
 const int SHADOW_MAP_RESOLUTION = 4096;
 const int SHADOW_VARIANCE_HIGH_QUALITY[5] = int[5](2,2,4,4,11);
@@ -58,6 +59,7 @@ uniform mat4 projViewMatrices[5];
 uniform float splitDistances[5];
 uniform mat4 viewMatrix;
 
+uniform int numSamples;
 
 float calculateFogFactor(float dist, float sightRangeFactor) {
 	return smoothstep(0, 1, -0.0002 / sightRangeFactor * (dist - (ZFAR) / 10 * sightRangeFactor) + 1);
@@ -207,36 +209,72 @@ void main(void){
 	vec4 normal = vec4(0);
 	vec4 specular_emission_diffuse_ssao_bloom = vec4(0);
 
+	if(imageLoad(sampleCoverageMask, computeCoord).r == 1.0){
+		for (int i=0; i<numSamples; i++){
+			albedo = imageLoad(albedoSampler, computeCoord,0).rgb;
+			normal = imageLoad(normalSampler, computeCoord,0).rbga;
+			if (normal.a != 0){
+				position = imageLoad(worldPositionSampler, computeCoord,0).rgb;
+				specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,0).rgba;
 
-	albedo = imageLoad(albedoSampler, computeCoord,0).rgb;
-	normal = imageLoad(normalSampler, computeCoord,0).rbga;
-	if (normal.a != 0){
-		position = imageLoad(worldPositionSampler, computeCoord,0).rgb;
-		specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,0).rgba;
+				finalColor = calculateDirectionalLight(position,
+						normalize(normal.xyz),
+						dirLight,
+						specular_emission_diffuse_ssao_bloom.r,
+						specular_emission_diffuse_ssao_bloom.g);
 
-		finalColor = calculateDirectionalLight(position,
-				normalize(normal.xyz),
-				dirLight,
-				specular_emission_diffuse_ssao_bloom.r,
-				specular_emission_diffuse_ssao_bloom.g);
+				finalColor += calculatePointLight(position,
+						normalize(normal.xyz),
+						pointLight,
+						specular_emission_diffuse_ssao_bloom.r,
+						specular_emission_diffuse_ssao_bloom.g);
 
-		finalColor += calculatePointLight(position,
-				normalize(normal.xyz),
-				pointLight,
-				specular_emission_diffuse_ssao_bloom.r,
-				specular_emission_diffuse_ssao_bloom.g);
+				finalColor += calculateSpotLight(position,
+						normalize(normal.xyz),
+						spotLight,
+						specular_emission_diffuse_ssao_bloom.r,
+						specular_emission_diffuse_ssao_bloom.g);
 
-		finalColor += calculateSpotLight(position,
-				normalize(normal.xyz),
-				spotLight,
-				specular_emission_diffuse_ssao_bloom.r,
-				specular_emission_diffuse_ssao_bloom.g);
+				finalColor = finalColor * albedo;
+				finalColor = finalColor * applyShadowMapping(position);
+			}
+			else{
+				finalColor = albedo;
+			}
+		}
+		finalColor /= numSamples;
 
-		finalColor = finalColor * albedo;
-		finalColor = finalColor * applyShadowMapping(position);
-	}
-	else{
-		finalColor = albedo;
+	}else{
+		albedo = imageLoad(albedoSampler, computeCoord,0).rgb;
+		normal = imageLoad(normalSampler, computeCoord,0).rbga;
+		if (normal.a != 0){
+			position = imageLoad(worldPositionSampler, computeCoord,0).rgb;
+			specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,0).rgba;
+
+			finalColor = calculateDirectionalLight(position,
+					normalize(normal.xyz),
+					dirLight,
+					specular_emission_diffuse_ssao_bloom.r,
+					specular_emission_diffuse_ssao_bloom.g);
+
+			finalColor += calculatePointLight(position,
+					normalize(normal.xyz),
+					pointLight,
+					specular_emission_diffuse_ssao_bloom.r,
+					specular_emission_diffuse_ssao_bloom.g);
+
+			finalColor += calculateSpotLight(position,
+					normalize(normal.xyz),
+					spotLight,
+					specular_emission_diffuse_ssao_bloom.r,
+					specular_emission_diffuse_ssao_bloom.g);
+
+			finalColor = finalColor * albedo;
+			finalColor = finalColor * applyShadowMapping(position);
+			}
+			else{
+				finalColor = albedo;
+			}
 	}
 
 	imageStore(defferedSceneImage, computeCoord, vec4(finalColor, 1.0));

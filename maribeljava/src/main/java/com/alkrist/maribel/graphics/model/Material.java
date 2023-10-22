@@ -14,6 +14,11 @@ import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
 import com.alkrist.maribel.utils.FileUtil;
 
+/**
+ * Material class represents the material for renderable object.
+ * 
+ * @author Alkrist
+ */
 public class Material {
 
 	private static final Material GENERIC_MATERIAL = getGenericMaterial();

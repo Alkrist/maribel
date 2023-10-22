@@ -20,6 +20,7 @@ public class GraphicsConfig extends ConfigBase{
 	public int shadowMapResolution;
 	public boolean isShadowMapsEnabled;
 	public boolean isSSAOEnabled;
+	public boolean isFXAAEnabled;
 	public boolean isMultisamplingEnabled;
 	public int multisampleSamplesCount;
 	
@@ -43,6 +44,7 @@ public class GraphicsConfig extends ConfigBase{
 		shadowMapResolution = Integer.valueOf(prop.getProperty("shadowmap_resolution", "2048"));
 		isShadowMapsEnabled = Boolean.valueOf(prop.getProperty("shadowmap_enabled", "true"));
 		isSSAOEnabled = Boolean.valueOf(prop.getProperty("ssao_enabled", "true"));
+		isFXAAEnabled = Boolean.valueOf(prop.getProperty("fxaa_enabled", "true"));
 		isMultisamplingEnabled = Boolean.valueOf(prop.getProperty("mulitsampling_enabled", "true"));
 		multisampleSamplesCount = Integer.valueOf(prop.getProperty("multisample_count", "2"));
 	}
@@ -63,6 +65,7 @@ public class GraphicsConfig extends ConfigBase{
 		prop.setProperty("shadowmap_resolution", String.valueOf(shadowMapResolution));
 		prop.setProperty("shadowmap_enabled", String.valueOf(isShadowMapsEnabled));
 		prop.setProperty("ssao_enabled", String.valueOf(isSSAOEnabled));
+		prop.setProperty("fxaa_enabled", String.valueOf(isFXAAEnabled));
 		prop.setProperty("mulitsampling_enabled", String.valueOf(isMultisamplingEnabled));
 		prop.setProperty("multisample_count", String.valueOf(multisampleSamplesCount));
 	}

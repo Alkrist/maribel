@@ -45,7 +45,7 @@ public class DeferredLighting {
 		glBindImageTexture(3, position.getId(), 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
 		glBindImageTexture(4, normal.getId(), 0, false, 0, GL_READ_ONLY, GL_RGBA16F);
 		glBindImageTexture(5, specularEmissionDiffuseSSAOBloom.getId(), 0, false, 0, GL_READ_ONLY, GL_RGBA16F);
-		glBindImageTexture(6, sampleCoverageMask.getId(), 0, false, 0, GL_READ_ONLY, GL_R8);
+		glBindImageTexture(7, sampleCoverageMask.getId(), 0, false, 0, GL_READ_ONLY, GL_R8);
 		shader.updateUniforms(pssm);
 		if (GLContext.getConfig().isSSAOEnabled)
 			glBindImageTexture(6, ssaoBlurScene.getId(), 0, false, 0, GL_READ_ONLY, GL_R16F);

@@ -9,9 +9,9 @@ uniform sampler2D uiTexture;
 void main(void){
 	vec4 color = texture(uiTexture, textureCoords_FS);
 
-	if(color.a < 0.5){
+	/*if(color.a < 0.5){
 		discard;
-	}
+	}*/
 
 	out_Color = color;
 }

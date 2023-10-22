@@ -25,7 +25,7 @@ public class Camera {
 	
 	private FrustumIntersection frustumIntersection;
 	
-	
+	private boolean isMoved = false;
 	 
 	
 	public Camera(Vector3f position, float pitch, float yaw, float roll) {
@@ -52,29 +52,36 @@ public class Camera {
 	public void update() {
 		
 		InputHandler input = GLContext.getInput();
+		isMoved = false;
 		
 		if(input.isKeyHolding(GLFW.GLFW_KEY_Q)) {
 			roll -= 0.1f;
+			isMoved = true;
 		}
 		
 		if(input.isKeyHolding(GLFW.GLFW_KEY_E)) {
 			roll += 0.1f;
+			isMoved = true;
 		}
 		
 		if(input.isKeyHolding(GLFW.GLFW_KEY_W)) {
 			position.z += 0.1f;
+			isMoved = true;
 		}
 		
 		if(input.isKeyHolding(GLFW.GLFW_KEY_S)) {
 			position.z -= 0.1f;
+			isMoved = true;
 		}
 		
 		if(input.isKeyHolding(GLFW.GLFW_KEY_A)) {
 			position.x -= 0.1f;
+			isMoved = true;
 		}
 		
 		if(input.isKeyHolding(GLFW.GLFW_KEY_D)) {
 			position.x += 0.1f;
+			isMoved = true;
 		}
 		
 		updateViewMatrix();
@@ -138,6 +145,10 @@ public class Camera {
 	
 	public float getRoll() {
 		return roll;
+	}
+	
+	public boolean isMoved() {
+		return isMoved;
 	}
 	
 	private Matrix4f updateViewMatrix() {

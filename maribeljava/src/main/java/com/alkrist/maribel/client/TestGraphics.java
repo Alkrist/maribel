@@ -2,7 +2,6 @@ package com.alkrist.maribel.client;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
@@ -12,6 +11,7 @@ import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.ModelShadowRenderer;
 import com.alkrist.maribel.graphics.components.OpaqueModelRenderer;
+import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
@@ -19,6 +19,7 @@ import com.alkrist.maribel.graphics.components.light.DirectionalLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.components.light.SpotLight;
 import com.alkrist.maribel.graphics.context.GLContext;
+import com.alkrist.maribel.graphics.filter.contrast.ContrastProperty;
 import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
 import com.alkrist.maribel.graphics.model.Model;
@@ -28,10 +29,10 @@ import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.systems.RenderSystem;
+import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
-import com.alkrist.maribel.graphics.ui.UIColorPanel;
 import com.alkrist.maribel.graphics.ui.UIElement;
 import com.alkrist.maribel.graphics.ui.UITexturePanel;
 import com.alkrist.maribel.graphics.ui.WindowCanvas;
@@ -87,13 +88,17 @@ public class TestGraphics {
 		
 		
 		WindowCanvas wCanvas = new WindowCanvas();
-		UIElement colorPanel = new UIColorPanel(new Vector2f(0f, 0f), new Vector4f(1, 1, 1, 1f), new Vector2f(0.5f, 0.5f));
-		UIElement texturePanel = new UITexturePanel(new Vector2f(0.5f, 0.5f), 
-				new Texture2D("testui.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new Vector2f(0.5f, 0.6f));
+		//UIElement colorPanel = new UIColorPanel(new Vector2f(0f, 0f), new Vector4f(1, 1, 1, 1f), new Vector2f(0.5f, 0.5f));
+		UIElement texturePanel = new UITexturePanel(new Vector2f(0.0f, 0.0f), 
+				new Texture2D("overlay\\overlay_gasmask_3.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new Vector2f(1.0f, 1.0f));
 		
-		wCanvas.addUIElement(colorPanel);
-		colorPanel.addChild(texturePanel);
+		wCanvas.addUIElement(texturePanel);
+		//colorPanel.addChild(texturePanel);
 		
+		//Test post processing pipeline
+		ContrastProperty contrastProp = new ContrastProperty(new Vector3f(1f), new Vector3f(1f));
+		
+		PostProcessingVolume ppeVolume1 = new PostProcessingVolume.PPEComponentBuilder().addEffectContrast(contrastProp).get();
 		Engine engine = new Engine();
 		engine.addSystem(new RenderSystem());
 		
@@ -102,6 +107,7 @@ public class TestGraphics {
 		e1.addComponent(dogTransform);
 		e1.addComponent(omRenderer);
 		e1.addComponent(shadowRenderer);
+		e1.addComponent(ppeVolume1);
 		engine.addEntity(e1);
 		
 		Entity e2 = engine.createEntity();

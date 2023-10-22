@@ -52,6 +52,8 @@ public class DeferredLightingShader extends ShaderProgram{
 			addUniform("projViewMatrices["+i+"]");
 			addUniform("splitDistances["+i+"]");
 		}
+		
+		addUniform("numSamples");
 	}
 	
 	public void updateUniforms(Texture pssm) {
@@ -81,6 +83,8 @@ public class DeferredLightingShader extends ShaderProgram{
 			setUniform("splitDistances["+i+"]",PSSMCamera.getSplitDistances()[i]);
 		}
 
+		setUniform("numSamples", GLContext.getConfig().multisampleSamplesCount);
+		
 		glActiveTexture(GL_TEXTURE0);
 		pssm.bind();
 		setUniform("pssm", 0);

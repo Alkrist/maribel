@@ -10,15 +10,18 @@ import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.common.ecs.Family;
 import com.alkrist.maribel.common.ecs.SystemBase;
+import com.alkrist.maribel.graphics.antialiasing.FXAA;
 import com.alkrist.maribel.graphics.antialiasing.SampleCoverage;
 import com.alkrist.maribel.graphics.components.ModelShadowRenderer;
 import com.alkrist.maribel.graphics.components.OpaqueModelRenderer;
+import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.context.GraphicsConfig;
 import com.alkrist.maribel.graphics.deferred.DeferredLighting;
+import com.alkrist.maribel.graphics.filter.PostProcessingVolumeRenderer;
 import com.alkrist.maribel.graphics.occlusion.SSAO;
 import com.alkrist.maribel.graphics.platform.GLUtil;
 import com.alkrist.maribel.graphics.platform.GLWindow;
@@ -30,6 +33,7 @@ import com.alkrist.maribel.graphics.target.FBO;
 import com.alkrist.maribel.graphics.target.FBO.Attachment;
 import com.alkrist.maribel.graphics.target.OffScreenFBO;
 import com.alkrist.maribel.graphics.target.TransparencyFBO;
+import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.transparency.OpaqueTransparencyBlending;
 import com.alkrist.maribel.graphics.ui.WindowCanvas;
 import com.alkrist.maribel.utils.ImmutableArrayList;
@@ -52,21 +56,27 @@ public class RenderSystem extends SystemBase{
 	private FBO secondarySceneFBO;
 	private ParallelSplitShadowMapsFBO pssmFBO;
 	private SSAO ssao;
+	private FXAA fxaa;
 	private SampleCoverage sampleCoverage;
 	private OpaqueTransparencyBlending opaqueTransparencyBlending;
 	
 	private DeferredLighting deferredLighting;
+	
+	private PostProcessingVolumeRenderer ppeVolumeRenderer;
+	
 	
 	private static final ComponentMapper<TestRenderer> testRendererMapper = ComponentMapper.getFor(TestRenderer.class);
 	private static final ComponentMapper<OpaqueModelRenderer> opaqueModelRendererMapper = ComponentMapper.getFor(OpaqueModelRenderer.class);
 	private static final ComponentMapper<ModelShadowRenderer> opaqueModelShadowMapper = ComponentMapper.getFor(ModelShadowRenderer.class);
 	private static final ComponentMapper<TransparentModelRenderer> transparentRendererMapper = ComponentMapper.getFor(TransparentModelRenderer.class);
 	private static final ComponentMapper<WindowCanvas> windowUIMapper = ComponentMapper.getFor(WindowCanvas.class);
+	private static final ComponentMapper<PostProcessingVolume> ppeVolumeMapper = ComponentMapper.getFor(PostProcessingVolume.class);
 	
 	private ImmutableArrayList<Entity> opaqueSceneRenderList;
 	private ImmutableArrayList<Entity> transparentSceneRenderList;
 	private ImmutableArrayList<Entity> shadowSceneRenderList;
 	private ImmutableArrayList<Entity> windowCanvases;
+	private ImmutableArrayList<Entity> postProcessingVolumes;
 	
 	public RenderSystem() {
 		super();
@@ -78,8 +88,11 @@ public class RenderSystem extends SystemBase{
 		PSSMCamera.init();
 		deferredLighting = new DeferredLighting(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
 		ssao = new SSAO(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
+		fxaa = new FXAA(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
 		sampleCoverage = new SampleCoverage(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
 		opaqueTransparencyBlending = new OpaqueTransparencyBlending(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
+	
+		ppeVolumeRenderer = new PostProcessingVolumeRenderer();
 	}
 	
 	@Override
@@ -88,7 +101,8 @@ public class RenderSystem extends SystemBase{
 		opaqueSceneRenderList = engine.getEntitiesOf(Family.one(OpaqueModelRenderer.class, TestRenderer.class).all(Transform.class, Renderable.class).get());
 		transparentSceneRenderList = engine.getEntitiesOf(Family.all(Transform.class, Renderable.class, TransparentModelRenderer.class).get());
 		shadowSceneRenderList = engine.getEntitiesOf(Family.all(ModelShadowRenderer.class, Transform.class, Renderable.class).get());
-		windowCanvases = engine.getEntitiesOf(Family.all(WindowCanvas.class).get());
+		windowCanvases = engine.getEntitiesOf(Family.all(WindowCanvas.class).get());	
+		postProcessingVolumes = engine.getEntitiesOf(Family.all(PostProcessingVolume.class).get());
 		
 		glFinish();
 	}
@@ -197,15 +211,34 @@ public class RenderSystem extends SystemBase{
 					secondarySceneFBO.getAttachmentTexture(Attachment.ALPHA));
 		}
 		
-		//TODO: PPE pass
+		//===================================//
+		//       POST PROCESSED SCENE        //
+		//===================================//
 		/*
 		 * PPE pipeline:
-		 * 1) pre-postprocessing - FXAA
+		 * 1) pre-postprocessing - FXAA +
 		 * 2) postprocessing carried out via something, so it can be extended later and not controlled from here
 		 * 3) retrieve final ppe result
 		 */
 		
-		fullScreenQuad.setTexture(opaqueTransparencyBlending.getBlendedSceneTexture());
+		Texture prePostProcessingScene = transparentSceneRenderList.size() > 0 ? opaqueTransparencyBlending.getBlendedSceneTexture() :
+			deferredLighting.getDeferredSceneTexture();
+		Texture currentScene = prePostProcessingScene;
+		
+		
+		if(GLContext.getConfig().isFXAAEnabled && GLContext.getMainCamera().isMoved()) {
+			fxaa.render(currentScene);
+			currentScene = fxaa.getFXAASceneTexture();
+		}
+		
+		for(Entity e: postProcessingVolumes) {
+			PostProcessingVolume volume = ppeVolumeMapper.getComponent(e);
+			
+			currentScene = ppeVolumeRenderer.render(volume, currentScene);
+		}
+		
+		
+		fullScreenQuad.setTexture(currentScene);
 		fullScreenQuad.render();
 		
 		

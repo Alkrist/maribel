@@ -1,5 +1,10 @@
 package com.alkrist.maribel.graphics.ui.constraints;
 
+/**
+ * Creates the constraint of specified percents of the screen
+ * 
+ * @author Alkrist
+ */
 public class RelativeConstraint implements PositionConstraint, ScaleConstraint{
 
 	private boolean isNegativeCoord = false;

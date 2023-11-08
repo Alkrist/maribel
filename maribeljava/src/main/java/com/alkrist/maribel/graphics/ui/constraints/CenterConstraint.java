@@ -1,7 +1,15 @@
 package com.alkrist.maribel.graphics.ui.constraints;
 
+/**
+ * Creates the constraint that will always place an element at the center of the screen.<br/>
+ * Can only be for position.
+ * @author Alkrist
+ */
 public class CenterConstraint implements PositionConstraint{
 
+	/**
+	 * Center Constraint constructor.
+	 */
 	public CenterConstraint() {}
 	
 	@Override

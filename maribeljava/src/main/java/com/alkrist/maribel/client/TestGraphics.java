@@ -102,7 +102,7 @@ public class TestGraphics {
 		UIElement colorPanel = new UIColorPanel(colorPanelConstraints, new Vector4f(0.4f,0.4f, 0.5f, 1.0f));
 		
 		UIConstraints texturePanelConstraints = new UIConstraints()
-				.setWidth(new RelativeConstraint(1))
+				.setWidth(new RelativeConstraint(0.5f))
 				.setHeight(new AspectConstraint(1))
 				.setX(UIConstraints.MarginHorizontal.RIGHT,new PixelConstraint(20))
 				.setY(UIConstraints.MarginVertical.TOP, new PixelConstraint(20));
@@ -112,7 +112,7 @@ public class TestGraphics {
 		
 		wCanvas.addUIElement(texturePanel);
 		//wCanvas.addUIElement(colorPanel);
-		texturePanel.addChild(colorPanel);
+		//texturePanel.addChild(colorPanel);
 		//colorPanel.addChild(texturePanel);
 		
 		//Test post processing pipeline

@@ -250,9 +250,9 @@ public class RenderSystem extends SystemBase{
 		fullScreenQuad.render();
 		
 		
-		/*for(Entity e: windowCanvases) {
+		for(Entity e: windowCanvases) {
 			windowUIMapper.getComponent(e).render();
-		}*/
+		}
 		
 		glViewport(0,0,config.width,config.height);
 	}

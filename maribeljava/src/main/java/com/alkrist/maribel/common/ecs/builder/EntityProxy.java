@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.alkrist.maribel.common.ecs.Component;
-import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.utils.Bits;

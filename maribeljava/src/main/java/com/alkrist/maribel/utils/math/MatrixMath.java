@@ -1,9 +1,7 @@
 package com.alkrist.maribel.utils.math;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 /**
  * This class contains static methods with matrices and vectors that are used

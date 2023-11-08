@@ -16,7 +16,6 @@ import java.util.logging.Level;
 
 import org.json.JSONObject;
 
-import com.alkrist.maribel.graphics.resources.ResourceCache;
 import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.Logging;
 

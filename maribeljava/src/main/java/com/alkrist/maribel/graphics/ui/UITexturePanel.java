@@ -15,6 +15,7 @@ import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.ui.UIConstraint.ConstraintType;
 import com.alkrist.maribel.graphics.ui.UIConstraint.OffsetFrom;
+import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 
 public class UITexturePanel extends UIElement{
 
@@ -30,13 +31,9 @@ public class UITexturePanel extends UIElement{
 	private static UITexturePanelShader shader;
 	
 	private Texture texture;
-	private Vector2f scale;
 	
-	private UIConstraint widthConstraint;
-	private UIConstraint heightConstraint;
-	
-	public UITexturePanel(Texture texture) {
-		super();
+	public UITexturePanel(UIConstraints constraints, Texture texture) {
+		super(constraints);
 		
 		this.texture = texture;
 		
@@ -48,14 +45,7 @@ public class UITexturePanel extends UIElement{
 			shader = UITexturePanelShader.getInstance();
 		}
 	}
-	public UITexturePanel(Vector2f position, Texture texture, Vector2f scale) {
-		
-		this(texture);
-		
-		this.position = position;
-		this.scale = scale;
-	}
-
+	
 	@Override
 	public void updateInternal(double deltaTime) {
 		// TODO Auto-generated method stub
@@ -77,155 +67,14 @@ public class UITexturePanel extends UIElement{
 
 	protected Matrix4f getTransformationMatrix() {
 		Matrix4f matrix = new Matrix4f();
+		Vector2f position = constraints.getPosition();
+		Vector2f scale = constraints.getScale();
+		
 		matrix.identity().translate(position.x, position.y, 0).scale(scale.x, scale.y, 1);
 		return matrix;
 	}
 	
 	public Texture getTexture() {
 		return texture;
-	}
-	
-	public void setWidthConstraint(UIConstraint constraint) {
-		if(constraint.getType() == ConstraintType.CENTER) {
-			throw new IllegalArgumentException("This constraint does not apply to size.");
-		}
-		
-		this.widthConstraint = constraint;
-	}
-	
-	public void setHeightConstraint(UIConstraint constraint) {
-		if(constraint.getType() == ConstraintType.CENTER) {
-			throw new IllegalArgumentException("This constraint does not apply to size.");
-		}
-		
-		this.heightConstraint = constraint;
-	}
-	
-	private float getRelativeHeight() {
-		if(heightConstraint == null) {
-			throw new IllegalArgumentException("no Y scale or height constraint specified.");
-		}
-		
-		switch(heightConstraint.getType()) {
-		
-		case ASPECT:
-			if(widthConstraint.getType() == ConstraintType.ASPECT) {
-				throw new IllegalArgumentException("width and height both can't have aspect constraint at the same time.");
-			}
-			return getRelativeWidth() * heightConstraint.getValue();
-			
-		case RELATIVE:
-			return heightConstraint.getValue();
-			
-		case PIXEL:
-			return heightConstraint.getValue() / GLContext.getConfig().height;
-			
-		default:
-			return 1;
-		}
-	}
-	
-	private float getRelativeWidth() {
-		if(widthConstraint == null) {
-			throw new IllegalArgumentException("no X scale or width constraint specified.");
-		}
-		
-		switch(widthConstraint.getType()) {
-		
-		case ASPECT:
-			if(heightConstraint.getType() == ConstraintType.ASPECT) {
-				throw new IllegalArgumentException("width and height both can't have aspect constraint at the same time.");
-			}
-			return getRelativeHeight() * widthConstraint.getValue();
-			
-		case RELATIVE:
-			return widthConstraint.getValue();
-			
-		case PIXEL:
-			return widthConstraint.getValue() / GLContext.getConfig().width;
-			
-		default:
-			return 1;
-		}
-	}
-	
-	private float getRelativeY() {
-		if(posYconstraint == null) {
-			throw new IllegalArgumentException("no Y position or Y position constraint specified.");
-		}
-		
-		switch(posYconstraint.getType()) {
-		
-		case ASPECT:
-			if(posXconstraint.getType() == ConstraintType.ASPECT) {
-				throw new IllegalArgumentException("X and Y position both can't have aspect constraint at the same time.");
-			}
-			if(posYconstraint.hasOffsetSide() && posYconstraint.getOffsetSide() == OffsetFrom.BOTTOM) {
-				return Math.abs(getRelativeX() * posYconstraint.getValue()) + (-1);
-			}
-			return 1 - (Math.abs(getRelativeX() * posYconstraint.getValue()));
-			
-		case RELATIVE:
-			if(posYconstraint.hasOffsetSide() && posYconstraint.getOffsetSide() == OffsetFrom.BOTTOM) {
-				return scale.y + posYconstraint.getValue() + (-1);
-			}
-			return 1 - (scale.y + posYconstraint.getValue());
-			
-		case PIXEL:
-			float offset = posYconstraint.getValue() / (GLContext.getConfig().height / 2);
-			if(posYconstraint.hasOffsetSide() && posYconstraint.getOffsetSide() == OffsetFrom.BOTTOM) {
-				return scale.y + offset + (-1);
-			}
-			return 1 - (scale.y + offset);
-			
-		default:
-			return 0;
-		}
-	}
-	
-	private float getRelativeX() {
-		if(posXconstraint == null) {
-			throw new IllegalArgumentException("no X position or X position constraint specified.");
-		}
-		
-		switch(posXconstraint.getType()) {
-		
-		case ASPECT:
-			if(posYconstraint.getType() == ConstraintType.ASPECT) {
-				throw new IllegalArgumentException("X and Y position both can't have aspect constraint at the same time.");
-			}
-			if(posXconstraint.hasOffsetSide() && posXconstraint.getOffsetSide() == OffsetFrom.LEFT) {
-				return Math.abs(getRelativeY() * posXconstraint.getValue()) + (-1);
-			}
-			return 1 - (Math.abs(getRelativeY() * posXconstraint.getValue()));
-			
-		case RELATIVE:
-			if(posXconstraint.hasOffsetSide() && posXconstraint.getOffsetSide() == OffsetFrom.LEFT) {
-				return scale.x + posXconstraint.getValue() + (-1);
-			}
-			return 1 - (scale.x + posXconstraint.getValue());
-			
-		case PIXEL:
-			float offset = posXconstraint.getValue() / (GLContext.getConfig().width / 2);
-			if(posXconstraint.hasOffsetSide() && posXconstraint.getOffsetSide() == OffsetFrom.LEFT) {
-				return scale.x + offset + (-1);
-			}
-			return 1 - (scale.x + offset);
-			
-		default:
-			return 0;
-		}
-	}
-	
-	private void calculateRelativePosAndScale() {
-		float w = getRelativeWidth();
-		float h = getRelativeHeight();
-		
-		this.scale = new Vector2f(w, h);
-		
-		float x = getRelativeX();
-		float y = getRelativeY();
-		
-		this.position = new Vector2f(x, y);
 	}
 }

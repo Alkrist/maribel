@@ -9,8 +9,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import com.alkrist.maribel.graphics.model.Mesh;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.render.RenderParameter;
-import com.alkrist.maribel.graphics.render.parameter.CCW;
-import com.alkrist.maribel.graphics.render.parameter.DefaultRenderParameter;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.texture.Texture;
 

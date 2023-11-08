@@ -1,7 +1,7 @@
 package com.alkrist.maribel.client;
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
@@ -29,13 +29,17 @@ import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.systems.RenderSystem;
-import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
+import com.alkrist.maribel.graphics.ui.UIColorPanel;
 import com.alkrist.maribel.graphics.ui.UIElement;
 import com.alkrist.maribel.graphics.ui.UITexturePanel;
 import com.alkrist.maribel.graphics.ui.WindowCanvas;
+import com.alkrist.maribel.graphics.ui.constraints.AspectConstraint;
+import com.alkrist.maribel.graphics.ui.constraints.PixelConstraint;
+import com.alkrist.maribel.graphics.ui.constraints.RelativeConstraint;
+import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 import com.alkrist.maribel.utils.Logging;
 
 /**
@@ -89,10 +93,26 @@ public class TestGraphics {
 		
 		WindowCanvas wCanvas = new WindowCanvas();
 		//UIElement colorPanel = new UIColorPanel(new Vector2f(0f, 0f), new Vector4f(1, 1, 1, 1f), new Vector2f(0.5f, 0.5f));
-		UIElement texturePanel = new UITexturePanel(new Vector2f(0.0f, 0.0f), 
-				new Texture2D("overlay\\overlay_gasmask_3.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new Vector2f(1.0f, 1.0f));
+		UIConstraints colorPanelConstraints = new UIConstraints()
+		.setWidth(new RelativeConstraint(0.5f))
+		.setHeight(new AspectConstraint(0.5f))
+		.setX(new RelativeConstraint(0.25f))
+		.setY(new RelativeConstraint(0.5f));
+		
+		UIElement colorPanel = new UIColorPanel(colorPanelConstraints, new Vector4f(0.4f,0.4f, 0.5f, 1.0f));
+		
+		UIConstraints texturePanelConstraints = new UIConstraints()
+				.setWidth(new RelativeConstraint(1))
+				.setHeight(new AspectConstraint(1))
+				.setX(UIConstraints.MarginHorizontal.RIGHT,new PixelConstraint(20))
+				.setY(UIConstraints.MarginVertical.TOP, new PixelConstraint(20));
+		
+		UIElement texturePanel = new UITexturePanel(texturePanelConstraints, 
+				new Texture2D("overlay\\overlay_gasmask_3.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge));
 		
 		wCanvas.addUIElement(texturePanel);
+		//wCanvas.addUIElement(colorPanel);
+		texturePanel.addChild(colorPanel);
 		//colorPanel.addChild(texturePanel);
 		
 		//Test post processing pipeline
@@ -149,6 +169,7 @@ public class TestGraphics {
 		
 		while(!window.isCloseRequested()) {
 			
+				
 			GLContext.getInput().update();
 			GLContext.getMainCamera().update();
 			PSSMCamera.update(sun);

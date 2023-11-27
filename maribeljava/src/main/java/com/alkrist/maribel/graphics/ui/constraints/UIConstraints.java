@@ -3,11 +3,6 @@ package com.alkrist.maribel.graphics.ui.constraints;
 import org.joml.Vector2f;
 
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.texture.Texture2D;
-import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
-import com.alkrist.maribel.graphics.ui.UIElement;
-import com.alkrist.maribel.graphics.ui.UITexturePanel;
 
 /**
  * This class keeps all the constraints for positioning and scaling the UI element.
@@ -156,6 +151,7 @@ public class UIConstraints {
 	 * @return UIConstraint object (this), just to make cascaded method calls.
 	 */
 	public UIConstraints setWidth(ScaleConstraint constraint) {
+		constraint.setValue(Math.abs(constraint.getValue()));
 		this.widthConstraint = constraint;
 		return this;
 	}
@@ -168,6 +164,7 @@ public class UIConstraints {
 	 * @return UIConstraint object (this), just to make cascaded method calls.
 	 */
 	public UIConstraints setHeight(ScaleConstraint constraint) {
+		constraint.setValue(Math.abs(constraint.getValue()));
 		this.heightConstraint = constraint;
 		return this;
 	}
@@ -221,6 +218,7 @@ public class UIConstraints {
 		return heightConstraint;
 	}
 	
+	
 	/**
 	 * Margin types for horizontal (x-axis) constraints.<br/>
 	 * LEFT: element will be aligned by left border of the screen and left border of itself.<br/>
@@ -241,5 +239,27 @@ public class UIConstraints {
 	public static enum MarginVertical{
 		TOP,
 		BOTTOM
+	}
+	
+	/**
+	 * This is a helper method that gives you number of pixels for a certain percentage based on the
+	 * current window width.
+	 * 
+	 * @param relativeValue - percentage value
+	 * @return - pixel percentage width value
+	 */
+	public static int getWidthPixelsFor(float relativeValue) {
+		return Math.round(relativeValue * GLContext.getConfig().width);
+	}
+	
+	/**
+	 * This is a helper method that gives you number of pixels for a certain percentage based on the
+	 * current window height.
+	 * 
+	 * @param relativeValue - percentage value
+	 * @return - pixels percentage height value
+	 */
+	public static int getHeightPixelsFor(float relativeValue) {
+		return Math.round(relativeValue * GLContext.getConfig().height);
 	}
 }

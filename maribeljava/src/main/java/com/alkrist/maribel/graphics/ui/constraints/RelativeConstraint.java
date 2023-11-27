@@ -1,7 +1,8 @@
 package com.alkrist.maribel.graphics.ui.constraints;
 
 /**
- * Creates the constraint of specified percents of the screen
+ * Creates the constraint of specified percents of the screen.<br/>
+ * Can be used for position and scale.
  * 
  * @author Alkrist
  */
@@ -12,7 +13,11 @@ public class RelativeConstraint implements PositionConstraint, ScaleConstraint{
 	
 	private float percents;
 	
-	
+	/**
+	 * Relative Constraint constructor. 
+	 * 
+	 * @param percents - percent value
+	 */
 	public RelativeConstraint(float percents) {
 		this.percents = Math.max(percents, -1);
 		this.percents = Math.min(this.percents, 1);

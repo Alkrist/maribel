@@ -9,12 +9,9 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.model.Mesh;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.graphics.ui.UIConstraint.ConstraintType;
-import com.alkrist.maribel.graphics.ui.UIConstraint.OffsetFrom;
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 
 public class UITexturePanel extends UIElement{

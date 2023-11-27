@@ -8,11 +8,15 @@ uniform sampler2D guiTexture;
 uniform float hasTexture;
 uniform vec4 frameColor;
 
+//border properties
 uniform vec4 borderColor;
 uniform float borderSize;
 
+//frame properties
 uniform vec2 framePixelPosition;
 uniform vec2 framePixelSize;
+
+//border radius
 uniform float cornerRadius;
 
 void main(void) {
@@ -23,11 +27,14 @@ void main(void) {
 		out_Color = vec4(finalColor, texturedColor.a);
 	} else {
 		out_Color = frameColor;
+
+		//calculate border
 		float leftBorder = framePixelPosition.x - framePixelSize.x / 2;
 		float rightBorder = framePixelPosition.x + framePixelSize.x / 2;
 		float bottomBorder = framePixelPosition.y - framePixelSize.y / 2;
 		float topBorder = framePixelPosition.y + framePixelSize.y / 2;
 
+		//find out if it is inside border zone
 		if (gl_FragCoord.x < leftBorder + borderSize
 				|| gl_FragCoord.x > rightBorder - borderSize
 				|| gl_FragCoord.y < bottomBorder + borderSize

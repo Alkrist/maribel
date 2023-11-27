@@ -99,7 +99,11 @@ public class TestGraphics {
 		.setX(new RelativeConstraint(0.25f))
 		.setY(new RelativeConstraint(0.5f));
 		
-		UIElement colorPanel = new UIColorPanel(colorPanelConstraints, new Vector4f(0.4f,0.4f, 0.5f, 1.0f));
+		float borderRadius = 0.9f;
+		float borderThickness = 0.5f;
+		Vector3f borderColor = new Vector3f(0);
+		
+		UIElement colorPanel = new UIColorPanel(colorPanelConstraints, new Vector4f(0.4f,0.4f, 0.5f, 1.0f), borderRadius, borderThickness, borderColor);
 		
 		UIConstraints texturePanelConstraints = new UIConstraints()
 				.setWidth(new RelativeConstraint(0.5f))
@@ -110,7 +114,7 @@ public class TestGraphics {
 		UIElement texturePanel = new UITexturePanel(texturePanelConstraints, 
 				new Texture2D("overlay\\overlay_gasmask_3.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge));
 		
-		wCanvas.addUIElement(texturePanel);
+		wCanvas.addUIElement(colorPanel);
 		//wCanvas.addUIElement(colorPanel);
 		//texturePanel.addChild(colorPanel);
 		//colorPanel.addChild(texturePanel);

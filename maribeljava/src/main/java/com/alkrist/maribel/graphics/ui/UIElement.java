@@ -3,11 +3,16 @@ package com.alkrist.maribel.graphics.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Vector2f;
-
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 
 
+/**
+ * This is an abstract class that represents all the UI elements of the engine.
+ * We consider a UI element the 2-dimensional quad that can have some properties to be rendered on.
+ * <br/>
+ * UI elements can be on-screen, those are rendered flat on top of the scene and in-game, which are rendered inside the 3D scene (think of texts).
+ * @author Alkrist
+ */
 public abstract class UIElement {
 	
 	private List<UIElement> children;

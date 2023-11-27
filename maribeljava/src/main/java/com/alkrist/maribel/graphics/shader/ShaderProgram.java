@@ -32,6 +32,7 @@ import org.lwjgl.opengl.GL43;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.filter.PPEProperty;
 import com.alkrist.maribel.graphics.texture.Texture;
+import com.alkrist.maribel.utils.FileUtil;
 
 public abstract class ShaderProgram {
 
@@ -213,5 +214,33 @@ public abstract class ShaderProgram {
 		}
 		
 		return shaderSource.toString();
+	}
+	
+	protected static String readShaderFromFile(String fileName, String libName) {
+		
+		//load shader source
+		String shaderResource = readShaderFromFile(fileName);
+		
+		//load library source
+		StringBuilder libSource = new StringBuilder();
+		try {
+
+			BufferedReader reader = new BufferedReader(new FileReader(FileUtil.getShadersPath()+"lib\\"+libName));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				libSource.append(line).append("\n");
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			System.err.println("Could not read the file!"); // TODO: logging
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		
+		String libResource = libSource.toString();
+		String libHeader = "#"+libName;
+		
+		return shaderResource.replaceFirst(libHeader, libResource);
 	}
 }

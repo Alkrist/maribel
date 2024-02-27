@@ -92,6 +92,13 @@ public class FileUtil {
 			return getAssetsPath() + "textures/";
 	}
 	
+	public static String getFontsPath() {
+		if (isWindows())
+			return getAssetsPath() + "fonts\\";
+		else
+			return getAssetsPath() + "fonts/";
+	}
+	
 	public static String getModelsPath() {
 		if (isWindows())
 			return getAssetsPath() + "models\\";

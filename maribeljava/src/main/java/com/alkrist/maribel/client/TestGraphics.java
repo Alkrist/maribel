@@ -1,5 +1,8 @@
 package com.alkrist.maribel.client;
 
+import java.io.File;
+
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -29,6 +32,7 @@ import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.systems.RenderSystem;
+import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
@@ -40,6 +44,9 @@ import com.alkrist.maribel.graphics.ui.constraints.AspectConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.PixelConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.RelativeConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
+import com.alkrist.maribel.graphics.ui.fonts.FontType;
+import com.alkrist.maribel.graphics.ui.fonts.UIText;
+import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.Logging;
 
 /**
@@ -101,9 +108,13 @@ public class TestGraphics {
 		
 		float borderRadius = 0.9f;
 		float borderThickness = 0.5f;
-		Vector3f borderColor = new Vector3f(0);
+		Vector3f borderColor = new Vector3f(1,0,0);
 		
-		UIElement colorPanel = new UIColorPanel(colorPanelConstraints, new Vector4f(0.4f,0.4f, 0.5f, 1.0f), borderRadius, borderThickness, borderColor);
+		UIElement colorPanel = new UIColorPanel(colorPanelConstraints, 
+				new Vector4f(0.4f,0.4f, 0.5f, 1.0f), 
+				borderRadius,
+				borderThickness, 
+				borderColor);
 		
 		UIConstraints texturePanelConstraints = new UIConstraints()
 				.setWidth(new RelativeConstraint(0.5f))
@@ -118,6 +129,11 @@ public class TestGraphics {
 		//wCanvas.addUIElement(colorPanel);
 		//texturePanel.addChild(colorPanel);
 		//colorPanel.addChild(texturePanel);
+		
+		FontType font = new FontType(new Texture2D("fonts\\times_new_roman_extended.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"times_new_roman_extended.fnt"));
+		UIText text = new UIText(new Vector2f(0,0), "Биба это текст", 8, font, 50, false);
+		text.setColor(1, 1, 1);
+		wCanvas.addUIText(text);
 		
 		//Test post processing pipeline
 		ContrastProperty contrastProp = new ContrastProperty(new Vector3f(1f), new Vector3f(1f));
@@ -173,12 +189,13 @@ public class TestGraphics {
 		
 		while(!window.isCloseRequested()) {
 			
-				
+			// Update loop now is here	
 			GLContext.getInput().update();
 			GLContext.getMainCamera().update();
 			PSSMCamera.update(sun);
-				
 			dogTransform.rotate(0, 0.1f, 0);
+			//End of update loop
+			
 			engine.update(0);
 			window.updateWindow();
 		}window.destroyWindow();

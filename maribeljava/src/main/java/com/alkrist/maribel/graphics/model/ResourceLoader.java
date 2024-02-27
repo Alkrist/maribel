@@ -103,6 +103,20 @@ public class ResourceLoader {
 	}
 
 	/**
+	 * Create UI text mesh.
+	 * 
+	 * @param positions      - vertices of the mesh
+	 * @param textureCoords  - texture coordinates of the mesh
+	 * @return VAO ID
+	 */
+	public static int loadToVAO(float[] positions, float[] textureCoords) {
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, 2, positions);
+		storeDataInAttributeList(1, 2, textureCoords);
+		unbindVAO();
+		return vaoID;
+	}
+	/**
 	 * make an empty Vertex buffer object.
 	 * 
 	 * @param floatCount - amount of floats to allocate

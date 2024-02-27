@@ -1,11 +1,15 @@
 package com.alkrist.maribel.graphics.ui.fonts;
 
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import com.alkrist.maribel.graphics.ui.UIElement;
-import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
-
-public class UIText extends UIElement{
+public class UIText{
 
 	private String textString;
 	private float fontSize;
@@ -21,27 +25,31 @@ public class UIText extends UIElement{
 
 	private boolean centerText = false;
 	
-	public UIText(UIConstraints constraints, String text, float fontSize, FontType font, float maxLineLength,
+	private Vector2f position;
+	
+	public UIText(Vector2f position, String text, float fontSize, FontType font, float maxLineLength,
 			boolean centered) {
-		super(constraints);
 		
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.font = font;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-	}
-
-	@Override
-	protected void updateInternal(double deltaTime) {
-		// TODO Auto-generated method stub
 		
+		this.position = position;
 	}
-
-	@Override
-	protected void renderInternal() {
-		// TODO Auto-generated method stub
+	
+	public void render(UITextShader shader) {
+		glBindVertexArray(textMeshVao);
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		shader.updateUniforms(color, position);
 		
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
 	}
 
 	public int getMesh() {
@@ -57,7 +65,7 @@ public class UIText extends UIElement{
 		this.vertexCount = verticesCount;
 	}
 	
-	public Vector3f getColour() {
+	public Vector3f getColor() {
 		return color;
 	}
 	

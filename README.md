@@ -5,15 +5,32 @@ Systems. Every Entity is created based on Game Object which has no use in the ga
 ### Version naimng idea:
 for Maribel - YYYYMMDD, Year - Month - Day. 
 
-## Goals
-The goal is to make a framework for an actual game project that will solve several problems:
-1. Enough abstraction for ANY new content integration (in simple words, you don't have to overwrite half of the engine to add new game object or feature, everything behaves in the same way for the core point of view).
-2. All common modern game graphical features and their detailed settings
-3. Memory saving
-4. Possibility of REAL multithreading (which is impossible in Unity Engine for example)
-5. Built-in flexible server-client architecture, maybe not very user friendly though, but who cares :)
-6. Tools for easier further game development (i.e. GUI constraint system, animating tools, storage tools, make networking without touching low level)
-7. Might and Power
+## Terms of references
+### General
+* Must work for multiplayer and singleplayer
+* Must have customizable settings
+* Must have logging
+* Must have changable parent directory
+* Must work on Windows, MacOS and Linux
+### System Requirements
+* Minimal RAM requirement is 4GB
+* Minimal CPU requirement is 2 cores
+* Core memory consumption limit is 600MB
+* For every hardware from minimal requirements must perform at 60FPS (based on settings)
+### Graphics Requirements
+* Shadows (quality varies on hardware performance)
+* HDR
+* SSAO/Bloom
+* Antialiasing: bilinear/trilinear sample filtering, FXAA, MSAA (2 up to 15 levels), Anisotropic filtering
+* Transparency based on blending
+* Dynamic and static lights
+* UI - multiple fonts and extended ASCII for languages
+### Architecture Requirements
+* Get rid of coupling issue - all game objects must be containers
+* All internal logic must be separated from API level and performed internally
+* Developer must operate with API endpoints - never with render loops and network loops
+* Networking must be done asyncronically
+* Rendering must reduce GL calls as much as possible
 
 ## How does it work
 The engine has 5 main stages, called one by one after the application is started:

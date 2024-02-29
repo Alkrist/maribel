@@ -26,7 +26,7 @@ public abstract class UICanvas {
 	public void addUIText(UIText text) {
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
-		int vao = ResourceLoader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
+		UIText.TextVAO vao = ResourceLoader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
 		text.setMeshData(vao, data.getVertexCount());
 		
 		if(texts == null) {
@@ -66,4 +66,5 @@ public abstract class UICanvas {
 	public abstract void render();
 	
 	public abstract void update(double deltaTime);
+	
 }

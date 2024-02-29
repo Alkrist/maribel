@@ -9,12 +9,14 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import com.alkrist.maribel.graphics.model.ResourceLoader;
+
 public class UIText{
 
 	private String textString;
 	private float fontSize;
 
-	private int textMeshVao;
+	private TextVAO textMeshVao;
 	private int vertexCount;
 	private Vector3f color = new Vector3f(0f, 0f, 0f);
 	
@@ -40,7 +42,7 @@ public class UIText{
 	}
 	
 	public void render(UITextShader shader) {
-		glBindVertexArray(textMeshVao);
+		glBindVertexArray(textMeshVao.getVAO());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		shader.updateUniforms(color, position);
@@ -53,14 +55,14 @@ public class UIText{
 	}
 
 	public int getMesh() {
-		return textMeshVao;
+		return textMeshVao.getVAO();
 	}
 	
 	public int getVertexCount() {
 		return this.vertexCount;
 	}
 	
-	public void setMeshData(int vao, int verticesCount) {
+	public void setMeshData(TextVAO vao, int verticesCount) {
 		this.textMeshVao = vao;
 		this.vertexCount = verticesCount;
 	}
@@ -85,6 +87,14 @@ public class UIText{
 		return textString;
 	}
 	
+	public void setTextString(String text) {
+		this.textString = text;
+		
+		TextMeshData data = font.loadText(this);
+		ResourceLoader.updateTextVAO(textMeshVao, data.getVertexPositions(), data.getTextureCoords());
+		setMeshData(textMeshVao, data.getVertexCount());
+	}
+
 	protected float getFontSize() {
 		return fontSize;
 	}
@@ -99,5 +109,37 @@ public class UIText{
 	
 	protected float getMaxLineSize() {
 		return lineMaxSize;
+	}
+	
+	public static class TextVAO{
+		private int vao;
+		private int positionsVBO;
+		private int textureCoordsVBO;
+		
+		public TextVAO(int vao, int positionsVBO, int textureCoordsVBO) {
+			this.vao = vao;
+			this.positionsVBO = positionsVBO;
+			this.textureCoordsVBO = textureCoordsVBO;
+		}
+		
+		public int getVAO() {
+			return vao;
+		}
+		
+		public int getPositionsVBO() {
+			return positionsVBO;
+		}
+		
+		public int getTextureCoordsVBO() {
+			return textureCoordsVBO;
+		}
+		
+		public void setPositionsVBO(int vbo) {
+			this.positionsVBO = vbo;
+		}
+		
+		public void setTextureCoordsVBO(int vbo) {
+			this.textureCoordsVBO = vbo;
+		}
 	}
 }

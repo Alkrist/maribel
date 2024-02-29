@@ -27,6 +27,7 @@ import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
 import com.alkrist.maribel.graphics.model.Model;
 import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
+import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
@@ -130,8 +131,9 @@ public class TestGraphics {
 		//texturePanel.addChild(colorPanel);
 		//colorPanel.addChild(texturePanel);
 		
-		FontType font = new FontType(new Texture2D("fonts\\times_new_roman_extended.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"times_new_roman_extended.fnt"));
-		UIText text = new UIText(new Vector2f(0,0), "Биба это текст", 8, font, 50, false);
+		//times_new_roman_extended
+		FontType font = new FontType(new Texture2D("fonts\\harry.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"harry.fnt"));
+		UIText text = new UIText(new Vector2f(0,0), "Delta time: ", 2, font, 1f, false);
 		text.setColor(1, 1, 1);
 		wCanvas.addUIText(text);
 		
@@ -194,6 +196,7 @@ public class TestGraphics {
 			GLContext.getMainCamera().update();
 			PSSMCamera.update(sun);
 			dogTransform.rotate(0, 0.1f, 0);
+			text.setTextString("VAOs: "+ResourceLoader.getVAOsCount()+" VBOs: "+ResourceLoader.getVBOsCount()+" deltaTime: "+GLContext.getWindow().deltaTime());
 			//End of update loop
 			
 			engine.update(0);

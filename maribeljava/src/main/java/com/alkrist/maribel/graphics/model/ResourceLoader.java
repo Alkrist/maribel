@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL33;
 
+import com.alkrist.maribel.graphics.ui.fonts.UIText;
+
 public class ResourceLoader {
 
 	private static List<Integer> VAOs = new ArrayList<Integer>();
@@ -109,13 +111,29 @@ public class ResourceLoader {
 	 * @param textureCoords  - texture coordinates of the mesh
 	 * @return VAO ID
 	 */
-	public static int loadToVAO(float[] positions, float[] textureCoords) {
+	public static UIText.TextVAO loadToVAO(float[] positions, float[] textureCoords) {
 		int vaoID = createVAO();
-		storeDataInAttributeList(0, 2, positions);
-		storeDataInAttributeList(1, 2, textureCoords);
+		int positionsVBO = storeDataInAttributeList(0, 2, positions);
+		int textureCoordsVBO = storeDataInAttributeList(1, 2, textureCoords);
 		unbindVAO();
-		return vaoID;
+		return new UIText.TextVAO(vaoID, positionsVBO, textureCoordsVBO);
 	}
+	
+	public static void updateTextVAO(UIText.TextVAO vao, float[] positions, float[] textureCoords) {
+		deleteVBO(vao.getPositionsVBO());
+		deleteVBO(vao.getTextureCoordsVBO());
+		
+		GL30.glBindVertexArray(vao.getVAO());
+		
+		//updateVBO(vao.getPositionsVBO(), positions, BufferUtils.createFloatBuffer(positions.length));
+		//updateVBO(vao.getTextureCoordsVBO(), textureCoords, BufferUtils.createFloatBuffer(textureCoords.length));
+		
+		vao.setPositionsVBO(storeDataInAttributeList(0, 2, positions));
+		vao.setTextureCoordsVBO(storeDataInAttributeList(1, 2, textureCoords));
+		
+		unbindVAO();
+	}
+	
 	/**
 	 * make an empty Vertex buffer object.
 	 * 
@@ -186,7 +204,17 @@ public class ResourceLoader {
 		return vaoID;
 	}
 
-	private static void storeDataInAttributeList(int attribNumber, int coordinateSize, float[] data) {
+	public static boolean deleteVAO(int vaoID) {		
+		GL30.glDeleteVertexArrays(vaoID);
+		return VAOs.remove((Integer) vaoID);
+	}
+
+	public static boolean deleteVBO(int vboID) {
+		GL15.glDeleteBuffers(vboID);
+		return VBOs.remove((Integer) vboID);
+	}
+
+	private static int storeDataInAttributeList(int attribNumber, int coordinateSize, float[] data) {
 		int vboID = GL15.glGenBuffers();
 		VBOs.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
@@ -194,6 +222,8 @@ public class ResourceLoader {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attribNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		
+		return vboID;
 	}
 
 	private static void bindIndicesBuffer(int[] indices) {
@@ -220,5 +250,15 @@ public class ResourceLoader {
 
 	private static void unbindVAO() {
 		GL30.glBindVertexArray(0);
+	}
+	
+	//TODO: test
+	public static int getVAOsCount() {
+		return VAOs.size();
+	}
+	
+	//TODO: test
+	public static int getVBOsCount() {
+		return VBOs.size();
 	}
 }

@@ -32,6 +32,15 @@ public class UITextShader extends ShaderProgram{
 		addUniform("fontAtlas");
 		addUniform("translation");
 		
+		addUniform("width");
+		addUniform("edge");
+		
+		addUniform("borderWidth");
+		addUniform("borderEdge");
+		
+		addUniform("outlineColor");
+		addUniform("offset");
+		
 	}
 	
 	public void updateFontTexture(FontType font) {
@@ -40,8 +49,15 @@ public class UITextShader extends ShaderProgram{
 		setUniform("fontAtlas", 0);
 	}
 	
-	public void updateUniforms(Vector3f color, Vector2f translation) {
-		setUniform("color", color);
-		setUniform("translation", translation);
+	public void updateUniforms(UIText textElement) {
+		setUniform("color", textElement.getColor());
+		setUniform("translation", textElement.getPosition());
+		
+		setUniform("width", textElement.getWidth());
+		setUniform("edge", textElement.getEdge());
+		setUniform("borderWidth", textElement.getBorderWidth());
+		setUniform("borderEdge", textElement.getBorderEdge());
+		setUniform("outlineColor", textElement.getOutlineColor());
+		setUniform("offset", textElement.getOutlineOffset());
 	}
 }

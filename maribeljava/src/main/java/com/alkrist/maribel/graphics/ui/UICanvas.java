@@ -44,9 +44,10 @@ public abstract class UICanvas {
 	public void removeUIText(UIText text) {
 		List<UIText> textBatch = texts.get(text.getFont());
 		if(textBatch != null) {
+			text.deleteFromBuffer();
 			textBatch.remove(text);
 			if(textBatch.isEmpty()) {
-				texts.remove(text.getFont()); //TODO: make sure it removes correctly
+				texts.remove(text.getFont());
 			}
 		}
 	}

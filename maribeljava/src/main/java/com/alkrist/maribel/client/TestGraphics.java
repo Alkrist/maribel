@@ -133,7 +133,8 @@ public class TestGraphics {
 		
 		//times_new_roman_extended
 		FontType font = new FontType(new Texture2D("fonts\\harry.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"harry.fnt"));
-		UIText text = new UIText(new Vector2f(0,0), "Delta time: ", 2, font, 1f, false);
+		FontType candara = new FontType(new Texture2D("fonts\\candara.png",SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"candara.fnt"));
+		UIText text = new UIText(new Vector2f(0,0), "Delta time: ", 2, candara, 1f, false);
 		text.setColor(1, 1, 1);
 		wCanvas.addUIText(text);
 		
@@ -197,6 +198,7 @@ public class TestGraphics {
 			PSSMCamera.update(sun);
 			dogTransform.rotate(0, 0.1f, 0);
 			text.setTextString("VAOs: "+ResourceLoader.getVAOsCount()+" VBOs: "+ResourceLoader.getVBOsCount()+" deltaTime: "+GLContext.getWindow().deltaTime());
+			
 			//End of update loop
 			
 			engine.update(0);

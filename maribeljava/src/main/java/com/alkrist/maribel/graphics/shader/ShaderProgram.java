@@ -32,6 +32,7 @@ import org.lwjgl.opengl.GL43;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.filter.PPEProperty;
 import com.alkrist.maribel.graphics.texture.Texture;
+import com.alkrist.maribel.graphics.ui.fonts.UIText;
 import com.alkrist.maribel.utils.FileUtil;
 
 public abstract class ShaderProgram {
@@ -188,6 +189,8 @@ public abstract class ShaderProgram {
 	public void updateUniforms(Texture texture) {}
 	
 	public void updateUniforms(PPEProperty property) {}
+	
+	public void updateUniforms(UIText textElement) {}
 	
 	public void updateUniforms() {}
 	//TODO: add more update uniforms, depending on purpose

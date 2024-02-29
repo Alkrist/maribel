@@ -29,6 +29,14 @@ public class UIText{
 	
 	private Vector2f position;
 	
+	private float edge = 0.02f;
+	private float width = 0.5f;
+	
+	private float borderWidth = 0.7f;
+	private float borderEdge = 0.1f;
+	private Vector3f outlineColor = new Vector3f(1, 0, 0);
+	private Vector2f outlineOffset = new Vector2f(0.006f, 0.006f);
+	
 	public UIText(Vector2f position, String text, float fontSize, FontType font, float maxLineLength,
 			boolean centered) {
 		
@@ -45,7 +53,7 @@ public class UIText{
 		glBindVertexArray(textMeshVao.getVAO());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		shader.updateUniforms(color, position);
+		shader.updateUniforms(this);
 		
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		
@@ -71,10 +79,24 @@ public class UIText{
 		return color;
 	}
 	
+	public Vector2f getPosition() {
+		return position;
+	}
+	
 	public void setColor(float r, float g, float b) {
 		color.set(r, g, b);
 	}
 	
+	public void setOutlineParameters(Vector3f outlineColor, Vector2f outlineOffset) {
+		this.outlineColor = outlineColor;
+		this.outlineOffset = outlineOffset;
+	}
+	
+	public void setBorderParameters(float borderWidth, float borderEdge) {
+		this.borderEdge = borderEdge;
+		this.borderWidth = borderWidth;
+	}
+
 	public FontType getFont() {
 		return font;
 	}
@@ -83,16 +105,34 @@ public class UIText{
 		return numberOfLines;
 	}
 	
-	protected String getTextString() {
+	public String getTextString() {
 		return textString;
+	}
+	
+	public Vector2f getOutlineOffset() {
+		return outlineOffset;
+	}
+	
+	public Vector3f getOutlineColor() {
+		return outlineColor;
 	}
 	
 	public void setTextString(String text) {
 		this.textString = text;
 		
-		TextMeshData data = font.loadText(this);
-		ResourceLoader.updateTextVAO(textMeshVao, data.getVertexPositions(), data.getTextureCoords());
-		setMeshData(textMeshVao, data.getVertexCount());
+		if(textMeshVao != null) {
+			TextMeshData data = font.loadText(this);
+			ResourceLoader.updateTextVAO(textMeshVao, data.getVertexPositions(), data.getTextureCoords());
+			setMeshData(textMeshVao, data.getVertexCount());
+		}
+	}
+
+	public void deleteFromBuffer() {
+		ResourceLoader.deleteVBO(textMeshVao.getPositionsVBO());
+		ResourceLoader.deleteVBO(textMeshVao.getTextureCoordsVBO());
+		ResourceLoader.deleteVAO(textMeshVao.getVAO());
+		
+		textMeshVao = null;
 	}
 
 	protected float getFontSize() {
@@ -109,6 +149,22 @@ public class UIText{
 	
 	protected float getMaxLineSize() {
 		return lineMaxSize;
+	}
+	
+	protected float getWidth() {
+		return width;
+	}
+	
+	protected float getEdge() {
+		return edge;
+	}
+	
+	protected float getBorderWidth() {
+		return borderWidth;
+	}
+	
+	protected float getBorderEdge() {
+		return borderEdge;
 	}
 	
 	public static class TextVAO{

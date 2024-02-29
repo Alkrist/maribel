@@ -79,30 +79,30 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 
 ## TODO:
 0. Fix all of the small TODO lists inside the project.
-a) improve GUI system, make it system, not a bullshit
-c) color filtering for GUI borders and edges
-
+* improve GUI system, make it system, not a bullshit
+* color filtering for GUI borders and edges
+<br>
 6. Add Graphics via LWJGL 3.
-a) GUI system with constraints, with + without textures
-e) post porcessing effects
-f) fonts
-j) fog effect
-
+* GUI system with constraints, with + without textures
+* post porcessing effects
+* fonts
+* fog effect
+<br>
 7. Add Models.
-a) add animations
-
+* add animations
+<br>
 8. Add Sounds via OpenAL.
-a) 2D sound (general sound effect)
-b) 3D sound (point sound)
-
+* 2D sound (general sound effect)
+* 3D sound (point sound)
+<br>
 9. Add Commands.
-a) chat with typing text
-b) server-side command processor
-c) access levels
-
+* chat with typing text
+* server-side command processor
+* access levels
+<br>
 10. Physics
-a) gravity
-b) acceleration
-c) ragdoll
-d) collision boxes
-e) collision meshes
+* gravity
+* acceleration
+* ragdoll
+* collision boxes
+* collision meshes

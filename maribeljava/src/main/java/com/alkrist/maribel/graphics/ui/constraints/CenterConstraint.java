@@ -13,8 +13,8 @@ public class CenterConstraint implements PositionConstraint{
 	public CenterConstraint() {}
 	
 	@Override
-	public float getRelativeValue(int sideLength, float xScale, boolean isPositon) {
-		return 0;
+	public float getRelativeValue(int sideLength, float xScale) {
+		return 0.5f;
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class CenterConstraint implements PositionConstraint{
 
 	@Override
 	public float getValue() {
-		return 0;
+		return 0.5f;
 	}
 
 	@Override

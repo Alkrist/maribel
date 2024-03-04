@@ -23,8 +23,8 @@ public class PixelConstraint implements PositionConstraint, ScaleConstraint{
 	}
 	
 	@Override
-	public float getRelativeValue(int sideLength, float xScale, boolean isPosition) {	
-		return isPosition ? pixels / (sideLength / 2) : pixels / sideLength;
+	public float getRelativeValue(int sideLength, float xScale) {	
+		return pixels / sideLength;
 	}
 
 	@Override

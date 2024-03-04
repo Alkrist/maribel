@@ -2,7 +2,7 @@ package com.alkrist.maribel.graphics.ui.constraints;
 
 public interface PositionConstraint {
 
-	public float getRelativeValue(int sideLength, float xScale, boolean isPosition);
+	public float getRelativeValue(int sideLength, float xScale);
 	
 	public void setToNegativeCoord();
 	

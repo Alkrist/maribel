@@ -56,6 +56,9 @@ public class TextMeshCreator {
 	}
 
 	private TextMeshData createQuadVertices(UIText text, List<Line> lines) {
+
+		float totalWidth = 0;
+		
 		text.setNumberOfLines(lines.size());
 		double curserX = 0f;
 		double curserY = 0f;
@@ -74,10 +77,18 @@ public class TextMeshCreator {
 				}
 				curserX += metaData.getSpaceWidth() * text.getFontSize();
 			}
+			
+			// Set width of the text
+			if(curserX > totalWidth) {
+				totalWidth = (float) curserX;
+			}
+			
 			curserX = 0;
 			curserY += LINE_HEIGHT * text.getFontSize();
-		}		
-		return new TextMeshData(listToArray(vertices), listToArray(textureCoords));
+			
+		}	
+		
+		return new TextMeshData(listToArray(vertices), listToArray(textureCoords), totalWidth, (float) curserY);
 	}
 
 	private void addVerticesForCharacter(double curserX, double curserY, Character character, double fontSize,

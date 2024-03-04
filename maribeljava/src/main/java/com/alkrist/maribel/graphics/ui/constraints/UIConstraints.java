@@ -40,13 +40,13 @@ import com.alkrist.maribel.graphics.context.GLContext;
  * <br/>
  * <pre>
  *               TOP
- *     width     y=1
+ *     width     y=0
  *     |----------|----------|
  *     |          |          | RIGHT
- *x=-1 ----------------------- x=1
+ *x=0  ----------------------- x=1
  *LEFT |          |          |
  *     |----------|----------| height
- *               y=-1
+ *               y=1
  *              BOTTOM
  * </pre>
  * Constraints' values can be changed in the runtime using setters.
@@ -174,19 +174,19 @@ public class UIConstraints {
 	 */
 	public Vector2f getPosition() {
 		
-		float offsetX = xConstraint.getRelativeValue(GLContext.getConfig().width, scale.x, true);
-		float offsetY = yConstraint.getRelativeValue(GLContext.getConfig().height, scale.x, true);
+		float offsetX = xConstraint.getRelativeValue(GLContext.getConfig().width, scale.x);
+		float offsetY = yConstraint.getRelativeValue(GLContext.getConfig().height, scale.x);
 		
 		if(xConstraint.isMargin()) {
-			position.x = xConstraint.isMarginNegative() ? (-1 + offsetX + scale.x) : (1 - offsetX - scale.x);
+			position.x = xConstraint.isMarginNegative() ? (-1 + (offsetX * 2) + scale.x) : (1 - (offsetX * 2) - scale.x);
 		}else {
-			position.x = (0 + offsetX);
+			position.x = (-1 + (offsetX * 2));
 		}
 		
 		if(yConstraint.isMargin()) {
-			position.y = yConstraint.isMarginNegative() ? (-1 + offsetY + scale.y) : (1 - offsetY - scale.y);
+			position.y = yConstraint.isMarginNegative() ? (-1 + (offsetY * 2) + scale.y) : (1 - (offsetY * 2) - scale.y);
 		}else {
-			position.y = (0 + offsetY);
+			position.y = (1 - (offsetY * 2));
 		}
 		
 		return position;
@@ -196,8 +196,8 @@ public class UIConstraints {
 	 * @return (width, height) actual screen scale of owner UI element.
 	 */
 	public Vector2f getScale() {
-		scale.x = widthConstraint.getRelativeValue(GLContext.getConfig().width, scale.x, false);
-		scale.y = heightConstraint.getRelativeValue(GLContext.getConfig().height, scale.x, false);
+		scale.x = widthConstraint.getRelativeValue(GLContext.getConfig().width, scale.x);
+		scale.y = heightConstraint.getRelativeValue(GLContext.getConfig().height, scale.x);
 		
 		return scale;
 	}

@@ -27,7 +27,12 @@ public abstract class UICanvas {
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
 		UIText.TextVAO vao = ResourceLoader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
+		
+		// Set text mesh
 		text.setMeshData(vao, data.getVertexCount());
+		
+		// Set text width and height parameters
+		text.setTextSize(data.getWidth(), data.getHeight());
 		
 		if(texts == null) {
 			texts = new HashMap<FontType, List<UIText>>();

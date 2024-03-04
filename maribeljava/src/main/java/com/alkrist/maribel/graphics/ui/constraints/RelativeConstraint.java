@@ -19,12 +19,12 @@ public class RelativeConstraint implements PositionConstraint, ScaleConstraint{
 	 * @param percents - percent value
 	 */
 	public RelativeConstraint(float percents) {
-		this.percents = Math.max(percents, -1);
+		this.percents = Math.max(percents, 0);
 		this.percents = Math.min(this.percents, 1);
 	}
 	
 	@Override
-	public float getRelativeValue(int sideLength, float xScale, boolean isPosition) {
+	public float getRelativeValue(int sideLength, float xScale) {
 		return percents;
 	}
 
@@ -55,7 +55,7 @@ public class RelativeConstraint implements PositionConstraint, ScaleConstraint{
 
 	@Override
 	public void setValue(float value) {
-		value = Math.max(value, -1);
+		value = Math.max(value, 0);
 		value = Math.min(1, value);
 		this.percents = value;
 	}

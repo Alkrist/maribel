@@ -29,6 +29,7 @@ public class UIText{
 	
 	private Vector2f position;
 	
+	//TODO: modify this group somehow for visibility and access
 	private float edge = 0.02f;
 	private float width = 0.5f;
 	
@@ -36,6 +37,10 @@ public class UIText{
 	private float borderEdge = 0.1f;
 	private Vector3f outlineColor = new Vector3f(1, 0, 0);
 	private Vector2f outlineOffset = new Vector2f(0.006f, 0.006f);
+	
+	// Text size parameters
+	private float textWidth = 0;
+	private float textHeight = 0;
 	
 	public UIText(Vector2f position, String text, float fontSize, FontType font, float maxLineLength,
 			boolean centered) {
@@ -124,6 +129,9 @@ public class UIText{
 			TextMeshData data = font.loadText(this);
 			ResourceLoader.updateTextVAO(textMeshVao, data.getVertexPositions(), data.getTextureCoords());
 			setMeshData(textMeshVao, data.getVertexCount());
+			
+			// Set text width and height parameters
+			setTextSize(data.getWidth(), data.getHeight());
 		}
 	}
 
@@ -166,6 +174,34 @@ public class UIText{
 	protected float getBorderEdge() {
 		return borderEdge;
 	}
+	
+	
+	public void setTextSize(float textWidth, float textHeight) {
+		this.textWidth = textWidth;
+		this.textHeight = textHeight;
+	}
+	
+
+	/**
+	 * Gives the width of the text.
+	 * 0 - left border of the screen
+	 * 1 - right border of the screen
+	 * @return text width in interval <0, 1>
+	 */
+	public float getTextWidth() {
+		return textWidth;
+	}
+
+	/**
+	 * Gives the height of the text.
+	 * 0 - top border of the screen
+	 * 1 - bottom border of the screen
+	 * @return text height in interval <0, 1>
+	 */
+	public float getTextHeight() {
+		return textHeight;
+	}
+		
 	
 	public static class TextVAO{
 		private int vao;

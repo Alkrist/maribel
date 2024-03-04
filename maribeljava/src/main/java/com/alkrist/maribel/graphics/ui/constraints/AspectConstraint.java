@@ -20,7 +20,7 @@ public class AspectConstraint implements ScaleConstraint{
 	}
 	
 	@Override
-	public float getRelativeValue(int sideLength, float xScale, boolean isPosition) {
+	public float getRelativeValue(int sideLength, float xScale) {
 		return xScale * aspectRatio;
 	}
 

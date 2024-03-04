@@ -46,22 +46,38 @@ public class UIText{
 	
 	private UIConstraints constraints;
 	
-	public UIText(UIConstraints constraints, String text, FontType font, 
-			float maxLineLength, boolean centered) {
+	public UIText(UIConstraints constraints, String text, FontType font, boolean centered) {
 		
 		this.textString = text;	
 		this.font = font;
-		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		
 		this.constraints = constraints;
-		if(constraints.getHeightConstraint() instanceof AspectConstraint) {
-			throw new IllegalArgumentException("Text can not have aspect constraint for its scale!");
-		}
 		
+		this.lineMaxSize = constraints.getLineLength();
 		this.fontSize = constraints.getFontSize();
+		
 	}
 
+	private void updatePositions() {
+		if(textMeshVao != null) {
+			TextMeshData data = font.loadText(this);
+			ResourceLoader.updateTextVAO(textMeshVao, data.getVertexPositions(), data.getTextureCoords());
+			setMeshData(textMeshVao, data.getVertexCount());
+			
+			// Set text width and height parameters
+			setTextSize(data.getWidth(), data.getHeight());
+		}
+	}
+
+	public void resize() {
+		
+		this.lineMaxSize = constraints.getLineLength();
+		this.fontSize = constraints.getFontSize();
+		
+		updatePositions();
+	}
+	
 	public void render(UITextShader shader) {
 		glBindVertexArray(textMeshVao.getVAO());
 		glEnableVertexAttribArray(0);
@@ -134,15 +150,7 @@ public class UIText{
 	
 	public void setTextString(String text) {
 		this.textString = text;
-		
-		if(textMeshVao != null) {
-			TextMeshData data = font.loadText(this);
-			ResourceLoader.updateTextVAO(textMeshVao, data.getVertexPositions(), data.getTextureCoords());
-			setMeshData(textMeshVao, data.getVertexCount());
-			
-			// Set text width and height parameters
-			setTextSize(data.getWidth(), data.getHeight());
-		}
+		updatePositions();
 	}
 
 	public void deleteFromBuffer() {

@@ -134,15 +134,16 @@ public class TestGraphics {
 		FontType candara = new FontType(new Texture2D("fonts\\candara.png",SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"candara.fnt"));
 		
 		UIConstraints textConstraints = new UIConstraints()
-				.setX(new PixelConstraint(640))
+				.setX(new RelativeConstraint(0.5f))
 				.setY(UIConstraints.MarginVertical.TOP, new RelativeConstraint(0.25f))
-				.setHeight(new PixelConstraint(45));
+				.setWidth(new PixelConstraint(640))
+				.setHeight(new AspectConstraint(0.12f));
+				
 		
 		//UIText text = new UIText(new Vector2f(0.25f,0.25f), "Frames: ", 2, candara, 1f, false);
-		UIText text = new UIText(textConstraints, "Frames: ", candara, 1f, false);
+		UIText text = new UIText(textConstraints, "Frames: undisplayed but the text is long quite long but not really", candara, false);
 		text.setColor(1, 1, 1);
 		wCanvas.addUIText(text);
-		System.out.println(text.getTextWidth()+" "+text.getTextHeight());
 		
 		//Test post processing pipeline
 		ContrastProperty contrastProp = new ContrastProperty(new Vector3f(1f), new Vector3f(1f));
@@ -203,7 +204,7 @@ public class TestGraphics {
 			GLContext.getMainCamera().update();
 			PSSMCamera.update(sun);
 			dogTransform.rotate(0, 0.1f, 0);
-			text.setTextString(" deltaTime: "+GLContext.getWindow().deltaTime());
+			//text.setTextString(" deltaTime: "+GLContext.getWindow().deltaTime());
 			
 			//End of update loop
 			

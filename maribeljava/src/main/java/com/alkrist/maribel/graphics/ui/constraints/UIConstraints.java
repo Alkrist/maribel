@@ -37,6 +37,9 @@ import com.alkrist.maribel.graphics.ui.fonts.TextMeshCreator;
  * <br/>
  * Default values for constraints are: (0,0) - for position, (1,1) - for scale (full-window quad).
  * <br/>
+ * Keep in mind, that using default coordinates for texts can get really ugly, so make sure to use constraints
+ * When making texts. Height constraint is mandatory for texts.
+ * <br/>
  * Coordinates on the display:
  * <br/>
  * <pre>
@@ -176,8 +179,8 @@ public class UIConstraints {
 	 */
 	public Vector2f getPosition() {
 		
-		float offsetX = xConstraint.getRelativeValue(GLContext.getConfig().width, scale.x);
-		float offsetY = yConstraint.getRelativeValue(GLContext.getConfig().height, scale.x);
+		float offsetX = xConstraint.getRelativeValue(GLContext.getWindow().getWidth(), scale.x);
+		float offsetY = yConstraint.getRelativeValue(GLContext.getWindow().getHeight(), scale.x);
 		
 		if(xConstraint.isMargin()) {
 			position.x = xConstraint.isMarginNegative() ? (-1 + (offsetX * 2) + scale.x) : (1 - (offsetX * 2) - scale.x);
@@ -202,8 +205,8 @@ public class UIConstraints {
 	 */
 	public Vector2f getPosition(float width, float height) {
 		
-		float offsetX = xConstraint.getRelativeValue(GLContext.getConfig().width, 0);
-		float offsetY = yConstraint.getRelativeValue(GLContext.getConfig().height, 0);
+		float offsetX = xConstraint.getRelativeValue(GLContext.getWindow().getWidth(), 0);
+		float offsetY = yConstraint.getRelativeValue(GLContext.getWindow().getHeight(), 0);
 		
 		if(xConstraint.isMargin()) {
 			position.x = xConstraint.isMarginNegative() ? offsetX : 1 - width - offsetX;
@@ -224,15 +227,19 @@ public class UIConstraints {
 	 * @return font size based on text scale (text height).
 	 */
 	public float getFontSize() {
-		return (float) (heightConstraint.getRelativeValue(GLContext.getConfig().height, 0) / TextMeshCreator.LINE_HEIGHT);
+		return (float) (heightConstraint.getRelativeValue(GLContext.getWindow().getHeight(), getLineLength()) / TextMeshCreator.LINE_HEIGHT);
+	}
+	
+	public float getLineLength() {
+		return (widthConstraint.getRelativeValue(GLContext.getWindow().getWidth(), 0));
 	}
 	
 	/**
 	 * @return (width, height) actual screen scale of owner UI element.
 	 */
 	public Vector2f getScale() {
-		scale.x = widthConstraint.getRelativeValue(GLContext.getConfig().width, scale.x);
-		scale.y = heightConstraint.getRelativeValue(GLContext.getConfig().height, scale.x);
+		scale.x = widthConstraint.getRelativeValue(GLContext.getWindow().getWidth(), scale.x);
+		scale.y = heightConstraint.getRelativeValue(GLContext.getWindow().getHeight(), scale.x);
 		
 		return scale;
 	}
@@ -284,7 +291,7 @@ public class UIConstraints {
 	 * @return - pixel percentage width value
 	 */
 	public static int getWidthPixelsFor(float relativeValue) {
-		return Math.round(relativeValue * GLContext.getConfig().width);
+		return Math.round(relativeValue * GLContext.getWindow().getWidth());
 	}
 	
 	/**
@@ -295,6 +302,6 @@ public class UIConstraints {
 	 * @return - pixels percentage height value
 	 */
 	public static int getHeightPixelsFor(float relativeValue) {
-		return Math.round(relativeValue * GLContext.getConfig().height);
+		return Math.round(relativeValue * GLContext.getWindow().getHeight());
 	}
 }

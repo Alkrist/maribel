@@ -136,12 +136,12 @@ public class TestGraphics {
 		UIConstraints textConstraints = new UIConstraints()
 				.setX(new RelativeConstraint(0.5f))
 				.setY(UIConstraints.MarginVertical.TOP, new RelativeConstraint(0.25f))
-				.setWidth(new PixelConstraint(640))
-				.setHeight(new RelativeConstraint(0.12f));
+				.setWidth(new RelativeConstraint(0.5f))
+				.setHeight(new RelativeConstraint(0.1f));
 
 		//UIText text = new UIText(new Vector2f(0.25f,0.25f), "Frames: ", 2, candara, 1f, false);
 		UIText text = new UIText(textConstraints, "Frames", candara, false);
-		//text.setColor(1, 1, 1);
+		text.setColor(1, 1, 1);
 		wCanvas.addUIText(text);
 		
 		//Test post processing pipeline
@@ -204,7 +204,7 @@ public class TestGraphics {
 			PSSMCamera.update(sun);
 			dogTransform.rotate(0, 0.1f, 0);
 			//text.setTextString(" deltaTime: "+GLContext.getWindow().deltaTime());
-			
+			text.resize();
 			//End of update loop
 			
 			engine.update(0);

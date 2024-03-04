@@ -104,15 +104,15 @@ public class TestGraphics {
 		UIConstraints colorPanelConstraints = new UIConstraints()
 		.setWidth(new RelativeConstraint(0.5f))
 		.setHeight(new AspectConstraint(0.5f))
-		.setX(UIConstraints.MarginHorizontal.RIGHT, new PixelConstraint(320))
-		.setY(new RelativeConstraint(0f));
+		.setX(UIConstraints.MarginHorizontal.LEFT, new PixelConstraint(300))
+		.setY(new RelativeConstraint(0.3f));
 		
-		float borderRadius = 0.9f;
-		float borderThickness = 0.5f;
+		float borderRadius = 0.5f;
+		float borderThickness = 0.2f;
 		Vector3f borderColor = new Vector3f(1,0,0);
 		
 		UIElement colorPanel = new UIColorPanel(colorPanelConstraints, 
-				new Vector4f(0.4f,0.4f, 0.5f, 1.0f), 
+				new Vector4f(0.4f,0.4f, 0.5f, 0.5f), 
 				borderRadius,
 				borderThickness, 
 				borderColor);
@@ -134,10 +134,10 @@ public class TestGraphics {
 		//times_new_roman_extended
 		FontType font = new FontType(new Texture2D("fonts\\harry.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"harry.fnt"));
 		FontType candara = new FontType(new Texture2D("fonts\\candara.png",SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"candara.fnt"));
-		UIText text = new UIText(new Vector2f(0.25f,0.1f), "Frames: ", 10, candara, 1f, false);
+		UIText text = new UIText(new Vector2f(0.25f,0.25f), "Frames: ", 2, candara, 1f, false);
 		text.setColor(1, 1, 1);
-		//wCanvas.addUIText(text);
-		//System.out.println(text.getTextWidth()+" "+text.getTextHeight());
+		wCanvas.addUIText(text);
+		System.out.println(text.getTextWidth()+" "+text.getTextHeight());
 		
 		//Test post processing pipeline
 		ContrastProperty contrastProp = new ContrastProperty(new Vector3f(1f), new Vector3f(1f));

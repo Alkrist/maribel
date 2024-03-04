@@ -155,6 +155,13 @@ public class UIConstraints {
 	 * @return UIConstraint object (this), just to make cascaded method calls.
 	 */
 	public UIConstraints setWidth(ScaleConstraint constraint) {
+		
+		//In case some dumb ass later (including me) will attempt to set width as aspect constraint, 
+		//which is fucking pointless, because height is dependent on width according to the idea of this constraint system.
+		if(constraint instanceof AspectConstraint) {
+			throw new IllegalArgumentException("Width constraint can not be an aspect constraint, only height can be!");
+		}
+		
 		constraint.setValue(Math.abs(constraint.getValue()));
 		this.widthConstraint = constraint;
 		return this;
@@ -174,7 +181,7 @@ public class UIConstraints {
 	}
 	
 	/**
-	 * Method is used for UI elements.
+	 * Method is used for {@link UIElement}.
 	 * @return (x,y) actual screen position of owner UI element in normalized device coordinates.
 	 */
 	public Vector2f getPosition() {
@@ -198,7 +205,7 @@ public class UIConstraints {
 	}
 
 	/**
-	 * Method is used for UI texts.
+	 * Method is used for {@link UIText}.
 	 * @param width - text element width
 	 * @param height - text element height
 	 * @return (x,y) actual screen position of owner UI element in view space coordinates
@@ -224,12 +231,15 @@ public class UIConstraints {
 	}
 	
 	/**
-	 * @return font size based on text scale (text height).
+	 * @return font size based on {@link UIText} scale (text height) which this constraint is attached to.
 	 */
 	public float getFontSize() {
 		return (float) (heightConstraint.getRelativeValue(GLContext.getWindow().getHeight(), getLineLength()) / TextMeshCreator.LINE_HEIGHT);
 	}
 	
+	/**
+	 * @return line length for {@link UIText} object which this constraint is attached to.
+	 */
 	public float getLineLength() {
 		return (widthConstraint.getRelativeValue(GLContext.getWindow().getWidth(), 0));
 	}

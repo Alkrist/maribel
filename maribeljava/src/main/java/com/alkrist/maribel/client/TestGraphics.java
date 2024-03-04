@@ -137,7 +137,7 @@ public class TestGraphics {
 				.setX(new RelativeConstraint(0.5f))
 				.setY(UIConstraints.MarginVertical.TOP, new RelativeConstraint(0.25f))
 				.setWidth(new RelativeConstraint(0.5f))
-				.setHeight(new RelativeConstraint(0.1f));
+				.setHeight(new RelativeConstraint(0.1f));	
 
 		//UIText text = new UIText(new Vector2f(0.25f,0.25f), "Frames: ", 2, candara, 1f, false);
 		UIText text = new UIText(textConstraints, "Frames", candara, false);

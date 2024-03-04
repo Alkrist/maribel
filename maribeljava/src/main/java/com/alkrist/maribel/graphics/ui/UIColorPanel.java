@@ -16,6 +16,14 @@ import com.alkrist.maribel.graphics.model.Mesh;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 
+/**
+ * {@link UIElement} that works as color panel without texture. Can have borders and curve edges.
+ * <br/>
+ * All sizes are specified in {@link UIConstraint} object in order to keep the shape on resize or on different
+ * aspect ratio displays.
+ * 
+ * @author Alkrist
+ */
 public class UIColorPanel extends UIElement{
 
 	float[] positions = {
@@ -59,32 +67,41 @@ public class UIColorPanel extends UIElement{
 		this.framePixelSize = new Vector2f(0);
 	}
 	
-	public UIColorPanel(UIConstraints constraints, Vector4f color, float borderRadius) {
+	public UIColorPanel(UIConstraints constraints, Vector4f color, 
+			float borderRadius) {
 		this(constraints, color);
 		this.borderRadius = borderRadius;
 	}
 	
-	public UIColorPanel(UIConstraints constraints, Vector4f color, float borderThickness, Vector3f borderColor) {
+	public UIColorPanel(UIConstraints constraints, Vector4f color, 
+			float borderThickness, Vector3f borderColor) {
 		this(constraints, color);
 		this.borderThickness = borderThickness;
 		this.borderColor = borderColor;
 	}
 	
-	public UIColorPanel(UIConstraints constraints, Vector4f color, float borderRadius, float borderThickness, Vector3f borderColor) {
+	public UIColorPanel(UIConstraints constraints, Vector4f color, 
+			float borderRadius, float borderThickness, Vector3f borderColor) {
 		this(constraints, color, borderThickness, borderColor);
 		this.borderRadius = borderRadius;
 	}
-	
-	//TODO: add another constructor for more args UI panel
 
+	public Vector4f getColor() {
+		return color;
+	}
+	
+	public Vector3f getBorderColor() {
+		return borderColor;
+	}
+	
 	@Override
-	public void updateInternal(double deltaTime) {
+	protected void updateInternal(double deltaTime) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void renderInternal() {
+	protected void renderInternal() {
 		glBindVertexArray(mesh.getVaoID());
 		glEnableVertexAttribArray(0);
 		shader.bind();
@@ -129,13 +146,5 @@ public class UIColorPanel extends UIElement{
 	
 	protected float getBorderThicknessPixels() {
 		return (float)(GLContext.getWindow().getWidth() / GLContext.getWindow().getHeight()) * 20 * borderThickness;
-	}
-	
-	public Vector4f getColor() {
-		return color;
-	}
-	
-	public Vector3f getBorderColor() {
-		return borderColor;
 	}
 }

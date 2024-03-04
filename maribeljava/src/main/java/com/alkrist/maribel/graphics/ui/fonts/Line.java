@@ -20,6 +20,8 @@ public class Line {
 	 *            - the size of font being used.
 	 * @param maxLength
 	 *            - the screen-space maximum length of a line.
+	 * <br/>
+	 * Based on Karl's (aka ThinMatrix) implementation of Line
 	 */
 	protected Line(double spaceWidth, double fontSize, double maxLength) {
 		this.spaceSize = spaceWidth * fontSize;

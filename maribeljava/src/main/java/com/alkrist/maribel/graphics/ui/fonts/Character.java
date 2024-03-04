@@ -39,6 +39,8 @@ public class Character {
 	 * @param xAdvance
 	 *            - how far in pixels the cursor should advance after adding
 	 *            this character.
+	 * <br/>
+	 * Based on Karl's (aka ThinMatrix) implementation of Character
 	 */
 	protected Character(int id, double xTextureCoord, double yTextureCoord, double xTexSize, double yTexSize,
 			double xOffset, double yOffset, double sizeX, double sizeY, double xAdvance) {

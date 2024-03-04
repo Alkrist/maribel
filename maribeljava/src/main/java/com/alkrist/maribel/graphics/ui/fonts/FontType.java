@@ -18,6 +18,8 @@ public class FontType {
 	 * @param fontFile
 	 *            - the font file containing information about each character in
 	 *            the texture atlas.
+	 * <br/>
+	 * Based on Karl's (aka ThinMatrix) implementation of FontType
 	 */
 	public FontType(Texture textureAtlas, File fontFile) {
 		this.textureAtlas = textureAtlas;

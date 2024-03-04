@@ -9,6 +9,12 @@ import java.util.Map;
 
 import com.alkrist.maribel.graphics.context.GLContext;
 
+/**
+ * Represents a meta file of the font, which is read from the assets and contains metadata about
+ * each character in the texture atlas.
+ * <br/>
+ * Based on Karl's (aka ThinMatrix) implementation of MetaFile.
+ */
 public class MetaFile {
 
 	private static final int PAD_TOP = 0;

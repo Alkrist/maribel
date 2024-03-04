@@ -3,6 +3,11 @@ package com.alkrist.maribel.graphics.ui.fonts;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents one word in the text object.
+ * <br/>
+ * Based on Karl's (aka ThinMatrix) implementation of Word.
+ */
 public class Word {
 
 	private List<Character> characters = new ArrayList<Character>();

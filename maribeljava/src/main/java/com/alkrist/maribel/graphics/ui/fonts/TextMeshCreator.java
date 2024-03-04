@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Creates a {@link TextMeshData} object from the {@link MetaFile} and {@link UIText} parameters.
+ * <br/>
+ * Based on Karl's (aka ThinMatrix) implementation of TextMeshCreator.
+ */
 public class TextMeshCreator {
 
 	public static final double LINE_HEIGHT = 0.03f;

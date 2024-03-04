@@ -1,5 +1,15 @@
 package com.alkrist.maribel.graphics.ui.fonts;
 
+/**
+ * Contains data about actual text mesh.
+ * <br/>
+ * Vertex Positions - coordinates of the text mesh vertices
+ * Texture Coordinates - it is understandable what it is :)
+ * Width - text width in screen coordinates.
+ * Height - text height in screen coordinates.
+ * <br/>
+ * Based on Karl's (aka ThinMatrix) implementation of TextMeshData.
+ */
 public class TextMeshData {
 
 	private float[] vertexPositions;

@@ -6,6 +6,11 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtil;
 
+/**
+ * {@link UIText} shader program.
+ * 
+ * @author Alkrist
+ */
 public class UITextShader extends ShaderProgram{
 
 	private static UITextShader instance = null;

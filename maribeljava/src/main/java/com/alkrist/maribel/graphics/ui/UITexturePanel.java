@@ -44,13 +44,13 @@ public class UITexturePanel extends UIElement{
 	}
 	
 	@Override
-	public void updateInternal(double deltaTime) {
+	protected void updateInternal(double deltaTime) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void renderInternal() {
+	protected void renderInternal() {
 		glBindVertexArray(mesh.getVaoID());
 		glEnableVertexAttribArray(0);
 		shader.bind();

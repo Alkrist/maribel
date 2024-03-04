@@ -3,6 +3,7 @@ package com.alkrist.maribel.graphics.ui.constraints;
 import org.joml.Vector2f;
 
 import com.alkrist.maribel.graphics.context.GLContext;
+import com.alkrist.maribel.graphics.ui.fonts.TextMeshCreator;
 
 /**
  * This class keeps all the constraints for positioning and scaling the UI element.
@@ -170,7 +171,8 @@ public class UIConstraints {
 	}
 	
 	/**
-	 * @return (x,y) actual screen position of owner UI element.
+	 * Method is used for UI elements.
+	 * @return (x,y) actual screen position of owner UI element in normalized device coordinates.
 	 */
 	public Vector2f getPosition() {
 		
@@ -190,6 +192,39 @@ public class UIConstraints {
 		}
 		
 		return position;
+	}
+
+	/**
+	 * Method is used for UI texts.
+	 * @param width - text element width
+	 * @param height - text element height
+	 * @return (x,y) actual screen position of owner UI element in view space coordinates
+	 */
+	public Vector2f getPosition(float width, float height) {
+		
+		float offsetX = xConstraint.getRelativeValue(GLContext.getConfig().width, 0);
+		float offsetY = yConstraint.getRelativeValue(GLContext.getConfig().height, 0);
+		
+		if(xConstraint.isMargin()) {
+			position.x = xConstraint.isMarginNegative() ? offsetX : 1 - width - offsetX;
+		}else {
+			position.x = offsetX - (width / 2);
+		}
+		
+		if(yConstraint.isMargin()) {
+			position.y = yConstraint.isMarginNegative() ? 1 - height - offsetY : offsetY;
+		}else {
+			position.y = offsetY - (height / 2);
+		}
+
+		return position;
+	}
+	
+	/**
+	 * @return font size based on text scale (text height).
+	 */
+	public float getFontSize() {
+		return (float) (heightConstraint.getRelativeValue(GLContext.getConfig().height, 0) / TextMeshCreator.LINE_HEIGHT);
 	}
 	
 	/**

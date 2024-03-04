@@ -10,6 +10,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import com.alkrist.maribel.graphics.model.ResourceLoader;
+import com.alkrist.maribel.graphics.ui.constraints.AspectConstraint;
+import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 
 public class UIText{
 
@@ -42,22 +44,30 @@ public class UIText{
 	private float textWidth = 0;
 	private float textHeight = 0;
 	
-	public UIText(Vector2f position, String text, float fontSize, FontType font, float maxLineLength,
-			boolean centered) {
+	private UIConstraints constraints;
+	
+	public UIText(UIConstraints constraints, String text, FontType font, 
+			float maxLineLength, boolean centered) {
 		
-		this.textString = text;
-		this.fontSize = fontSize;
+		this.textString = text;	
 		this.font = font;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		
-		this.position = position;
+		this.constraints = constraints;
+		if(constraints.getHeightConstraint() instanceof AspectConstraint) {
+			throw new IllegalArgumentException("Text can not have aspect constraint for its scale!");
+		}
+		
+		this.fontSize = constraints.getFontSize();
 	}
-	
+
 	public void render(UITextShader shader) {
 		glBindVertexArray(textMeshVao.getVAO());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		
+		position = constraints.getPosition(textWidth, textHeight);
 		shader.updateUniforms(this);
 		
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);

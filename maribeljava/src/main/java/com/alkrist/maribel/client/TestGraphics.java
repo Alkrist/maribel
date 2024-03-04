@@ -2,7 +2,6 @@ package com.alkrist.maribel.client;
 
 import java.io.File;
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -27,13 +26,11 @@ import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
 import com.alkrist.maribel.graphics.model.Model;
 import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
-import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.systems.RenderSystem;
-import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
@@ -42,6 +39,7 @@ import com.alkrist.maribel.graphics.ui.UIElement;
 import com.alkrist.maribel.graphics.ui.UITexturePanel;
 import com.alkrist.maribel.graphics.ui.WindowCanvas;
 import com.alkrist.maribel.graphics.ui.constraints.AspectConstraint;
+import com.alkrist.maribel.graphics.ui.constraints.CenterConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.PixelConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.RelativeConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
@@ -134,7 +132,14 @@ public class TestGraphics {
 		//times_new_roman_extended
 		FontType font = new FontType(new Texture2D("fonts\\harry.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"harry.fnt"));
 		FontType candara = new FontType(new Texture2D("fonts\\candara.png",SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"candara.fnt"));
-		UIText text = new UIText(new Vector2f(0.25f,0.25f), "Frames: ", 2, candara, 1f, false);
+		
+		UIConstraints textConstraints = new UIConstraints()
+				.setX(new PixelConstraint(640))
+				.setY(UIConstraints.MarginVertical.TOP, new RelativeConstraint(0.25f))
+				.setHeight(new PixelConstraint(45));
+		
+		//UIText text = new UIText(new Vector2f(0.25f,0.25f), "Frames: ", 2, candara, 1f, false);
+		UIText text = new UIText(textConstraints, "Frames: ", candara, 1f, false);
 		text.setColor(1, 1, 1);
 		wCanvas.addUIText(text);
 		System.out.println(text.getTextWidth()+" "+text.getTextHeight());

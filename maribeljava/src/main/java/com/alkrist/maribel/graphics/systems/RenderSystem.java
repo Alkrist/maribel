@@ -120,7 +120,7 @@ public class RenderSystem extends SystemBase{
 		transparentSceneRenderList = null;
 		shadowSceneRenderList = null;
 		glFinish();
-		glViewport(0,0,config.width,config.height);
+		glViewport(0,0,window.getWidth(), window.getHeight());
 	}
 	
 	@Override
@@ -151,7 +151,7 @@ public class RenderSystem extends SystemBase{
 			for(Entity e: shadowSceneRenderList)
 				opaqueModelShadowMapper.getComponent(e).render(e);
 			
-			glViewport(0,0,config.width,config.height);
+			glViewport(0,0,window.getWidth(), window.getHeight());
 			pssmFBO.getParameter().disable();
 			pssmFBO.getFbo().unbind();
 		}
@@ -254,7 +254,7 @@ public class RenderSystem extends SystemBase{
 			windowUIMapper.getComponent(e).render();
 		}
 		
-		glViewport(0,0,config.width,config.height);
+		glViewport(0,0,window.getWidth(), window.getHeight());
 	}
 	
 	private void createSceneFBOs() {

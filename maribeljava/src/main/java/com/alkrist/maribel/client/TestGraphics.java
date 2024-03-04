@@ -101,8 +101,8 @@ public class TestGraphics {
 		//UIElement colorPanel = new UIColorPanel(new Vector2f(0f, 0f), new Vector4f(1, 1, 1, 1f), new Vector2f(0.5f, 0.5f));
 		UIConstraints colorPanelConstraints = new UIConstraints()
 		.setWidth(new RelativeConstraint(0.5f))
-		.setHeight(new AspectConstraint(0.5f))
-		.setX(UIConstraints.MarginHorizontal.LEFT, new PixelConstraint(300))
+		.setHeight(new RelativeConstraint(0.25f))
+		.setX(UIConstraints.MarginHorizontal.LEFT, new RelativeConstraint(0.25f))
 		.setY(new RelativeConstraint(0.3f));
 		
 		float borderRadius = 0.5f;
@@ -137,12 +137,11 @@ public class TestGraphics {
 				.setX(new RelativeConstraint(0.5f))
 				.setY(UIConstraints.MarginVertical.TOP, new RelativeConstraint(0.25f))
 				.setWidth(new PixelConstraint(640))
-				.setHeight(new AspectConstraint(0.12f));
-				
-		
+				.setHeight(new RelativeConstraint(0.12f));
+
 		//UIText text = new UIText(new Vector2f(0.25f,0.25f), "Frames: ", 2, candara, 1f, false);
-		UIText text = new UIText(textConstraints, "Frames: undisplayed but the text is long quite long but not really", candara, false);
-		text.setColor(1, 1, 1);
+		UIText text = new UIText(textConstraints, "Frames", candara, false);
+		//text.setColor(1, 1, 1);
 		wCanvas.addUIText(text);
 		
 		//Test post processing pipeline
@@ -196,7 +195,7 @@ public class TestGraphics {
 		Entity canvasEntity = engine.createEntity();
 		canvasEntity.addComponent(wCanvas);
 		engine.addEntity(canvasEntity);
-		
+
 		while(!window.isCloseRequested()) {
 			
 			// Update loop now is here	

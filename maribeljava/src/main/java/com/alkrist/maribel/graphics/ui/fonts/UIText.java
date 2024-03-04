@@ -10,7 +10,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import com.alkrist.maribel.graphics.model.ResourceLoader;
-import com.alkrist.maribel.graphics.ui.constraints.AspectConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 
 public class UIText{
@@ -32,13 +31,13 @@ public class UIText{
 	private Vector2f position;
 	
 	//TODO: modify this group somehow for visibility and access
-	private float edge = 0.02f;
+	private float edge = 0.05f;
 	private float width = 0.5f;
 	
-	private float borderWidth = 0.7f;
-	private float borderEdge = 0.1f;
+	private float borderWidth = 0.0f;
+	private float borderEdge = 0.0f;
 	private Vector3f outlineColor = new Vector3f(1, 0, 0);
-	private Vector2f outlineOffset = new Vector2f(0.006f, 0.006f);
+	private Vector2f outlineOffset = new Vector2f(0.000f, 0.000f);
 	
 	// Text size parameters
 	private float textWidth = 0;

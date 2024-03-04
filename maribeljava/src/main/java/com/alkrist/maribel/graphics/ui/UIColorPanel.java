@@ -101,8 +101,8 @@ public class UIColorPanel extends UIElement{
 		position = constraints.getPosition();
 		scale = constraints.getScale();
 		
-		float width = GLContext.getConfig().width;
-		float height = GLContext.getConfig().height;
+		float width = GLContext.getWindow().getWidth();
+		float height = GLContext.getWindow().getHeight();
 		
 		framePixelPosition.x = width/2 + position.x * (width/2);
 		framePixelPosition.y = height/2 +position.y * (height/2);
@@ -124,11 +124,11 @@ public class UIColorPanel extends UIElement{
 	}
 	
 	protected float getBorderRadiusPixels() {
-		return (float)(GLContext.getConfig().width / GLContext.getConfig().height) * 40 * borderRadius;
+		return (float)(GLContext.getWindow().getWidth() / GLContext.getWindow().getHeight()) * 40 * borderRadius;
 	}
 	
 	protected float getBorderThicknessPixels() {
-		return (float)(GLContext.getConfig().width / GLContext.getConfig().height) * 20 * borderThickness;
+		return (float)(GLContext.getWindow().getWidth() / GLContext.getWindow().getHeight()) * 20 * borderThickness;
 	}
 	
 	public Vector4f getColor() {

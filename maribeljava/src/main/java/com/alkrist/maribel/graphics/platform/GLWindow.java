@@ -248,6 +248,7 @@ public class GLWindow {
 
 			width = pWidth.get(0);
 			height = pHeight.get(0);
+			
 		}
 
 		// Resize callback - happen on resize

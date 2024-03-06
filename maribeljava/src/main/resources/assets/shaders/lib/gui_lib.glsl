@@ -55,6 +55,7 @@ int isOverlappingBorder(vec2 currentFragPosition, vec4 borderPosition, float bor
  * cornerRadius - radius of corner <0;1>, 1 - 50% curvature, 0 - 0% curvature
  */
 int isOverlappingCorner(vec2 currentFragPosition, vec4 borderPosition, float cornerRadius){
+
 	float dist = 0;
 
 	if (currentFragPosition.x < borderPosition.x + cornerRadius

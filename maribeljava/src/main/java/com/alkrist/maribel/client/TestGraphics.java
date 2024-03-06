@@ -26,6 +26,7 @@ import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
 import com.alkrist.maribel.graphics.model.Model;
 import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
+import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
@@ -100,9 +101,9 @@ public class TestGraphics {
 		WindowCanvas wCanvas = new WindowCanvas();
 		//UIElement colorPanel = new UIColorPanel(new Vector2f(0f, 0f), new Vector4f(1, 1, 1, 1f), new Vector2f(0.5f, 0.5f));
 		UIConstraints colorPanelConstraints = new UIConstraints()
-		.setWidth(new RelativeConstraint(0.5f))
-		.setHeight(new RelativeConstraint(0.25f))
-		.setX(UIConstraints.MarginHorizontal.LEFT, new RelativeConstraint(0.25f))
+		.setWidth(new RelativeConstraint(0.25f))
+		.setHeight(new AspectConstraint(0.5f))
+		.setX(new CenterConstraint())
 		.setY(new RelativeConstraint(0.3f));
 		
 		float borderRadius = 0.5f;

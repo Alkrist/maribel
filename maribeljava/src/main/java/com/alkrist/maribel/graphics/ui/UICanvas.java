@@ -2,6 +2,7 @@ package com.alkrist.maribel.graphics.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +95,17 @@ public abstract class UICanvas {
 	 */
 	public void clearUIElements() {
 		elements.clear();
-		//TODO: clear texts.
+		
+		Iterator<List<UIText>> iterator = texts.values().iterator();
+	    while (iterator.hasNext()) {
+	        List<UIText> textBatch = iterator.next();
+	        iterator.remove();
+
+	        for (UIText text : textBatch) {
+	            text.deleteFromBuffer();
+	        }
+	        textBatch.clear();
+	    }
 	}
 	
 	/**

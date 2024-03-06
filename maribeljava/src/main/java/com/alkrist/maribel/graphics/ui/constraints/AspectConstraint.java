@@ -1,5 +1,7 @@
 package com.alkrist.maribel.graphics.ui.constraints;
 
+import com.alkrist.maribel.graphics.context.GLContext;
+
 /**
  * Creates a constraint that will set the ratio of HEIGHT based on WIDTH.
  * So, do not set this constraint for width!<br/>
@@ -21,7 +23,9 @@ public class AspectConstraint implements ScaleConstraint{
 	
 	@Override
 	public float getRelativeValue(int sideLength, float xScale) {
-		return xScale * aspectRatio;
+		
+		float windowAspectRatio = (float) GLContext.getWindow().getWidth() / (float) sideLength;
+		return xScale * windowAspectRatio * aspectRatio;
 	}
 
 	@Override

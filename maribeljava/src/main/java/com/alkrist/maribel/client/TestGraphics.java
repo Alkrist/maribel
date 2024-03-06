@@ -140,10 +140,12 @@ public class TestGraphics {
 				.setHeight(new RelativeConstraint(0.1f));	
 
 		//UIText text = new UIText(new Vector2f(0.25f,0.25f), "Frames: ", 2, candara, 1f, false);
-		UIText text = new UIText(textConstraints, "Frames", candara, false);
-		text.setColor(1, 1, 1);
+		UIText text = new UIText(textConstraints, "Biba", candara, false);
+		text.setColor(0, 0, 0);
 		wCanvas.addUIText(text);
 		
+		System.out.println("position: "+colorPanel.getConstraits().getPosition().x+" "+colorPanel.getConstraits().getPosition().y);
+		System.out.println("scale: "+colorPanel.getConstraits().getScale().x+" "+colorPanel.getConstraits().getScale().y);
 		//Test post processing pipeline
 		ContrastProperty contrastProp = new ContrastProperty(new Vector3f(1f), new Vector3f(1f));
 		

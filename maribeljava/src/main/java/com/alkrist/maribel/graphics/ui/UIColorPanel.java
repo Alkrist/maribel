@@ -36,9 +36,6 @@ public class UIColorPanel extends UIElement{
 	private static Mesh mesh;
 	private static UIColorPanelShader shader;
 	
-	private Vector2f position;
-	private Vector2f scale;
-	
 	private Vector4f color;
 	
 	private Vector3f borderColor;
@@ -96,7 +93,6 @@ public class UIColorPanel extends UIElement{
 	
 	@Override
 	protected void updateInternal(double deltaTime) {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -3,7 +3,10 @@ package com.alkrist.maribel.graphics.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector2f;
+
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
+import com.alkrist.maribel.utils.math.RayCaster;
 
 
 /**
@@ -19,6 +22,9 @@ public abstract class UIElement {
 	private UIElement parent;
 
 	protected UIConstraints constraints;
+	
+	protected Vector2f position;
+	protected Vector2f scale;
 	
 	public UIElement(UIConstraints constraints) {
 		this.constraints = constraints;

@@ -37,17 +37,18 @@ public static ImageMeta loadImage(String file, int id) {
             throw new RuntimeException(e);
         }
         
-        IntBuffer w    = BufferUtils.createIntBuffer(1);
-        IntBuffer h    = BufferUtils.createIntBuffer(1);
+        IntBuffer w = BufferUtils.createIntBuffer(1);
+        IntBuffer h = BufferUtils.createIntBuffer(1);
         IntBuffer c = BufferUtils.createIntBuffer(1);
 
         if (!stbi_info_from_memory(imageBuffer, w, h, c)) {
             throw new RuntimeException("Failed to read image information: " + stbi_failure_reason());
         }
         
-        System.out.println("Image width: " + w.get(0));
+        //This stupid piece of crap is not needed even for debugging
+        /*System.out.println("Image width: " + w.get(0));
         System.out.println("Image height: " + h.get(0));
-        System.out.println("Image components: " + c.get(0));
+        System.out.println("Image components: " + c.get(0));*/
 
         ByteBuffer image = stbi_load_from_memory(imageBuffer, w, h, c, 0);
         if (image == null) {

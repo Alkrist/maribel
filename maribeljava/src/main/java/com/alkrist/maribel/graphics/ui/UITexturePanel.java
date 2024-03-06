@@ -7,7 +7,6 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 
 import com.alkrist.maribel.graphics.model.Mesh;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
@@ -64,8 +63,8 @@ public class UITexturePanel extends UIElement{
 
 	protected Matrix4f getTransformationMatrix() {
 		Matrix4f matrix = new Matrix4f();
-		Vector2f position = constraints.getPosition();
-		Vector2f scale = constraints.getScale();
+		position = constraints.getPosition();
+		scale = constraints.getScale();
 		
 		matrix.identity().translate(position.x, position.y, 0).scale(scale.x, scale.y, 1);
 		return matrix;

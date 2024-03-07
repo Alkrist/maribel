@@ -26,6 +26,9 @@ import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
  */
 public class UIColorPanel extends UIElement{
 
+	private static final float BORDER_THICKNESS_PIXELS_MODIFIER = 42;
+	private static final float BORDER_CURVATURE_PIXELS_MODIFIER = 16;
+	
 	float[] positions = {
 			-1, 1, 0, 
 			-1, -1, 0,
@@ -65,22 +68,22 @@ public class UIColorPanel extends UIElement{
 	}
 	
 	public UIColorPanel(UIConstraints constraints, Vector4f color, 
-			float borderRadius) {
+			float curvatureModifier) {
 		this(constraints, color);
-		this.borderRadius = borderRadius;
+		setBorderCurvature(curvatureModifier);
 	}
 	
 	public UIColorPanel(UIConstraints constraints, Vector4f color, 
-			float borderThickness, Vector3f borderColor) {
-		this(constraints, color);
-		this.borderThickness = borderThickness;
+			float borderThicknessModifier, Vector3f borderColor) {
+		this(constraints, color);;
 		this.borderColor = borderColor;
+		setBorderThickness(borderThicknessModifier);
 	}
 	
 	public UIColorPanel(UIConstraints constraints, Vector4f color, 
-			float borderRadius, float borderThickness, Vector3f borderColor) {
-		this(constraints, color, borderThickness, borderColor);
-		this.borderRadius = borderRadius;
+			float curvatureModifier, float borderThicknessModifier, Vector3f borderColor) {
+		this(constraints, color, borderThicknessModifier, borderColor);
+		setBorderCurvature(curvatureModifier);
 	}
 
 	public Vector4f getColor() {
@@ -93,7 +96,7 @@ public class UIColorPanel extends UIElement{
 	
 	@Override
 	protected void updateInternal(double deltaTime) {
-		
+		return;
 	}
 
 	@Override
@@ -140,18 +143,42 @@ public class UIColorPanel extends UIElement{
 		float w = (float)(GLContext.getWindow().getWidth());
 		float h = (float)(GLContext.getWindow().getHeight());
 		
-		return w >= h ? w / h * 40 * borderRadius : h / w * 40 * borderRadius;
+		float length = w >= h ? w : h;
+		
+		return (length * borderRadius) / BORDER_CURVATURE_PIXELS_MODIFIER;
 	}
 	
 	protected float getBorderThicknessPixels() {
 		float w = (float)(GLContext.getWindow().getWidth());
 		float h = (float)(GLContext.getWindow().getHeight());
-		return w >= h ? w / h * 20 * borderThickness : h / w * 20 * borderThickness;
+		float length = w >= h ? w : h;
+		
+		return (length * borderThickness) / BORDER_THICKNESS_PIXELS_MODIFIER;
 	}
 
 	@Override
 	public boolean clearBuffer() {
 		
 		return mesh.clearBuffer();
+	}
+	
+	public void setBorderCurvature(float curvatureModifier) {
+		curvatureModifier = Math.max(0, curvatureModifier);
+		curvatureModifier = Math.min(1, curvatureModifier);
+		this.borderRadius = curvatureModifier;
+	}
+	
+	public void setBorderThickness(float thicknessModifier) {
+		thicknessModifier = Math.max(0, thicknessModifier);
+		thicknessModifier = Math.min(1, thicknessModifier);
+		this.borderThickness = thicknessModifier;
+	}
+	
+	public float getBorderThicknessModifier() {
+		return borderThickness;
+	}
+	
+	public float getBorderCurvatureModifier() {
+		return borderRadius;
 	}
 }

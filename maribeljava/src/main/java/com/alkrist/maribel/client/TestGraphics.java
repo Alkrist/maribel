@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFW;
 
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
@@ -201,16 +202,20 @@ public class TestGraphics {
 
 		while(!window.isCloseRequested()) {
 			
-			// Update loop now is here	
-			GLContext.getInput().update();
+			// Update loop now is here
+			
+			
 			GLContext.getMainCamera().update();
 			PSSMCamera.update(sun);
 			dogTransform.rotate(0, 0.1f, 0);
 			text.setTextString("VBOs: "+ResourceLoader.getVBOsCount());
+			text.resize();
 			//End of update loop
 			
 			engine.update(0);
 			window.updateWindow();
+			
+			GLContext.getInput().update();
 		}window.destroyWindow();
 		
 		GLContext.finish();

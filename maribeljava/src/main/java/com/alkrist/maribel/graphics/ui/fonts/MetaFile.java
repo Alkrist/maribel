@@ -48,7 +48,7 @@ public class MetaFile {
 	 *            - the font file.
 	 */
 	protected MetaFile(File file) {
-		this.aspectRatio = (double) GLContext.getConfig().width / (double) GLContext.getConfig().height;
+		this.aspectRatio = (double) GLContext.getWindow().getWidth() / (double) GLContext.getWindow().getHeight();
 		openFile(file);
 		loadPaddingData();
 		loadLineSizes();

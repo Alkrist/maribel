@@ -44,8 +44,7 @@ public class UITexturePanel extends UIElement{
 	
 	@Override
 	protected void updateInternal(double deltaTime) {
-		// TODO Auto-generated method stub
-		
+		return;
 	}
 
 	@Override

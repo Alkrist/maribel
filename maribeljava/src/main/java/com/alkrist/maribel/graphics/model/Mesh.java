@@ -50,5 +50,9 @@ public class Mesh {
 	public String toString() {
 		return "[VAO ID: "+vaoID+", vertices: "+vertexCount+"]";
 	}
+	
+	public boolean clearBuffer() {
+		return ResourceLoader.deleteVAO(vaoID);
+	}
 
 }

@@ -137,10 +137,21 @@ public class UIColorPanel extends UIElement{
 	}
 	
 	protected float getBorderRadiusPixels() {
-		return (float)(GLContext.getWindow().getWidth() / GLContext.getWindow().getHeight()) * 40 * borderRadius;
+		float w = (float)(GLContext.getWindow().getWidth());
+		float h = (float)(GLContext.getWindow().getHeight());
+		
+		return w >= h ? w / h * 40 * borderRadius : h / w * 40 * borderRadius;
 	}
 	
 	protected float getBorderThicknessPixels() {
-		return (float)(GLContext.getWindow().getWidth() / GLContext.getWindow().getHeight()) * 20 * borderThickness;
+		float w = (float)(GLContext.getWindow().getWidth());
+		float h = (float)(GLContext.getWindow().getHeight());
+		return w >= h ? w / h * 20 * borderThickness : h / w * 20 * borderThickness;
+	}
+
+	@Override
+	public boolean clearBuffer() {
+		
+		return mesh.clearBuffer();
 	}
 }

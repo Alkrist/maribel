@@ -23,6 +23,7 @@ void main(void){
 		discard;
 	}
 
+	float biba = 0;
 	if(isOverlappingCornerBorder(gl_FragCoord.xy, borderPosition, borderRadius, borderThickness) == 1
 			|| isOverlappingBorder(gl_FragCoord.xy, borderPosition, borderThickness) == 1){
 		out_Color = vec4(borderColor, 1.0);

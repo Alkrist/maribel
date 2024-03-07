@@ -117,10 +117,10 @@ public class TestGraphics {
 				borderColor);
 		
 		UIConstraints texturePanelConstraints = new UIConstraints()
-				.setWidth(new RelativeConstraint(0.5f))
-				.setHeight(new AspectConstraint(1))
-				.setX(UIConstraints.MarginHorizontal.RIGHT,new PixelConstraint(20))
-				.setY(UIConstraints.MarginVertical.TOP, new PixelConstraint(20));
+				.setWidth(new RelativeConstraint(0.2f))
+				.setHeight(new AspectConstraint(0.5f))
+				.setX(new CenterConstraint())
+				.setY(new RelativeConstraint(0.4f));
 		
 		UIElement texturePanel = new UITexturePanel(texturePanelConstraints, 
 				new Texture2D("overlay\\overlay_gasmask_3.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge));
@@ -128,7 +128,7 @@ public class TestGraphics {
 		wCanvas.addUIElement(colorPanel);
 		//wCanvas.addUIElement(colorPanel);
 		//texturePanel.addChild(colorPanel);
-		//colorPanel.addChild(texturePanel);
+		colorPanel.addChild(texturePanel);
 		
 		//times_new_roman_extended
 		FontType font = new FontType(new Texture2D("fonts\\harry.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"harry.fnt"));
@@ -206,8 +206,7 @@ public class TestGraphics {
 			GLContext.getMainCamera().update();
 			PSSMCamera.update(sun);
 			dogTransform.rotate(0, 0.1f, 0);
-			//text.setTextString(" deltaTime: "+GLContext.getWindow().deltaTime());
-			text.resize();
+			text.setTextString("VBOs: "+ResourceLoader.getVBOsCount());
 			//End of update loop
 			
 			engine.update(0);

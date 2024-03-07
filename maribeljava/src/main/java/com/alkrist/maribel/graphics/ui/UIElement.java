@@ -80,4 +80,6 @@ public abstract class UIElement {
 	
 	protected abstract void updateInternal(double deltaTime);
 	protected abstract void renderInternal();
+	
+	public abstract boolean clearBuffer();
 }

@@ -33,7 +33,7 @@ vec4 getBorderPosition(vec2 framePixelPosition, vec2 framePixelSize){
  */
 int isOverlappingBorder(vec2 currentFragPosition, vec4 borderPosition, float borderSize){
 
-	if (gl_FragCoord.x < borderPosition.x + borderSize
+	if (currentFragPosition.x < borderPosition.x + borderSize
 			|| currentFragPosition.x > borderPosition.y - borderSize
 			|| currentFragPosition.y < borderPosition.z + borderSize
 			|| currentFragPosition.y > borderPosition.w - borderSize) {

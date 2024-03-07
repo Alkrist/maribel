@@ -73,4 +73,10 @@ public class UITexturePanel extends UIElement{
 	public Texture getTexture() {
 		return texture;
 	}
+	
+	@Override
+	public boolean clearBuffer() {
+		
+		return mesh.clearBuffer();
+	}
 }

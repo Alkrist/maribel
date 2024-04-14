@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
@@ -107,12 +108,17 @@ public class Texture {
     	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     	glGenerateMipmap(target);
     	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    	glTexParameterf(target, GL_TEXTURE_LOD_BIAS, -1);
     }
     
     public void anisotropicFilter() {
     	if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
+    		glGenerateMipmap(target);
+        	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        	glTexParameterf(target, GL_TEXTURE_LOD_BIAS, 0);
+        	
     		float maxfilterLevel = glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-    		glTexParameterf(id, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxfilterLevel);
+    		glTexParameterf(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxfilterLevel);
     	}else {
     		Logging.getLogger().log(Level.WARNING, "Anisotropic filtering is not supported!");
     		trilinearFilter(); //TODO: can get rid of it completely, it's deprecated

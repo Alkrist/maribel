@@ -4,8 +4,11 @@ layout (local_size_x = 16, local_size_y = 16) in;
 
 layout (binding = 0, rgba16f) uniform writeonly image2D fxaaScene_out;
 
-const float EDGE_THRESHOLD_MIN = 0.0312;
-const float EDGE_THRESHOLD_MAX = 0.125;
+//const float EDGE_THRESHOLD_MIN = 0.0312;
+//const float EDGE_THRESHOLD_MAX = 0.125;
+
+const float EDGE_THRESHOLD_MIN = 0.625;
+const float EDGE_THRESHOLD_MAX = 0.063;
 const int ITERATIONS = 7;
 const float QUALITY[7] = {1.5f, 2.0f, 2.0f, 2.0f, 2.0f, 4.0f, 8.0f};
 const float SUBPIXEL_QUALITY = 0.75;

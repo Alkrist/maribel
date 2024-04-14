@@ -196,9 +196,9 @@ public class TestGraphics {
 		
 		engine.addEntity(e5);
 		
-		Entity canvasEntity = engine.createEntity();
+		/*Entity canvasEntity = engine.createEntity();
 		canvasEntity.addComponent(wCanvas);
-		engine.addEntity(canvasEntity);
+		engine.addEntity(canvasEntity);*/
 
 		while(!window.isCloseRequested()) {
 			

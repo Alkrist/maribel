@@ -2,6 +2,7 @@ package com.alkrist.maribel.graphics.context;
 
 import java.util.logging.Level;
 
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import com.alkrist.maribel.common.ecs.Engine;
@@ -23,7 +24,7 @@ public class GLContext {
 		config = new GraphicsConfig();
 		window = new GLWindow();
 		inputHandler = new InputHandler();
-		camera = new Camera(new org.joml.Vector3f(), 0, 0, 0);
+		camera = new Camera(new Vector3f(0, 0, -100), 0, 180, 0);
 		
 		config.load("video");
 		window.init(windowTitle, iconPath);

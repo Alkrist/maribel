@@ -25,7 +25,7 @@ public class FullScreenQuad {
 		config = param;
 		
 		float[] positions = {-1, 1, -1, -1, 1, 1, 1, -1};
-
+		
 		this.mesh = ResourceLoader.loadToVAO(positions, 2);
 	}
 	

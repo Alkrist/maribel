@@ -101,6 +101,18 @@ public class Camera {
 		this.projectionMatrix.perspective(fovY, ((float) width / (float) height), zNear, zFar);
 		
 		this.invProjectionMatrix.set(projectionMatrix).invert();
+		
+		/*float aspectRatio = (float) width / (float) height;
+	    float yScale = (float) (1.0 / Math.tan(Math.toRadians(fovY / 2.0)));
+	    float xScale = yScale / aspectRatio;
+	    float frustumLength = zFar - zNear;
+
+	    projectionMatrix.m00(xScale);
+	    projectionMatrix.m11(yScale);
+	    projectionMatrix.m22(-((zFar + zNear) / frustumLength));
+	    projectionMatrix.m23(-1);
+	    projectionMatrix.m32(-((2 * zNear * zFar) / frustumLength));
+	    projectionMatrix.m33(0);*/
 	}
 	
 	public void setViewMatrix(Matrix4f viewMatrix) {
@@ -154,11 +166,16 @@ public class Camera {
 	private Matrix4f updateViewMatrix() {
 		viewMatrix.identity();
 		
+		
 		viewMatrix.rotate((float)Math.toRadians(pitch), new Vector3f(1,0,0));
 		viewMatrix.rotate((float)Math.toRadians(yaw), new Vector3f(0,1,0));
 		viewMatrix.rotate((float)Math.toRadians(roll), new Vector3f(0,0,1));
+		//viewMatrix.rotate(-(float)Math.toRadians(yaw), new Vector3f(0, 1, 0));
+	    //viewMatrix.rotate(-(float)Math.toRadians(pitch), new Vector3f(1, 0, 0));
+	    //viewMatrix.rotate(-(float)Math.toRadians(roll), new Vector3f(0, 0, 1));
 		
-		viewMatrix.translate(-position.x, -position.y, -position.z);
+		Vector3f negativePos = new Vector3f(-position.x, -position.y, -position.z);
+		viewMatrix.translate(negativePos);
 		
 		this.invViewMatirx.set(viewMatrix).invert();
 		

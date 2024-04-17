@@ -23,6 +23,8 @@ public class SSAO {
 	private Texture sceneTexture;
 	private Texture blurSceneTexture;
 	
+	private Texture debugTexture;
+	
 	private int kernelSize;
 	private Vector3f[] kernel;
 	private float[] randomX;
@@ -54,10 +56,12 @@ public class SSAO {
 		blurShader = SSAOBlurShader.getInstance();
 		noiseShader = SSAONoiseShader.getInstance();
 		
-		noiseTexture = new Texture2DStorage(4,4,1,ImageFormat.RGBA16FLOAT);
+		noiseTexture = new Texture2D(4,4,ImageFormat.RGBA16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.Repeat);
 		sceneTexture = new Texture2D(width, height, ImageFormat.R16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge);
 		blurSceneTexture = new Texture2D(width, height, ImageFormat.R16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge);
 	
+		debugTexture = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge);
+		
 		noiseShader.bind();
 		glBindImageTexture(0, noiseTexture.getId(), 0, false, 0, GL_WRITE_ONLY, GL_RGBA16F);
 		noiseShader.updateUniforms(randomX, randomY);
@@ -79,12 +83,17 @@ public class SSAO {
 		blurShader.bind();
 		glBindImageTexture(0, blurSceneTexture.getId(), 0, false, 0, GL_WRITE_ONLY, GL_R16F);
 		glBindImageTexture(1, sceneTexture.getId(), 0, false, 0, GL_READ_ONLY, GL_R16F);
+		glBindImageTexture(2, debugTexture.getId(), 0, false, 0, GL_WRITE_ONLY, GL_RGBA16F);
 		
 		glDispatchCompute(width/16,height/16,1);
 	}
 	
 	public Texture getBlurSceneTexture() {
 		return blurSceneTexture;
+	}
+	
+	public Texture getDebugTexture() {
+		return debugTexture;
 	}
 	
 	private static Vector3f[] generateRandomKernel3D(int kernelSize){
@@ -103,7 +112,6 @@ public class SSAO {
 			
 			kernel[i] = kernel[i].mul(scale).mul(-1);
 		}
-		
 		return kernel;
 	}
 }

@@ -59,7 +59,7 @@ import com.alkrist.maribel.utils.Logging;
  */
 public class TestGraphics {
 
-	public static DirectionalLight sun = new DirectionalLight(new Vector3f(1, 10000, 1000), new Vector3f(1,1,1), 0.7f);
+	public static DirectionalLight sun = new DirectionalLight(new Vector3f(10000, 10000, 1000), new Vector3f(1,1,1), 0.5f);
 	public static PointLight light1 = new PointLight(new Vector3f(-2, 10, -40), new Vector3f(0,0,1), 0.5f, 1, 0.01f, 0.002f);
 	public static SpotLight light2 = new SpotLight(new Vector3f(0, 15, 0), new Vector3f(1,0,1),
 			2f, 1, 0.01f, 0.002f, new Vector3f(-2, 10, -40), 45);
@@ -172,7 +172,7 @@ public class TestGraphics {
 		
 		engine.addEntity(e2);
 		
-		Entity e3 = engine.createEntity();
+		/*Entity e3 = engine.createEntity();
 		e3.addComponent(glassTransform);
 		e3.addComponent(glassRenderable);
 		e3.addComponent(transparentRenderer);
@@ -186,7 +186,7 @@ public class TestGraphics {
 		e4.addComponent(transparentRenderer);
 		e4.addComponent(shadowRenderer);
 		
-		engine.addEntity(e4);
+		engine.addEntity(e4);*/
 		
 		Entity e5 = engine.createEntity();
 		e5.addComponent(sampleSceneRenderable);

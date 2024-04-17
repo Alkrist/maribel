@@ -16,50 +16,55 @@ uniform float threshold;
 uniform int width;
 uniform int height;
 
-const float ZFAR = 10000;
+const float zfar = 10000.0f;
 
 void main(void){
 	ivec2 computeCoord = ivec2(gl_GlobalInvocationID.xy);
 
-	vec3 worldPos = imageLoad(worldPositionSampler, computeCoord, 0).rgb;
+		vec3 worldPosition = imageLoad(worldPositionSampler, computeCoord, 0).rgb;
 
-	vec3 viewPos = (viewMatrix * vec4(worldPos,1.0)).xyz;
+		vec3 viewPosition = (viewMatrix * vec4(worldPosition,1.0)).xyz;
 
-	float actualDepth = viewPos.z/ZFAR;
+		float actualDepth = viewPosition.z/zfar;
 
-	vec3 normal = imageLoad(normalSampler, computeCoord, 0).rgb;
+		vec3 normal = imageLoad(normalSampler, computeCoord, 0).rgb;
 
-	ivec2 noiseCoord = computeCoord - ivec2(floor(gl_GlobalInvocationID.x/4), floor(gl_GlobalInvocationID.y/4)) * 4;
+		ivec2 noiseCoord = computeCoord - ivec2(floor(gl_GlobalInvocationID.x/4), floor(gl_GlobalInvocationID.y/4)) * 4;
 
-	vec3 rvec = imageLoad(noiseSampler, noiseCoord).rgb;
-	vec3 tangent = normalize(rvec - normal * dot(rvec, normal));
-	vec3 bitangent = cross(normal, tangent);
-	mat3 tbn = mat3(tangent, bitangent, normal);
+		vec3 rvec = imageLoad(noiseSampler, noiseCoord).rgb;
+		vec3 tangent = normalize(rvec - normal * dot(rvec, normal));
+		vec3 bitangent = cross(normal, tangent);
+		mat3 tbn = mat3(tangent, bitangent, normal);
 
-	float occlusion = 0.0;
-	float occlusionOffset = 0.0;
+		float occlusion = 0.0;
+		float occlusionOffset = 0.0;
 
-	for (int i = 0; i < kernelSize; ++i){
-		// get sample position
-		vec3 sampleVec = tbn * kernel[i];
-		sampleVec = sampleVec * uRadius + viewPos;
+		float accumulator = 0.36;
+		for (int i = 0; i < kernelSize; ++i) {
+			// get sample position:
+			vec3 smple = tbn * kernel[i];
+			smple = smple * uRadius + viewPosition;
 
-		// project sample position
-		vec4 offset = vec4(sampleVec, 1.0);
-		offset = projectionMatrix * offset;
-		offset.xy /= offset.w;
-		offset.xy = offset.xy * 0.5 + 0.5;
+			// project sample position:
+			vec4 offset = vec4(smple, 1.0);
+			offset = projectionMatrix * offset;
+			offset.xyz /= offset.w;
+			offset.xy = offset.xy * 0.5 + 0.5;
 
-		// get sample depth
-		float sampleDepth = (viewMatrix * vec4(imageLoad(worldPositionSampler,ivec2(offset.x * width, offset.y * height), 0).rgb,1.0)).z/ZFAR;
+			// get sample depth:
+			vec3 offsetWorldPosition = imageLoad(worldPositionSampler,ivec2(offset.x * width, offset.y * height), 0).rgb;
+			vec3 offsetViewPosition = (viewMatrix * vec4(offsetWorldPosition, 1.0)).xyz;
+			float sampleDepth = offsetViewPosition.z / zfar;
 
-		// range check and accumulate
-		float rangeCheck = abs(actualDepth - sampleDepth) < threshold ? 1.0 : 0.0;
 
-		occlusionOffset = (sampleDepth <= sampleVec.z/ZFAR ? 1.0 : 0.0) * rangeCheck;
-		occlusion += occlusionOffset;
-	}
+			// range check & accumulate:
+			float rangeCheck= abs(actualDepth - sampleDepth) < threshold ? 1.0 : 0.0;
 
-	occlusion = (1.0 - (occlusion / float(kernelSize)));
-	imageStore(ssao_out, computeCoord, vec4(occlusion,0,0,1.0));
+			occlusionOffset = (sampleDepth <= smple.z/zfar ? 1.0 : 0.0) * rangeCheck;
+			occlusion += occlusionOffset;
+		}
+
+		occlusion = (1.0 - (occlusion / float(kernelSize)));
+
+		imageStore(ssao_out, computeCoord, vec4(occlusion,0,0,1.0));
 }

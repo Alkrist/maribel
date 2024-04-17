@@ -18,6 +18,7 @@ const int SHADOW_VARIANCE_LOW_QUALITY[5] = int[5](1,1,2,2,5);
 const int SHADOW_VARIANCE_VERY_LOW_QUALITY[5] = int[5](1,1,1,1,1);
 const float ZFAR = 10000;
 
+const int ssaoEnable = 1;
 
 struct Attenuation
 {
@@ -104,6 +105,7 @@ vec3 calculatePointLight(vec3 position, vec3 normal, PointLight light, float ref
 	float attenuationInv = light.att.constant + light.att.linear * distance +
 	    light.att.exponent * distance * distance;
 
+	//TODO: attenuationInv zero check
 	return lightColor / attenuationInv;
 }
 
@@ -158,12 +160,12 @@ float applyShadowMapping(vec3 worldPos)
 		case 0: variance_shadows_kernels = SHADOW_VARIANCE_VERY_LOW_QUALITY; break;
 	}
 
-	//TODO: FUCKING DO SOMETHING WITH LAGGY TERRAIN SHADOW!!!
-	//Perhaps, move it down, so it's rendered only if linear depth is too big. But study it first.
+	if (linDepth >= splitDistances[3] && linDepth <= splitDistances[4]){
+		vec4 lightSpacePos = projViewMatrices[4] * vec4(worldPos,1.0);
+		projCoords = lightSpacePos.xyz * 0.5 + 0.5;
+		terrainShadow = varianceShadow(projCoords,4,variance_shadows_kernels[4]);
+	}
 
-	//vec4 lightSpacePos = projViewMatrices[4] * vec4(worldPos,1.0);
-	//projCoords = lightSpacePos.xyz * 0.5 + 0.5;
-	//terrainShadow = varianceShadow(projCoords,4,variance_shadows_kernels[4]);
 
 	if (linDepth <= splitDistances[0]){
 		vec4 lightSpacePos = projViewMatrices[0] * vec4(worldPos,1.0);
@@ -195,8 +197,8 @@ float applyShadowMapping(vec3 worldPos)
 		shadowFactor = varianceShadow(projCoords,3,variance_shadows_kernels[3]);
 	}
 
-	return shadowFactor;
-	//return min(terrainShadow, shadowFactor);
+	//return shadowFactor;
+	return min(terrainShadow, shadowFactor);
 }
 
 void main(void){
@@ -217,6 +219,19 @@ void main(void){
 				position = imageLoad(worldPositionSampler, computeCoord,0).rgb;
 				specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,0).rgba;
 
+				int diffuseEnable = int(specular_emission_diffuse_ssao_bloom.z/10.0);
+				float ssao = specular_emission_diffuse_ssao_bloom.z - (diffuseEnable * 10);
+
+				if (ssao == 1 && ssaoEnable == 1){
+					ssao = imageLoad(ssaoBlurImage, computeCoord).r;
+				}
+				else{
+					ssao = 1;
+				}
+
+
+
+
 				finalColor = calculateDirectionalLight(position,
 						normalize(normal.xyz),
 						dirLight,
@@ -236,7 +251,8 @@ void main(void){
 						specular_emission_diffuse_ssao_bloom.g);
 
 				finalColor = finalColor * albedo;
-				finalColor = finalColor * applyShadowMapping(position);
+				finalColor = finalColor * applyShadowMapping(position) * ssao;
+
 			}
 			else{
 				finalColor = albedo;
@@ -250,6 +266,16 @@ void main(void){
 		if (normal.a != 0){
 			position = imageLoad(worldPositionSampler, computeCoord,0).rgb;
 			specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,0).rgba;
+
+			int diffuseEnable = int(specular_emission_diffuse_ssao_bloom.z/10.0);
+							float ssao = specular_emission_diffuse_ssao_bloom.z - (diffuseEnable * 10);
+
+							if (ssao == 1 && ssaoEnable == 1){
+								ssao = imageLoad(ssaoBlurImage, computeCoord).r;
+							}
+							else{
+								ssao = 1;
+							}
 
 			finalColor = calculateDirectionalLight(position,
 					normalize(normal.xyz),
@@ -270,7 +296,8 @@ void main(void){
 					specular_emission_diffuse_ssao_bloom.g);
 
 			finalColor = finalColor * albedo;
-			finalColor = finalColor * applyShadowMapping(position);
+			finalColor = finalColor * applyShadowMapping(position) * ssao;
+
 			}
 			else{
 				finalColor = albedo;

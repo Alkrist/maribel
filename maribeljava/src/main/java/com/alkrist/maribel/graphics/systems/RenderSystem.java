@@ -246,6 +246,7 @@ public class RenderSystem extends SystemBase{
 				currentScene = ppeVolumeRenderer.render(volume, currentScene);
 		}
 		
+		//ssao.getDebugTexture()
 		fullScreenQuad.setTexture(currentScene);
 		fullScreenQuad.render();
 		

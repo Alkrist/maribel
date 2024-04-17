@@ -2,20 +2,25 @@
 
 layout (local_size_x = 4, local_size_y = 4) in;
 
-layout (binding = 0, rgba32f) uniform writeonly image2D outputNoise;
+layout (binding = 0, rgba16f) uniform writeonly image2D outputNoise;
 
 uniform float randomx[16];
 uniform float randomy[16];
 
-void main(void){
+void main() {
+    ivec2 computeCoord = ivec2(gl_GlobalInvocationID.xy);
 
-	ivec2 computeCoord = ivec2(gl_GlobalInvocationID.xy);
+    // Ensure computeCoord is within bounds
+    if (computeCoord.x < 4 && computeCoord.y < 4) {
+        // Access random values from arrays
+        vec3 noise = vec3(randomx[computeCoord.x + computeCoord.y * 4],
+                          randomy[computeCoord.x + computeCoord.y * 4],
+                          0.0f);
 
-	vec3 noise = vec3(randomx[computeCoord.x + computeCoord.y * 4],
-					  randomy[computeCoord.x + computeCoord.y * 4],
-					  0.0f);
+        // Normalize the noise
+        noise = normalize(noise);
 
-	noise = normalize(noise);
-
-	imageStore(outputNoise, computeCoord, vec4(noise,1.0));
+        // Store the normalized noise in the output image
+        imageStore(outputNoise, computeCoord, vec4(noise, 1.0));
+    }
 }

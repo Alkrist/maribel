@@ -28,11 +28,14 @@ public class DeferredClusterShader extends ShaderProgram{
 		addUniform("screenDimensions");
 	}
 	
-	public void updateUniforms(int width, int height, int gridSizeX, int gridSizeY, int gridSizeZ) {
+	public void updateUniforms(int width, int height) {
 		setUniform("zNear", GLContext.getConfig().NEAR_PLANE);
 		setUniform("zFar", GLContext.getConfig().FAR_PLANE);
 		setUniform("inverseProjection", GLContext.getMainCamera().getInvertedProjectionMatrix());
-		setUniform("screenDimensions", width,height);
-		setUniform("gridSize", gridSizeX, gridSizeY, gridSizeZ);
+		setUniform("screenDimensions", width, height);
+		setUniform("gridSize", 
+				DeferredClusteredLighting.GRID_SIZE_X, 
+				DeferredClusteredLighting.GRID_SIZE_Y, 
+				DeferredClusteredLighting.GRID_SIZE_Z);
 	}
 }

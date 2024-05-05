@@ -77,7 +77,7 @@ public class TestCluster {
 		this.lightingShader = DeferredTestShader.getInstance();
 		
 		deferredSceneTexture = new Texture2D(width, height, 
-				ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest, TextureWrapMode.ClampToEdge);
+				ImageFormat.RGBA16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge);
 		
 		createSSBO();
 		
@@ -95,7 +95,7 @@ public class TestCluster {
 	
 	public void cullLightsCompute() {
 		shader.bind();
-		shader.updateUniforms(width, height, gridSizeX, gridSizeY, gridSizeZ);
+		shader.updateUniforms(width, height);
 		glDispatchCompute(gridSizeX, gridSizeY, gridSizeZ);
 		glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	}
@@ -159,7 +159,7 @@ public class TestCluster {
 	
 	public void lightAABBIntersection() {
 		lightCullingShader.bind();
-		lightCullingShader.updateUniforms(GLContext.getMainCamera().getViewMatrix());
+		lightCullingShader.updateUniforms();
 		glDispatchCompute(27,1,1); // for 12x12x24 work groups of cluster shader we have 3456 threads, same as for 27 work groups
 		glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	}

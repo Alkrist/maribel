@@ -1,7 +1,6 @@
 package com.alkrist.maribel.graphics.deferred;
 
-import org.joml.Matrix4f;
-
+import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtil;
 
@@ -25,7 +24,7 @@ public class DeferredLightAABBCullingShader extends ShaderProgram{
 		addUniform("viewMatrix");
 	}
 	
-	public void updateUniforms(Matrix4f viewMatrix) {
-		setUniform("viewMatrix", viewMatrix);
+	public void updateUniforms() {
+		setUniform("viewMatrix", GLContext.getMainCamera().getViewMatrix());
 	}
 }

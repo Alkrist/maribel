@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT1;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT3;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT4;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT5;
 
 import java.nio.IntBuffer;
 

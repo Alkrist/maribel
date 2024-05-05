@@ -50,8 +50,8 @@ vec3 diffuse(vec3 albedo, vec3 normal, vec3 toLightDirection, vec3 lightColor,
 vec3 specular(vec3 normal, vec3 position, vec3 toLightDir, vec3 lightColor,
 		float reflectance, float emission, float lightIntensity) {
 	vec3 d = cameraPosition;
-	vec3 viewPosition = (viewMatrix * vec4(position, 1.0)).xyz;
-	vec3 cameraDirection = normalize(-viewPosition);
+	//vec3 viewPosition = (viewMatrix * vec4(position, 1.0)).xyz;
+	vec3 cameraDirection = normalize(-position);
 	vec3 fromLightDir = -toLightDir;
 	vec3 reflectedLight = normalize(reflect(fromLightDir, normal));
 	float specularFactor = max(dot(cameraDirection, reflectedLight), 0.0);
@@ -64,22 +64,22 @@ vec3 calculateLight(vec3 albedo, vec3 position, vec3 normal, PointLight light,
 	vec3 lightDirection = light.position.xyz - position;
 	vec3 toLightDir = normalize(lightDirection);
 
+	float distance = length(light.position.xyz - position); //Added check for radius
+	/*if(distance > light.radius){
+		return vec3(0);
+	}*/
+
 	vec3 diffuse = diffuse(albedo, normal, toLightDir, light.color.rgb,
 			light.intensity);
 	vec3 specular = specular(normal, position, toLightDir, light.color.rgb,
 			reflectance, emission, light.intensity);
 
 	// Attenuation
-	float distance = length(light.position.xyz - position);
-	float attenuation = 1.0 / (1.0 + (distance / light.radius));
+	float attenuation = smoothstep(light.radius, 0, distance);
 
 	diffuse *= attenuation;
 	specular *= attenuation;
 
-	// To test, I set lighting to 0 if fragment is beyond radius
-	if(distance > light.radius){
-		return vec3(0);
-	}
 	return diffuse + specular;
 }
 

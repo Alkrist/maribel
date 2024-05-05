@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
@@ -38,7 +37,6 @@ import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.shadow.ParallelSplitShadowMapsFBO;
 import com.alkrist.maribel.graphics.surface.FullScreenQuad;
-import com.alkrist.maribel.graphics.target.DeferredFBO;
 import com.alkrist.maribel.graphics.target.FBO;
 import com.alkrist.maribel.graphics.target.FBO.Attachment;
 import com.alkrist.maribel.graphics.target.OffScreenFBO;
@@ -93,7 +91,6 @@ public class RenderSystem extends SystemBase{
 	// TEST STUFF
 	List<PointLight> pointLights = new ArrayList<PointLight>();
 	private TestCluster testCluster;
-	private DeferredFBO testFBO;
 	
 	public RenderSystem() {
 		super();
@@ -229,7 +226,6 @@ public class RenderSystem extends SystemBase{
 		//      RENDER DEFERRED LIGHTING     //
 		//===================================//
 		//testCluster.updateLightSSBO(pointLights);
-		testCluster.cullLightsCompute();
 		testCluster.lightAABBIntersection();
 		/*deferredLighting.render(primarySceneFBO.getAttachmentTexture(Attachment.COLOR),
 				primarySceneFBO.getAttachmentTexture(Attachment.POSITION),
@@ -243,13 +239,6 @@ public class RenderSystem extends SystemBase{
 				primarySceneFBO.getAttachmentTexture(Attachment.POSITION), 
 				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
 				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM));
-		
-		/*testFBO.bind();
-		testCluster.renderFragment(primarySceneFBO.getAttachmentTexture(Attachment.COLOR), 
-				primarySceneFBO.getAttachmentTexture(Attachment.POSITION), 
-				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
-				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM));
-		testFBO.unbind();*/
 		
 		//deferredLighting.getDeferredSceneTexture()
 		//===================================//
@@ -305,8 +294,6 @@ public class RenderSystem extends SystemBase{
 	private void createSceneFBOs() {
 		primarySceneFBO = new OffScreenFBO(window.getWidth(), window.getHeight(), GLContext.getConfig().multisampleSamplesCount);
 		secondarySceneFBO = new TransparencyFBO(window.getWidth(), window.getHeight());
-		
-		testFBO = new DeferredFBO(window.getWidth(), window.getHeight());
 	}
 	
 	private void sortPPEVolumeList() {

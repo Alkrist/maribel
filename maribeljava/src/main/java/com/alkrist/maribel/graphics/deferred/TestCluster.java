@@ -47,7 +47,6 @@ public class TestCluster {
 	private DeferredClusterShader shader;
 	private DeferredLightAABBCullingShader lightCullingShader;
 	private DeferredTestShader lightingShader;
-	private DeferredFragTestShader testShader;
 	
 	private Texture deferredSceneTexture;
 	
@@ -76,7 +75,6 @@ public class TestCluster {
 		this.shader = DeferredClusterShader.getInstance();
 		this.lightCullingShader = DeferredLightAABBCullingShader.getInstance();
 		this.lightingShader = DeferredTestShader.getInstance();
-		this.testShader = DeferredFragTestShader.getInstance();
 		
 		deferredSceneTexture = new Texture2D(width, height, 
 				ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest, TextureWrapMode.ClampToEdge);
@@ -177,25 +175,6 @@ public class TestCluster {
 		lightingShader.updateUniforms(width, height, gridSizeX, gridSizeY, gridSizeZ);
 		
 		glDispatchCompute(width/2, height/2,1);
-	}
-	
-	public void renderFragment(Texture albedo, Texture position, Texture normal, Texture specularEmissionDiffuseSSAOBloom) {
-		config.enable();
-		testShader.bind();
-		testShader.updateUniforms(width, height, gridSizeX, gridSizeY, gridSizeZ);
-		testShader.updateUniforms(albedo, position, normal, specularEmissionDiffuseSSAOBloom);
-		
-		glBindVertexArray(mesh.getVaoID());
-		glEnableVertexAttribArray(0); // vertices
-		//glEnableVertexAttribArray(1); // texture coords
-		
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.getVertexCount());
-		
-		glDisableVertexAttribArray(0); // vertices
-		//glDisableVertexAttribArray(1); // texture coords
-		glBindVertexArray(0);
-		
-		config.disable();
 	}
 	
 	public Texture getDeferredSceneTexture() {

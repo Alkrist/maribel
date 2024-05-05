@@ -1,7 +1,5 @@
 package com.alkrist.maribel.graphics.deferred;
 
-import org.joml.Matrix4f;
-
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtil;

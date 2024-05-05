@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import com.alkrist.maribel.graphics.components.light.DirectionalLight;
+import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.context.GLContext;
 
 public class PSSMCamera {
@@ -25,7 +25,7 @@ public class PSSMCamera {
 		projectionViewMatrices = new Matrix4f[PSSM_SPLITS];
 	}
 	
-	public static void update(DirectionalLight sourceLight) {
+	public static void update(DirectionLight sourceLight) {
 		Matrix4f viewMatrix = GLContext.getMainCamera().getViewMatrix();
 		Matrix4f projectionMatrix = GLContext.getMainCamera().getProjectionMatrix();
 		

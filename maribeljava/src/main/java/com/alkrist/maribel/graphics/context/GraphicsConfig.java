@@ -23,12 +23,14 @@ public class GraphicsConfig extends ConfigBase{
 	public boolean isFXAAEnabled;
 	public boolean isMultisamplingEnabled;
 	public int multisampleSamplesCount;
+	public float maxLightDistance;
+	public int maxRenderedLights;
 	
 	public GraphicsConfig() {}
 	
 	@Override
 	protected void loadProperties(Properties prop) {
-		fovY = Float.valueOf(prop.getProperty("FOV", "70"));
+		fovY = Float.valueOf(prop.getProperty("FOV", "70.0"));
 		vsyncEnabled = Boolean.valueOf(prop.getProperty("vsync", "false"));
 		fullscreen = Boolean.valueOf(prop.getProperty("fullscreen_mode", "false"));
 		String filter = prop.getProperty("samplerFilter", "trilinear");
@@ -47,6 +49,8 @@ public class GraphicsConfig extends ConfigBase{
 		isFXAAEnabled = Boolean.valueOf(prop.getProperty("fxaa_enabled", "true"));
 		isMultisamplingEnabled = Boolean.valueOf(prop.getProperty("mulitsampling_enabled", "true"));
 		multisampleSamplesCount = Integer.valueOf(prop.getProperty("multisample_count", "2"));
+		maxLightDistance = Float.valueOf(prop.getProperty("max_light_distance", "500.0"));
+		maxRenderedLights = Integer.valueOf(prop.getProperty("max_rendered_lights", "20"));
 	}
 
 	@Override
@@ -68,6 +72,8 @@ public class GraphicsConfig extends ConfigBase{
 		prop.setProperty("fxaa_enabled", String.valueOf(isFXAAEnabled));
 		prop.setProperty("mulitsampling_enabled", String.valueOf(isMultisamplingEnabled));
 		prop.setProperty("multisample_count", String.valueOf(multisampleSamplesCount));
+		prop.setProperty("max_light_distance", String.valueOf(maxLightDistance));
+		prop.setProperty("max_rendered_lights", String.valueOf(maxRenderedLights));
 	}
 
 }

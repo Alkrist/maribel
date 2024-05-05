@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -22,9 +25,11 @@ import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
+import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.context.GraphicsConfig;
 import com.alkrist.maribel.graphics.deferred.DeferredLighting;
+import com.alkrist.maribel.graphics.deferred.TestCluster;
 import com.alkrist.maribel.graphics.filter.PostProcessingVolumeRenderer;
 import com.alkrist.maribel.graphics.occlusion.SSAO;
 import com.alkrist.maribel.graphics.platform.GLUtil;
@@ -33,6 +38,7 @@ import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.shadow.ParallelSplitShadowMapsFBO;
 import com.alkrist.maribel.graphics.surface.FullScreenQuad;
+import com.alkrist.maribel.graphics.target.DeferredFBO;
 import com.alkrist.maribel.graphics.target.FBO;
 import com.alkrist.maribel.graphics.target.FBO.Attachment;
 import com.alkrist.maribel.graphics.target.OffScreenFBO;
@@ -84,6 +90,11 @@ public class RenderSystem extends SystemBase{
 	
 	private List<PostProcessingVolume> ppeVolumeList;
 	
+	// TEST STUFF
+	List<PointLight> pointLights = new ArrayList<PointLight>();
+	private TestCluster testCluster;
+	private DeferredFBO testFBO;
+	
 	public RenderSystem() {
 		super();
 		this.window = GLContext.getWindow();
@@ -93,6 +104,7 @@ public class RenderSystem extends SystemBase{
 		pssmFBO = new ParallelSplitShadowMapsFBO();
 		PSSMCamera.init();
 		deferredLighting = new DeferredLighting(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
+		
 		ssao = new SSAO(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
 		fxaa = new FXAA(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
 		sampleCoverage = new SampleCoverage(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
@@ -100,6 +112,16 @@ public class RenderSystem extends SystemBase{
 	
 		ppeVolumeRenderer = new PostProcessingVolumeRenderer();
 		ppeVolumeList = new ArrayList<PostProcessingVolume>();
+		
+		//TEST STUFF
+		pointLights.add(new PointLight(new Vector3f(-10, 5, -60), new Vector3f(1, 0, 0), 1f, 1, 0.01f, 0.002f, 15.0f));
+		pointLights.add(new PointLight(new Vector3f(20, 5, -60), new Vector3f(0, 1, 0), 1f, 1, 0.01f, 0.002f, 15.0f));
+		pointLights.add(new PointLight(new Vector3f(-30, 5, -60), new Vector3f(0, 0, 1), 1f, 1, 0.01f, 0.002f, 15.0f));
+		testCluster = new TestCluster(window.getWidth(), window.getHeight());
+		
+		testCluster.cullLightsCompute();
+		testCluster.initLightSSBO(pointLights);
+		testCluster.lightAABBIntersection();
 	}
 	
 	@Override
@@ -110,6 +132,10 @@ public class RenderSystem extends SystemBase{
 		shadowSceneRenderList = engine.getEntitiesOf(Family.all(ModelShadowRenderer.class, Transform.class, Renderable.class).get());
 		windowCanvases = engine.getEntitiesOf(Family.all(WindowCanvas.class).get());	
 		postProcessingVolumes = engine.getEntitiesOf(Family.all(PostProcessingVolume.class).get());
+		
+		
+		
+		//testCluster.lightAABBIntersection();
 		
 		glFinish();
 	}
@@ -138,7 +164,7 @@ public class RenderSystem extends SystemBase{
 		pssmFBO.getFbo().unbind();
 		
 		ppeVolumeList.clear();
-		
+
 		
 		//===================================//
 		//        RENDER SHADOW MAPS         //
@@ -173,6 +199,7 @@ public class RenderSystem extends SystemBase{
 		//===================================//
 		//     RENDER TRANSPARENT OBJECTS    //
 		//===================================//
+		
 		secondarySceneFBO.bind();
 		for(Entity e: transparentSceneRenderList) {
 			if(transparentRendererMapper.hasComponent(e))
@@ -201,19 +228,35 @@ public class RenderSystem extends SystemBase{
 		//===================================//
 		//      RENDER DEFERRED LIGHTING     //
 		//===================================//
-		deferredLighting.render(primarySceneFBO.getAttachmentTexture(Attachment.COLOR),
+		//testCluster.updateLightSSBO(pointLights);
+		testCluster.cullLightsCompute();
+		testCluster.lightAABBIntersection();
+		/*deferredLighting.render(primarySceneFBO.getAttachmentTexture(Attachment.COLOR),
 				primarySceneFBO.getAttachmentTexture(Attachment.POSITION),
 				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
 				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM),
 				pssmFBO.getDepthMap(),
 				ssao.getBlurSceneTexture(),
-				sampleCoverage.getSampleCoverageMask());
+				sampleCoverage.getSampleCoverageMask());*/
+
+		testCluster.render(primarySceneFBO.getAttachmentTexture(Attachment.COLOR), 
+				primarySceneFBO.getAttachmentTexture(Attachment.POSITION), 
+				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
+				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM));
 		
+		/*testFBO.bind();
+		testCluster.renderFragment(primarySceneFBO.getAttachmentTexture(Attachment.COLOR), 
+				primarySceneFBO.getAttachmentTexture(Attachment.POSITION), 
+				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
+				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM));
+		testFBO.unbind();*/
+		
+		//deferredLighting.getDeferredSceneTexture()
 		//===================================//
 		//   BLEND OPAQUE/TRANSPARENT SCENE  //
 		//===================================//
 		if(transparentSceneRenderList.size() > 0) {
-			opaqueTransparencyBlending.render(deferredLighting.getDeferredSceneTexture(),
+			opaqueTransparencyBlending.render(testCluster.getDeferredSceneTexture(),
 					primarySceneFBO.getAttachmentTexture(Attachment.DEPTH),
 					secondarySceneFBO.getAttachmentTexture(Attachment.COLOR),
 					secondarySceneFBO.getAttachmentTexture(Attachment.DEPTH),
@@ -229,9 +272,10 @@ public class RenderSystem extends SystemBase{
 		 * 2) postprocessing carried out via something, so it can be extended later and not controlled from here
 		 * 3) retrieve final ppe result
 		 */
-		
+		//primarySceneFBO.getAttachmentTexture(Attachment.TEST);
+		//testCluster.getDeferredSceneTexture()
 		Texture prePostProcessingScene = transparentSceneRenderList.size() > 0 ? opaqueTransparencyBlending.getBlendedSceneTexture() :
-			deferredLighting.getDeferredSceneTexture();
+			testCluster.getDeferredSceneTexture();
 		Texture currentScene = prePostProcessingScene;
 		
 		
@@ -261,6 +305,8 @@ public class RenderSystem extends SystemBase{
 	private void createSceneFBOs() {
 		primarySceneFBO = new OffScreenFBO(window.getWidth(), window.getHeight(), GLContext.getConfig().multisampleSamplesCount);
 		secondarySceneFBO = new TransparencyFBO(window.getWidth(), window.getHeight());
+		
+		testFBO = new DeferredFBO(window.getWidth(), window.getHeight());
 	}
 	
 	private void sortPPEVolumeList() {
@@ -272,5 +318,4 @@ public class RenderSystem extends SystemBase{
 		Collections.sort(ppeVolumeList, new PostProcessingVolume.PPEVolumeComparator());
 		Collections.reverse(ppeVolumeList);
 	}
-
 }

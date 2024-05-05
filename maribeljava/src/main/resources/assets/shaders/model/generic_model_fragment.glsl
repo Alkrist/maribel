@@ -1,4 +1,4 @@
-#version 400 core
+#version 430 core
 
 in vec2 textureCoords_FS;
 in vec3 position_FS;
@@ -11,7 +11,6 @@ layout(location = 1) out vec4 worldPosition_out;
 layout(location = 2) out vec4 normal_out;
 layout(location = 3) out vec4 specularEmission_out;
 
-
 struct Material
 {
 	sampler2D diffusemap;
@@ -21,6 +20,7 @@ struct Material
 };
 
 uniform Material material;
+
 
 void main(void){
 
@@ -32,7 +32,6 @@ void main(void){
 
 	//ALBEDO
 	vec3 albedo = texture(material.diffusemap, textureCoords_FS).rgb;
-
 
 	//FINAL
 	albedo_out = vec4(albedo,1);

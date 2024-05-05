@@ -24,7 +24,7 @@ public class GLContext {
 		config = new GraphicsConfig();
 		window = new GLWindow();
 		inputHandler = new InputHandler();
-		camera = new Camera(new Vector3f(0, 0, -100), 0, 180, 0);
+		camera = new Camera(new Vector3f(0), 0, 0, 0);
 		
 		config.load("video");
 		window.init(windowTitle, iconPath);

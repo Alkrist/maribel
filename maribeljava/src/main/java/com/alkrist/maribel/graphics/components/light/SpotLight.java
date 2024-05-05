@@ -2,9 +2,10 @@ package com.alkrist.maribel.graphics.components.light;
 
 import org.joml.Vector3f;
 
+import com.alkrist.maribel.common.ecs.Component;
 import com.alkrist.maribel.graphics.components.light.PointLight.Attenuation;
 
-public class SpotLight extends Light {
+public class SpotLight extends Light{
 
 	private Vector3f coneDirection;
 	private float cutOff;

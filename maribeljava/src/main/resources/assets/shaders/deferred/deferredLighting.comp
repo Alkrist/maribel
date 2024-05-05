@@ -67,7 +67,7 @@ float calculateFogFactor(float dist, float sightRangeFactor) {
 }
 
 
-vec3 calculateLightColor(vec3 normal, vec3 position, vec3 to_light_dir, vec3 lightColor, float light_intensity, float emission, float reflectance){
+vec3 calculateLightColor(vec3 color, float ssao, vec3 normal, vec3 position, vec3 to_light_dir, vec3 lightColor, float light_intensity, float emission, float reflectance){
 
 	vec3 diffuseColor = vec3(0);
 	vec3 specularColor = vec3(0);
@@ -75,7 +75,7 @@ vec3 calculateLightColor(vec3 normal, vec3 position, vec3 to_light_dir, vec3 lig
 	//diffuse
 	float diffuseFactor = max(dot(normal, to_light_dir), 0.0);
 	diffuseColor =  lightColor * diffuseFactor * light_intensity;
-	diffuseColor = max(diffuseColor, 0.02); //TODO: can remove this, if total darkness is OK
+	diffuseColor = max(diffuseColor, 0.02);
 
 	//specular
 	vec3 camera_direction = normalize(-position);
@@ -86,19 +86,19 @@ vec3 calculateLightColor(vec3 normal, vec3 position, vec3 to_light_dir, vec3 lig
 	specularColor = light_intensity  * specularFactor * reflectance * lightColor;
 
 	//diffuse + specular
-	return (diffuseColor + specularColor);
+	return (diffuseColor * color * ssao + specularColor);
 }
 
-vec3 calculateDirectionalLight(vec3 position, vec3 normal, DirectionLight light, float reflectance, float emission){
-	return calculateLightColor(normal, position, normalize(light.direction),
+vec3 calculateDirectionalLight(vec3 color, float ssao, vec3 position, vec3 normal, DirectionLight light, float reflectance, float emission){
+	return calculateLightColor(color, ssao, normal, position, normalize(light.direction),
 			light.color, light.intensity, emission, reflectance);
 }
 
 
-vec3 calculatePointLight(vec3 position, vec3 normal, PointLight light, float reflectance, float emission){
+vec3 calculatePointLight(vec3 color, float ssao, vec3 position, vec3 normal, PointLight light, float reflectance, float emission){
 	vec3 light_direction = light.position - position;
 	vec3 to_light_dir  = normalize(light_direction);
-	vec3 lightColor = calculateLightColor(normal, position, to_light_dir,
+	vec3 lightColor = calculateLightColor(color, ssao, normal, position, to_light_dir,
 			light.color, light.intensity, emission, reflectance);
 
 	float distance = length(light_direction);
@@ -109,7 +109,7 @@ vec3 calculatePointLight(vec3 position, vec3 normal, PointLight light, float ref
 	return lightColor / attenuationInv;
 }
 
-vec3 calculateSpotLight(vec3 position, vec3 normal, SpotLight light, float reflectance, float emission){
+vec3 calculateSpotLight(vec3 color, float ssao, vec3 position, vec3 normal, SpotLight light, float reflectance, float emission){
 	 vec3 light_direction = light.pl.position - position;
 	 vec3 to_light_dir  = normalize(light_direction);
 	 vec3 from_light_dir  = -to_light_dir;
@@ -117,7 +117,7 @@ vec3 calculateSpotLight(vec3 position, vec3 normal, SpotLight light, float refle
 
 	 vec3 lightColor = vec3(0);
 	 if (spot_alfa > light.cutoff){
-		 lightColor = calculatePointLight(position, normal, light.pl, reflectance, emission);
+		 lightColor = calculatePointLight(color, ssao, position, normal, light.pl, reflectance, emission);
 		 lightColor *= (1.0 - (1.0 - spot_alfa)/(1.0 - light.cutoff));
 	 }
 
@@ -213,11 +213,11 @@ void main(void){
 
 	if(imageLoad(sampleCoverageMask, computeCoord).r == 1.0){
 		for (int i=0; i<numSamples; i++){
-			albedo = imageLoad(albedoSampler, computeCoord,0).rgb;
-			normal = imageLoad(normalSampler, computeCoord,0).rbga;
+			albedo = imageLoad(albedoSampler, computeCoord,i).rgb;
+			normal = imageLoad(normalSampler, computeCoord,i).rbga;
 			if (normal.a != 0){
-				position = imageLoad(worldPositionSampler, computeCoord,0).rgb;
-				specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,0).rgba;
+				position = imageLoad(worldPositionSampler, computeCoord,i).rgb;
+				specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,i).rgba;
 
 				int diffuseEnable = int(specular_emission_diffuse_ssao_bloom.z/10.0);
 				float ssao = specular_emission_diffuse_ssao_bloom.z - (diffuseEnable * 10);
@@ -230,28 +230,29 @@ void main(void){
 				}
 
 
+				float shadow = applyShadowMapping(position);
 
-
-				finalColor = calculateDirectionalLight(position,
+				finalColor = calculateDirectionalLight(albedo, ssao, position,
 						normalize(normal.xyz),
 						dirLight,
 						specular_emission_diffuse_ssao_bloom.r,
 						specular_emission_diffuse_ssao_bloom.g);
 
-				finalColor += calculatePointLight(position,
+				finalColor += calculatePointLight(albedo, ssao, position,
 						normalize(normal.xyz),
 						pointLight,
 						specular_emission_diffuse_ssao_bloom.r,
 						specular_emission_diffuse_ssao_bloom.g);
 
-				finalColor += calculateSpotLight(position,
+				finalColor += calculateSpotLight(albedo, ssao, position,
 						normalize(normal.xyz),
 						spotLight,
 						specular_emission_diffuse_ssao_bloom.r,
 						specular_emission_diffuse_ssao_bloom.g);
 
-				finalColor = finalColor * albedo;
-				finalColor = finalColor * applyShadowMapping(position) * ssao;
+				finalColor *= shadow;
+				//finalColor = finalColor * albedo;
+				//finalColor = finalColor * applyShadowMapping(position) * ssao;
 
 			}
 			else{
@@ -277,26 +278,29 @@ void main(void){
 								ssao = 1;
 							}
 
-			finalColor = calculateDirectionalLight(position,
+							float shadow = applyShadowMapping(position);
+
+			finalColor = calculateDirectionalLight(albedo, ssao, position,
 					normalize(normal.xyz),
 					dirLight,
 					specular_emission_diffuse_ssao_bloom.r,
 					specular_emission_diffuse_ssao_bloom.g);
 
-			finalColor += calculatePointLight(position,
+			finalColor += calculatePointLight(albedo, ssao, position,
 					normalize(normal.xyz),
 					pointLight,
 					specular_emission_diffuse_ssao_bloom.r,
 					specular_emission_diffuse_ssao_bloom.g);
 
-			finalColor += calculateSpotLight(position,
+			finalColor += calculateSpotLight(albedo, ssao, position,
 					normalize(normal.xyz),
 					spotLight,
 					specular_emission_diffuse_ssao_bloom.r,
 					specular_emission_diffuse_ssao_bloom.g);
 
-			finalColor = finalColor * albedo;
-			finalColor = finalColor * applyShadowMapping(position) * ssao;
+			finalColor *= shadow;
+			//finalColor = finalColor * albedo;
+			//finalColor = finalColor * applyShadowMapping(position) * ssao;
 
 			}
 			else{

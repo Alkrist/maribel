@@ -1,0 +1,18 @@
+{
+	"wall":{
+		"mesh": "demo_wall",
+		"material": "wall",
+		"floor":{
+			"mesh":"demo_floor",
+			"material":"floor"
+		},
+		"ceiling":{
+			"mesh":"demo_ceiling",
+			"material":"ceiling"
+		},
+		"barrier":{
+			"mesh":"demo_barrier",
+			"material":"barrier"
+		}
+	}
+}

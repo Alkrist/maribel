@@ -1,6 +1,7 @@
 package com.alkrist.maribel.utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -53,6 +54,10 @@ public class ImmutableArrayList<T> implements Iterable<T>{
 
 	public Iterator<T> iterator() {
 		return list.iterator();
+	}
+	
+	public void sort(Comparator <? super T> comparator) {
+		list.sort(comparator);
 	}
 
 }

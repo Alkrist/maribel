@@ -2,6 +2,9 @@ package com.alkrist.maribel.graphics.shader;
 
 import static org.lwjgl.opengl.GL20.glUniform1f;
 import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL30.glUniform2ui;
+import static org.lwjgl.opengl.GL30.glUniform3ui;
+import static org.lwjgl.opengl.GL30.glUniform1ui;
 import static org.lwjgl.opengl.GL20.glUniform2f;
 import static org.lwjgl.opengl.GL20.glUniform3f;
 import static org.lwjgl.opengl.GL20.glUniform4f;
@@ -166,6 +169,18 @@ public abstract class ShaderProgram {
 		glUniformMatrix4fv(uniforms.get(uniformName), false, matrixBuffer);
 	}
 	
+	public void setUniform(String uniformName, int x, int y) {
+		glUniform2ui(uniforms.get(uniformName), x, y);
+	}
+	
+	public void setUniform(String uniformName, int x, int y,int z) {
+		glUniform3ui(uniforms.get(uniformName), x, y, z);
+	}
+	
+	public void setUniformUnsignedInt(String uniformName, int value) {
+		glUniform1ui(uniforms.get(uniformName), value);
+	}
+	
 	public void setUniform(String uniformName, Matrix3f value){
 		value.get(matrixBuffer);
 		//matrixBuffer.flip();
@@ -191,6 +206,8 @@ public abstract class ShaderProgram {
 	public void updateUniforms(PPEProperty property) {}
 	
 	public void updateUniforms(UIText textElement) {}
+	
+	public void updateUniforms(Texture[] textures) {}
 	
 	public void updateUniforms() {}
 	//TODO: add more update uniforms, depending on purpose

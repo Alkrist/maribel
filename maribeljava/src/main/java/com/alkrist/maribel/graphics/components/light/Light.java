@@ -47,4 +47,8 @@ public abstract class Light implements Component{
 	public void setIntensity(float intensity) {
 		this.intensity = intensity;
 	}
+	
+	public float getDistanceToLight(Vector3f cameraPosition) {
+		return (position.distance(cameraPosition));
+	}
 }

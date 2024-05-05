@@ -35,6 +35,5 @@ public abstract class FBO {
 		SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM,
 		LIGHT_SCATTERING,
 		DEPTH;
-		
 	}
 }

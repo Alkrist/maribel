@@ -113,6 +113,8 @@ public class Camera {
 	    projectionMatrix.m23(-1);
 	    projectionMatrix.m32(-((2 * zNear * zFar) / frustumLength));
 	    projectionMatrix.m33(0);*/
+	    
+	    //this.invProjectionMatrix.set(projectionMatrix).invert();
 	}
 	
 	public void setViewMatrix(Matrix4f viewMatrix) {
@@ -164,15 +166,12 @@ public class Camera {
 	}
 	
 	private Matrix4f updateViewMatrix() {
-		viewMatrix.identity();
 		
+		viewMatrix.identity();
 		
 		viewMatrix.rotate((float)Math.toRadians(pitch), new Vector3f(1,0,0));
 		viewMatrix.rotate((float)Math.toRadians(yaw), new Vector3f(0,1,0));
 		viewMatrix.rotate((float)Math.toRadians(roll), new Vector3f(0,0,1));
-		//viewMatrix.rotate(-(float)Math.toRadians(yaw), new Vector3f(0, 1, 0));
-	    //viewMatrix.rotate(-(float)Math.toRadians(pitch), new Vector3f(1, 0, 0));
-	    //viewMatrix.rotate(-(float)Math.toRadians(roll), new Vector3f(0, 0, 1));
 		
 		Vector3f negativePos = new Vector3f(-position.x, -position.y, -position.z);
 		viewMatrix.translate(negativePos);

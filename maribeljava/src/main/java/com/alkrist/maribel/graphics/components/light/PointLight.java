@@ -2,9 +2,10 @@ package com.alkrist.maribel.graphics.components.light;
 
 import org.joml.Vector3f;
 
-public class PointLight extends Light {
+public class PointLight extends Light{
 
 	private Attenuation attenuation;
+	private float radius = 0;
 	
 	public PointLight(Vector3f position, Vector3f color, float intensity) {
 		super(position, color, intensity);
@@ -15,6 +16,13 @@ public class PointLight extends Light {
 			float attConstant, float attLinear, float attExponent) {
 		super(position, color, intensity);
 		this.attenuation = new Attenuation(attConstant, attLinear, attExponent);
+	}
+	
+	public PointLight(Vector3f position, Vector3f color, float intensity, 
+			float attConstant, float attLinear, float attExponent, float radius) {
+		super(position, color, intensity);
+		this.attenuation = new Attenuation(attConstant, attLinear, attExponent);
+		this.radius = radius;
 	}
 	
 	public Attenuation getAttenuation() {
@@ -28,6 +36,10 @@ public class PointLight extends Light {
 	public void setAttenuation(float constant, float linear, float exponent) {
 		this.attenuation = new Attenuation(constant, linear, exponent);
 	}
+	
+	public float getRadius() {
+    	return radius;
+    }
 	
 	public static class Attenuation {
 		

@@ -9,6 +9,6 @@ uniform sampler2D diffusemap;
 void main(void){
 	//ALBEDO
 	vec4 albedo = texture(diffusemap, textureCoords_FS);
-	albedo_out = vec4(albedo.rgb, 1);
+	albedo_out = vec4(albedo.rgb, albedo.a);
 	alpha_out = vec4(albedo.a, 0, 0, 1);
 }

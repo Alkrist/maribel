@@ -2,9 +2,9 @@ package com.alkrist.maribel.client;
 
 import java.io.File;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.glfw.GLFW;
 
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
@@ -18,7 +18,7 @@ import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
-import com.alkrist.maribel.graphics.components.light.DirectionalLight;
+import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.components.light.SpotLight;
 import com.alkrist.maribel.graphics.context.GLContext;
@@ -29,6 +29,7 @@ import com.alkrist.maribel.graphics.model.Model;
 import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
+import com.alkrist.maribel.graphics.render.parameter.AlphaBlendingSrcAlpha;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
@@ -42,7 +43,6 @@ import com.alkrist.maribel.graphics.ui.UITexturePanel;
 import com.alkrist.maribel.graphics.ui.WindowCanvas;
 import com.alkrist.maribel.graphics.ui.constraints.AspectConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.CenterConstraint;
-import com.alkrist.maribel.graphics.ui.constraints.PixelConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.RelativeConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 import com.alkrist.maribel.graphics.ui.fonts.FontType;
@@ -59,7 +59,7 @@ import com.alkrist.maribel.utils.Logging;
  */
 public class TestGraphics {
 
-	public static DirectionalLight sun = new DirectionalLight(new Vector3f(10000, 10000, 1000), new Vector3f(1,1,1), 0.5f);
+	public static DirectionLight sun = DirectionLight.getInstance();
 	public static PointLight light1 = new PointLight(new Vector3f(-2, 10, -40), new Vector3f(0,0,1), 0.5f, 1, 0.01f, 0.002f);
 	public static SpotLight light2 = new SpotLight(new Vector3f(0, 15, 0), new Vector3f(1,0,1),
 			2f, 1, 0.01f, 0.002f, new Vector3f(-2, 10, -40), 45);
@@ -76,6 +76,8 @@ public class TestGraphics {
 		Model sampleScene = ModelCompositeLoader.loadFromJson("sample_plane");
 		Model glass = ModelCompositeLoader.loadFromJson("transparent");
 		Model dragon = ModelCompositeLoader.loadFromJson("dragon");
+		
+		//Model demo = ModelCompositeLoader.loadFromJson("demo\\demo");
 		
 		Transform dogTransform = new Transform(new Vector3f(0, -4,-60), new Vector3f(0,0,0), 2);
 		Transform sampleSceneTransform = new Transform(new Vector3f(0,-5,-60), new Vector3f(0,1,0), 2);
@@ -96,7 +98,7 @@ public class TestGraphics {
 		TestRenderer renderer = new TestRenderer(new CCW(), shader);
 		OpaqueModelRenderer omRenderer = new OpaqueModelRenderer(new CCW(), gms);
 		ModelShadowRenderer shadowRenderer = new ModelShadowRenderer(new ShadowRenderParameter(), gmss);
-		TransparentModelRenderer transparentRenderer = new TransparentModelRenderer(new CCW(), ts);
+		TransparentModelRenderer transparentRenderer = new TransparentModelRenderer(new AlphaBlendingSrcAlpha(), ts);
 		
 		
 		WindowCanvas wCanvas = new WindowCanvas();
@@ -153,6 +155,16 @@ public class TestGraphics {
 		
 		PostProcessingVolume ppeVolume1 = new PostProcessingVolume.PPEComponentBuilder(0.1f).addEffectContrast(contrastProp).get();
 		
+		// LIGHTS TEST
+		PointLight light3 = new PointLight(new Vector3f(-2, 10, -40), new Vector3f(0,0,1), 0.5f, 1, 0.01f, 0.002f);
+		SpotLight light4 = new SpotLight(new Vector3f(0, 15, 0), new Vector3f(1,0,1),
+				2f, 1, 0.01f, 0.002f, new Vector3f(-2, 10, -40), 45);
+		
+		DirectionLight sun = DirectionLight.getInstance();
+		sun.setPosition(10000.0f,10000.0f, 1000.0f);
+		sun.setColor(1,1,1);
+		sun.setIntensity(0.5f);
+		
 		Engine engine = new Engine();
 		engine.addSystem(new RenderSystem());
 		
@@ -169,6 +181,7 @@ public class TestGraphics {
 		e2.addComponent(sampleSceneTransform);
 		e2.addComponent(omRenderer);
 		e2.addComponent(shadowRenderer);
+		e2.addComponent(light3);
 		
 		engine.addEntity(e2);
 		
@@ -177,6 +190,7 @@ public class TestGraphics {
 		e3.addComponent(glassRenderable);
 		e3.addComponent(transparentRenderer);
 		e3.addComponent(shadowRenderer);
+		e3.addComponent(light4);
 		
 		engine.addEntity(e3);
 		
@@ -185,6 +199,7 @@ public class TestGraphics {
 		e4.addComponent(dragonRenderable);
 		e4.addComponent(transparentRenderer);
 		e4.addComponent(shadowRenderer);
+		e4.addComponent(sun);
 		
 		engine.addEntity(e4);*/
 		
@@ -200,6 +215,28 @@ public class TestGraphics {
 		canvasEntity.addComponent(wCanvas);
 		engine.addEntity(canvasEntity);*/
 
+		/*TestCluster testCluster = new TestCluster(window.getWidth(), window.getHeight());
+		testCluster.cullLightsCompute();
+		
+		List<PointLight> pointLights = new ArrayList<PointLight>();
+		pointLights.add(new PointLight(new Vector3f(1), new Vector3f(1, 0, 0), 0.5f, 1, 0.01f, 0.002f, 5.5f));
+		pointLights.add(new PointLight(new Vector3f(-2, 10, -14), new Vector3f(0, 1, 0), 0.5f, 1, 0.01f, 0.002f, 5.5f));
+		pointLights.add(new PointLight(new Vector3f(0, 15, -40), new Vector3f(0, 0, 1), 0.5f, 1, 0.01f, 0.002f, 5.5f));
+		
+		testCluster.initLightSSBO(pointLights);
+		testCluster.lightAABBIntersection();*/
+		
+		// TEST SANDBOX
+		
+		float screenX = 1200.0f;
+		float screenY = 700.0f;
+		Vector2f ndcXY = new Vector2f((screenX / 1280) * 2.0f - 1.0f, (screenY / 720) * 2.0f - 1.0f);
+		Vector4f ndc = new Vector4f(ndcXY.x, ndcXY.y, -1.0f, 1.0f);
+		Vector4f viewCoord = new Vector4f();
+		ndc.mul(GLContext.getMainCamera().getInvertedProjectionMatrix(), viewCoord);
+		viewCoord.div(viewCoord.w);
+		System.out.println(viewCoord.x+" "+viewCoord.y+" "+viewCoord.z+" "+viewCoord.w);
+		
 		while(!window.isCloseRequested()) {
 			
 			// Update loop now is here

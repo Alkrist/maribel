@@ -2,7 +2,7 @@
 ![alt text](https://github.com/Alkrist/maribel/blob/master/logo.png)
 game engine API, based on the ECS approach split for Server and Client. Every object in the game is represented as Entity with a set of Components, which later re updted in
 Systems. Every Entity is created based on Game Object which has no use in the game on its own and server just as a factory for entities.
-### Version naimng idea:
+### Version naming:
 for Maribel - YYYYMMDD, Year - Month - Day. 
 
 ## Terms of references
@@ -78,6 +78,7 @@ Connection is established locally, via shared memory or remotely, via the UDP. S
 Server is in charge of level loading, updating and saving. Holds no models nor textures, but world data and player data.
 
 ## TODO:
+<<<<<<< HEAD
 0. Fix all of the small TODO lists inside the project.
 * improve GUI system, make it system, not a bullshit
 * color filtering for GUI borders and edges
@@ -101,3 +102,27 @@ Server is in charge of level loading, updating and saving. Holds no models nor t
 * ragdoll
 * collision boxes
 * collision meshes
+=======
+
+1. LWJGL 3 render engine.
+* GUI system with constraints, with + without textures, screen and world UIs
+* FXAA
+* post porcessing effects pipeline
+* fonts
+
+2. Models.
+* test MMC load, test MMC complex trees, make obj->mmc converter
+* add animations
+
+3. OpenAL sound engine.
+* 2D sound (general sound effect)
+* 3D sound (point sound)
+
+4. JBullet Physics Engine
+* ???
+
+5. Add Commands.
+* chat with typing text
+* server-side command processor
+* access levels
+>>>>>>> e59305a2d24e4dca946f3c6d0967206e12048c7f

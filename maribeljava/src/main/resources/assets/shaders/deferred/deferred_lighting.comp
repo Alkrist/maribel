@@ -11,18 +11,6 @@ layout (binding = 5, rgba16f) uniform readonly image2DMS specular_emission_diffu
 layout (binding = 6, r16f) uniform readonly image2D ssaoBlurImage;
 layout (binding = 7, r8) uniform readonly image2D sampleCoverageMask;
 
-struct PointLight {
-	vec4 position;
-	vec4 color;
-	float intensity;
-	float radius;
-};
-
-layout(std430, binding = 1) restrict buffer lightSSBO
-{
-	PointLight pointLight[];
-};
-
 struct AmbientLight
 {
 	vec3 color;
@@ -36,46 +24,100 @@ struct DirectionLight
     float intensity;
 };
 
-// MSAA uniforms
-uniform uint numSamples;
+struct PointLight {
+	vec4 position;
+	vec4 color;
+	float intensity;
+	float radius;
+};
 
-// SSAO uniforms
-uniform uint ssaoEnable;
+struct Cluster {
+	vec4 minPoint;
+	vec4 maxPoint;
+	uint count;
+	uint lightIndices[100];
+};
 
-// Ambient and direction lights
-uniform uint directionLightEnable;
+// Light SSBOs
+layout(std430, binding = 1) restrict buffer clusterSSBO
+{
+	Cluster clusters[];
+};
+
+layout(std430, binding = 2) restrict buffer lightSSBO
+{
+	PointLight pointLight[];
+};
+
+// Light uniforms
+uniform AmbientLight ambientLight;
 uniform DirectionLight directionLight;
 uniform uint ambientLightEnable;
-uniform AmbientLight ambientLight;
+uniform uint directionLightEnable;
 
-float calculateFogFactor(float dist, float sightRangeFactor) {
-	return smoothstep(0, 1, -0.0002 / sightRangeFactor * (dist - (zFar) / 10 * sightRangeFactor) + 1);
-}
+// General uniforms
+uniform float zNear;
+uniform float zFar;
+uniform uvec3 gridSize;
+uniform uvec2 screenDimensions;
+uniform mat4 viewMatrix;
+uniform vec3 cameraPosition;
 
-vec3 diffuse(vec3 albedo, vec3 normal, vec3 toLightDirection, vec3 lightColor, float intensity){
+// MSAA
+uniform uint numSamples;
+
+// SSAO
+uniform uint ssaoEnable;
+
+vec3 diffuse(vec3 albedo, vec3 normal, vec3 toLightDirection, vec3 lightColor, float lightIntensity) {
 	float diffuseFactor = max(dot(normal, toLightDirection), 0.0);
-	return albedo * lightColor * diffuseFactor * intensity;
+
+	return albedo * lightColor * diffuseFactor * lightIntensity;
 }
 
-vec3 specular(vec3 normal, vec3 position, vec3 toLightDir, vec3 lightColor, float reflectance, float emission, float intensity){
-	vec3 cameraDirection = normalize(-position);
+vec3 specular(vec3 normal, vec3 worldPos, vec3 toLightDir, vec3 lightColor, float reflectance, float emission, float lightIntensity) {
+	vec3 cameraDirection = normalize(cameraPosition - worldPos);
+
 	vec3 fromLightDir = -toLightDir;
+
 	vec3 reflectedLight = normalize(reflect(fromLightDir, normal));
+
 	float specularFactor = max(dot(cameraDirection, reflectedLight), 0.0);
 	specularFactor = pow(specularFactor, emission);
-	return intensity  * specularFactor * reflectance * lightColor;
+
+	return lightIntensity * specularFactor * reflectance * lightColor;
 }
 
-vec3 calculatePointLight(vec3 albedo, vec3 position, vec3 normal, PointLight light, float reflectance, float emission){
-	vec3 lightDirection = light.position.xyz - position;
-	vec3 toLightDir  = normalize(lightDirection);
+vec3 calculateAmbientLight(AmbientLight light, float emission){
+	return light.color * light.intensity * emission;
+}
 
-	vec3 diffuse = diffuse(albedo, normal, toLightDir, light.color.rgb, light.intensity);
-	vec3 specular = specular(normal, position, toLightDir,light.color.rgb, reflectance, emission, light.intensity);
+vec3 calculateDirectionLight(vec3 albedo, vec3 worldPos, vec3 normal, DirectionLight light, float reflectance, float emission){
+	vec3 nDirection = normalize(light.direction);
+	vec3 diffuse = diffuse(albedo, normal, nDirection, light.color.rgb,
+			light.intensity);
+	vec3 specular = specular(normal, worldPos, nDirection, light.color.rgb,
+			reflectance, emission, light.intensity);
 
-	// Attenuation
-	float distance = length(light.position.xyz - position);
-	float attenuation = 1.0 / (1.0 + (distance / light.radius));
+	return diffuse + specular;
+}
+
+vec3 calculatePointLight(vec3 albedo, vec3 worldPos, vec3 normal, PointLight light, float reflectance, float emission) {
+	vec3 lightDirection = light.position.xyz - worldPos;
+	float distance = length(lightDirection);
+
+	if(distance > light.radius){ // ignore fragments outside of range
+		return vec3(0);
+	}
+
+	vec3 toLightDir = normalize(lightDirection);
+
+	vec3 diffuse = diffuse(albedo, normal, toLightDir, light.color.rgb,
+			light.intensity);
+	vec3 specular = specular(normal, worldPos, toLightDir, light.color.rgb,
+			reflectance, emission, light.intensity);
+
+	float attenuation = pow(smoothstep(light.radius, 0, distance), 0.5); //TODO: change for variable exp
 
 	diffuse *= attenuation;
 	specular *= attenuation;
@@ -83,18 +125,9 @@ vec3 calculatePointLight(vec3 albedo, vec3 position, vec3 normal, PointLight lig
 	return diffuse + specular;
 }
 
-vec3 calculateDirectionLight(vec3 albedo, vec3 position, vec3 normal, DirectionLight light, float reflectance, float emission){
-	vec3 diffuse = diffuse(albedo, normal, normalize(light.direction), light.color, light.intensity);
-	vec3 specular = specular(normal, position, normalize(light.direction), light.color, reflectance, emission, light.intensity);
+//TODO: shadow
 
-	return diffuse + specular;
-}
-
-vec3 calculateAmbientLight(AmbientLight light, float emission) {
-    return light.color * light.intensity * emission;
-}
-
-void main(void) {
+void main(void){
 	ivec2 computeCoord = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
 
 	vec3 finalColor = vec3(0);
@@ -103,48 +136,54 @@ void main(void) {
 	vec4 normal = vec4(0);
 	vec4 specular_emission_diffuse_ssao_bloom = vec4(0);
 
-	// Check if current fragment is in aliased region, if yes, approximate it's value by samples (MSAA)
 	if(imageLoad(sampleCoverageMask, computeCoord).r == 1.0){
 		for (int i=0; i<numSamples; i++){
-
 			albedo = imageLoad(albedoSampler, computeCoord,i).rgb;
 			normal = imageLoad(normalSampler, computeCoord,i).rbga;
 
-			// Prevent lighting atmosphere
 			if (normal.a != 0){
-
 				position = imageLoad(worldPositionSampler, computeCoord,i).rgb;
 				specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,i).rgba;
 
 				int diffuseEnable = int(specular_emission_diffuse_ssao_bloom.z/10.0);
+
+				// SSAO factor, 1 if disabled
 				float ssao = specular_emission_diffuse_ssao_bloom.z - (diffuseEnable * 10);
 
-				// Calculate SSAO factor
-				if (ssao == 1 && ssaoEnable == 1){
+				if (ssao == 1 && ssaoEnable == 1)
 					ssao = imageLoad(ssaoBlurImage, computeCoord).r;
-				}else{
+				else
 					ssao = 1;
-				}
 
-				if(ambientLightEnable == 1){
-					finalColor += calculateAmbientLight(ambientLight, specular_emission_diffuse_ssao_bloom.g);
-				}
+				if(ambientLightEnable == 1)
+					finalColor = albedo * calculateAmbientLight(ambientLight, specular_emission_diffuse_ssao_bloom.g);
 
-				if(directionLightEnable == 1){
-					finalColor += calculateDirectionLight(albedo,
+				// TODO: shadow
+
+				// Direction light
+				if(directionLightEnable == 1)
+					finalColor += calculateDirectionlight(
+							albedo,
 							position,
 							normalize(normal.xyz),
 							directionLight,
 							specular_emission_diffuse_ssao_bloom.r,
 							specular_emission_diffuse_ssao_bloom.g);
-				}
 
-				// TODO: calculate shadow
+				// Locating current tile
+				uint zTile = uint((log(abs(vec3(viewMatrix * vec4(position, 1.0)).z) / zNear) * gridSize.z) / log(zFar / zNear));
+				vec2 tileSize = screenDimensions / gridSize.xy;
 
-				for (int i = 0; i < pointLight.length(); ++i){
-					PointLight light = pointLight[i];
+				uvec3 tile = uvec3(computeCoord.xy / tileSize, zTile);
+				uint tileIndex = tile.x + (tile.y * gridSize.x) + (tile.z * gridSize.x * gridSize.y);
 
-					// Apply point lights
+				uint lightCount = clusters[tileIndex].count;
+
+				// Point lights
+				for (int i = 0; i < lightCount; ++i) {
+					uint lightIndex = clusters[tileIndex].lightIndices[i];
+					PointLight light = pointLight[lightIndex];
+
 					finalColor += calculatePointLight(
 							albedo,
 							position,
@@ -153,50 +192,60 @@ void main(void) {
 							specular_emission_diffuse_ssao_bloom.r,
 							specular_emission_diffuse_ssao_bloom.g);
 				}
+
 				finalColor *= ssao;
 			}else{
 				finalColor = albedo;
 			}
 		}
+		finalColor /= numSamples;
 	}else{
-
 		albedo = imageLoad(albedoSampler, computeCoord,0).rgb;
 		normal = imageLoad(normalSampler, computeCoord,0).rbga;
 
-		// Prevent lighting atmosphere
 		if (normal.a != 0){
-
 			position = imageLoad(worldPositionSampler, computeCoord,0).rgb;
 			specular_emission_diffuse_ssao_bloom = imageLoad(specular_emission_diffuse_ssao_bloom_Sampler, computeCoord,0).rgba;
 
 			int diffuseEnable = int(specular_emission_diffuse_ssao_bloom.z/10.0);
+
+			// SSAO factor, 1 if disabled
 			float ssao = specular_emission_diffuse_ssao_bloom.z - (diffuseEnable * 10);
 
-			// Calculate SSAO factor
-			if (ssao == 1 && ssaoEnable == 1){
+			if (ssao == 1 && ssaoEnable == 1)
 				ssao = imageLoad(ssaoBlurImage, computeCoord).r;
-			}else{
+			else
 				ssao = 1;
-			}
 
-			if(ambientLightEnable == 1){
-				finalColor += calculateAmbientLight(ambientLight, specular_emission_diffuse_ssao_bloom.g);
-			}
+			if(ambientLightEnable == 1)
+				finalColor = albedo * calculateAmbientLight(ambientLight, specular_emission_diffuse_ssao_bloom.g);
 
-			if(directionLightEnable == 1){
-				finalColor += calculateDirectionLight(albedo,
+			// TODO: shadow
+
+			// Direction light
+			if(directionLightEnable == 1)
+				finalColor += calculateDirectionlight(
+						albedo,
 						position,
 						normalize(normal.xyz),
 						directionLight,
 						specular_emission_diffuse_ssao_bloom.r,
 						specular_emission_diffuse_ssao_bloom.g);
-			}
-			// TODO: calculate shadow
 
-			for (int i = 0; i < pointLight.length(); ++i){
-				PointLight light = pointLight[i];
+			// Locating current tile
+			uint zTile = uint((log(abs(vec3(viewMatrix * vec4(position, 1.0)).z) / zNear) * gridSize.z) / log(zFar / zNear));
+			vec2 tileSize = screenDimensions / gridSize.xy;
 
-				// Apply point lights
+			uvec3 tile = uvec3(computeCoord.xy / tileSize, zTile);
+			uint tileIndex = tile.x + (tile.y * gridSize.x) + (tile.z * gridSize.x * gridSize.y);
+
+			uint lightCount = clusters[tileIndex].count;
+
+			// Point lights
+			for (int i = 0; i < lightCount; ++i) {
+				uint lightIndex = clusters[tileIndex].lightIndices[i];
+				PointLight light = pointLight[lightIndex];
+
 				finalColor += calculatePointLight(
 						albedo,
 						position,
@@ -205,14 +254,12 @@ void main(void) {
 						specular_emission_diffuse_ssao_bloom.r,
 						specular_emission_diffuse_ssao_bloom.g);
 			}
-			finalColor *= ssao;
 
+			finalColor *= ssao;
 		}else{
 			finalColor = albedo;
 		}
 	}
 
-	// TODO: apply fog
-	// Save final result to output image
 	imageStore(defferedSceneImage, computeCoord, vec4(finalColor, 1.0));
 }

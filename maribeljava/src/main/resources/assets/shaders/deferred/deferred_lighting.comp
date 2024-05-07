@@ -11,16 +11,10 @@ layout (binding = 5, rgba16f) uniform readonly image2DMS specular_emission_diffu
 layout (binding = 6, r16f) uniform readonly image2D ssaoBlurImage;
 layout (binding = 7, r8) uniform readonly image2D sampleCoverageMask;
 
-struct AmbientLight
-{
-	vec3 color;
-	float intensity;
-};
-
 struct DirectionLight
 {
-    vec3 color;
-    vec3 direction;
+	vec4 direction;
+    vec4 color;
     float intensity;
 };
 
@@ -29,6 +23,7 @@ struct PointLight {
 	vec4 color;
 	float intensity;
 	float radius;
+	float exp;
 };
 
 struct Cluster {
@@ -49,11 +44,10 @@ layout(std430, binding = 2) restrict buffer lightSSBO
 	PointLight pointLight[];
 };
 
-// Light uniforms
-uniform AmbientLight ambientLight;
-uniform DirectionLight directionLight;
-uniform uint ambientLightEnable;
-uniform uint directionLightEnable;
+layout(std430, binding = 3) restrict buffer directionLightSSBO
+{
+	DirectionLight dirLight[];
+};
 
 // General uniforms
 uniform float zNear;
@@ -68,6 +62,19 @@ uniform uint numSamples;
 
 // SSAO
 uniform uint ssaoEnable;
+
+// Shadows
+const int SHADOW_MAP_RESOLUTION = 2048;
+const int SHADOW_VARIANCE_HIGH_QUALITY[5] = int[5](2,2,4,4,11);
+const int SHADOW_VARIANCE_MEDIUM_QUALITY[5] = int[5](1,1,2,2,7);
+const int SHADOW_VARIANCE_LOW_QUALITY[5] = int[5](1,1,2,2,5);
+const int SHADOW_VARIANCE_VERY_LOW_QUALITY[5] = int[5](1,1,1,1,1);
+
+uniform sampler2DArray pssm;
+uniform uint shadowsQuality;
+uniform uint shadowEnable;
+uniform mat4 projViewMatrices[5];
+uniform float splitDistances[5];
 
 vec3 diffuse(vec3 albedo, vec3 normal, vec3 toLightDirection, vec3 lightColor, float lightIntensity) {
 	float diffuseFactor = max(dot(normal, toLightDirection), 0.0);
@@ -88,12 +95,12 @@ vec3 specular(vec3 normal, vec3 worldPos, vec3 toLightDir, vec3 lightColor, floa
 	return lightIntensity * specularFactor * reflectance * lightColor;
 }
 
-vec3 calculateAmbientLight(AmbientLight light, float emission){
-	return light.color * light.intensity * emission;
-}
+//vec3 calculateAmbientLight(AmbientLight light, float emission){
+//	return light.color * light.intensity * emission;
+//}
 
 vec3 calculateDirectionLight(vec3 albedo, vec3 worldPos, vec3 normal, DirectionLight light, float reflectance, float emission){
-	vec3 nDirection = normalize(light.direction);
+	vec3 nDirection = normalize(light.direction.xyz);
 	vec3 diffuse = diffuse(albedo, normal, nDirection, light.color.rgb,
 			light.intensity);
 	vec3 specular = specular(normal, worldPos, nDirection, light.color.rgb,
@@ -117,7 +124,7 @@ vec3 calculatePointLight(vec3 albedo, vec3 worldPos, vec3 normal, PointLight lig
 	vec3 specular = specular(normal, worldPos, toLightDir, light.color.rgb,
 			reflectance, emission, light.intensity);
 
-	float attenuation = pow(smoothstep(light.radius, 0, distance), 0.5); //TODO: change for variable exp
+	float attenuation = pow(smoothstep(light.radius, 0, distance), light.exp);
 
 	diffuse *= attenuation;
 	specular *= attenuation;
@@ -125,7 +132,80 @@ vec3 calculatePointLight(vec3 albedo, vec3 worldPos, vec3 normal, PointLight lig
 	return diffuse + specular;
 }
 
-//TODO: shadow
+float varianceShadow(vec3 projCoords, int split, int kernels){
+
+	float shadowFactor = 1.0;
+	float texelSize = 1.0/ SHADOW_MAP_RESOLUTION;
+	float currentDepth = projCoords.z;
+	float reduceFactor = 1/ pow(kernels*2+1,2);
+
+	for (int i=-kernels; i<=kernels; i++){
+		for (int j=-kernels; j<=kernels; j++){
+			float shadowMapDepth = texture(pssm, vec3(projCoords.xy,split) + vec3(i,j,0) * texelSize).r;
+			if (currentDepth > shadowMapDepth)
+				shadowFactor -= reduceFactor;
+		}
+	}
+
+	return max(0.1,shadowFactor);
+}
+
+float applyShadowMapping(vec3 worldPos)
+{
+	float shadowFactor = 1;
+	float terrainShadow = 1;
+	vec3 projCoords = vec3(0,0,0);
+	float linDepth = abs((viewMatrix * vec4(worldPos,1)).z/zFar);
+	int[5] variance_shadows_kernels = int[5](0,0,0,0,0);
+
+	switch(shadowsQuality)
+	{
+		case 3: variance_shadows_kernels = SHADOW_VARIANCE_HIGH_QUALITY; break;
+		case 2: variance_shadows_kernels = SHADOW_VARIANCE_MEDIUM_QUALITY; break;
+		case 1: variance_shadows_kernels = SHADOW_VARIANCE_LOW_QUALITY; break;
+		case 0: variance_shadows_kernels = SHADOW_VARIANCE_VERY_LOW_QUALITY; break;
+	}
+
+	if (linDepth >= splitDistances[3] && linDepth <= splitDistances[4]){
+		vec4 lightSpacePos = projViewMatrices[4] * vec4(worldPos,1.0);
+		projCoords = lightSpacePos.xyz * 0.5 + 0.5;
+		terrainShadow = varianceShadow(projCoords,4,variance_shadows_kernels[4]);
+	}
+
+
+	if (linDepth <= splitDistances[0]){
+		vec4 lightSpacePos = projViewMatrices[0] * vec4(worldPos,1.0);
+		projCoords = lightSpacePos.xyz * 0.5 + 0.5;
+		shadowFactor = varianceShadow(projCoords,0,variance_shadows_kernels[0]);
+
+		lightSpacePos = projViewMatrices[1] * vec4(worldPos,1.0);
+		projCoords = lightSpacePos.xyz * 0.5 + 0.5;
+		shadowFactor = min(shadowFactor,varianceShadow(projCoords,1,variance_shadows_kernels[1]));
+	}
+	else if (linDepth <= splitDistances[1]){
+		vec4 lightSpacePos = projViewMatrices[1] * vec4(worldPos,1.0);
+		projCoords = lightSpacePos.xyz * 0.5 + 0.5;
+		shadowFactor = varianceShadow(projCoords,1,variance_shadows_kernels[1]);
+
+		lightSpacePos = projViewMatrices[2] * vec4(worldPos,1.0);
+		projCoords = lightSpacePos.xyz * 0.5 + 0.5;
+		shadowFactor = min(shadowFactor,varianceShadow(projCoords,2,variance_shadows_kernels[2]));
+	}
+	else if (linDepth <= splitDistances[2]){
+		vec4 lightSpacePos = projViewMatrices[2] * vec4(worldPos,1.0);
+		projCoords = lightSpacePos.xyz * 0.5 + 0.5;
+		shadowFactor = varianceShadow(projCoords,2,variance_shadows_kernels[2]);
+	}
+	else if (linDepth <= splitDistances[3]){
+
+		vec4 lightSpacePos = projViewMatrices[3] * vec4(worldPos,1.0);
+		projCoords = lightSpacePos.xyz * 0.5 + 0.5;
+		shadowFactor = varianceShadow(projCoords,3,variance_shadows_kernels[3]);
+	}
+
+	//return shadowFactor;
+	return min(terrainShadow, shadowFactor);
+}
 
 void main(void){
 	ivec2 computeCoord = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
@@ -135,6 +215,8 @@ void main(void){
 	vec3 position = vec3(0);
 	vec4 normal = vec4(0);
 	vec4 specular_emission_diffuse_ssao_bloom = vec4(0);
+
+	float shadow = 1.0;
 
 	if(imageLoad(sampleCoverageMask, computeCoord).r == 1.0){
 		for (int i=0; i<numSamples; i++){
@@ -155,20 +237,25 @@ void main(void){
 				else
 					ssao = 1;
 
-				if(ambientLightEnable == 1)
-					finalColor = albedo * calculateAmbientLight(ambientLight, specular_emission_diffuse_ssao_bloom.g);
-
-				// TODO: shadow
+				/*if(ambientLightEnable == 1)
+					finalColor = albedo * calculateAmbientLight(ambientLight, specular_emission_diffuse_ssao_bloom.g);*/
 
 				// Direction light
-				if(directionLightEnable == 1)
-					finalColor += calculateDirectionlight(
+				for(int j = 0; j < dirLight.length(); j++){
+					DirectionLight light = dirLight[j];
+					finalColor += calculateDirectionLight(
 							albedo,
 							position,
 							normalize(normal.xyz),
-							directionLight,
+							light,
 							specular_emission_diffuse_ssao_bloom.r,
 							specular_emission_diffuse_ssao_bloom.g);
+				}
+
+				// Shadows
+				if(shadowEnable == 1)
+					shadow = applyShadowMapping(position);
+				finalColor *= shadow;
 
 				// Locating current tile
 				uint zTile = uint((log(abs(vec3(viewMatrix * vec4(position, 1.0)).z) / zNear) * gridSize.z) / log(zFar / zNear));
@@ -180,8 +267,8 @@ void main(void){
 				uint lightCount = clusters[tileIndex].count;
 
 				// Point lights
-				for (int i = 0; i < lightCount; ++i) {
-					uint lightIndex = clusters[tileIndex].lightIndices[i];
+				for (int j = 0; j < lightCount; ++j) {
+					uint lightIndex = clusters[tileIndex].lightIndices[j];
 					PointLight light = pointLight[lightIndex];
 
 					finalColor += calculatePointLight(
@@ -217,20 +304,25 @@ void main(void){
 			else
 				ssao = 1;
 
-			if(ambientLightEnable == 1)
-				finalColor = albedo * calculateAmbientLight(ambientLight, specular_emission_diffuse_ssao_bloom.g);
-
-			// TODO: shadow
+			/*if(ambientLightEnable == 1)
+				finalColor = albedo * calculateAmbientLight(ambientLight, specular_emission_diffuse_ssao_bloom.g);*/
 
 			// Direction light
-			if(directionLightEnable == 1)
-				finalColor += calculateDirectionlight(
+			for(int j = 0; j < dirLight.length(); j++){
+				DirectionLight light = dirLight[j];
+				finalColor += calculateDirectionLight(
 						albedo,
 						position,
 						normalize(normal.xyz),
-						directionLight,
+						light,
 						specular_emission_diffuse_ssao_bloom.r,
 						specular_emission_diffuse_ssao_bloom.g);
+			}
+
+			// Shadows
+			if(shadowEnable == 1)
+				shadow = applyShadowMapping(position);
+			finalColor *= shadow;
 
 			// Locating current tile
 			uint zTile = uint((log(abs(vec3(viewMatrix * vec4(position, 1.0)).z) / zNear) * gridSize.z) / log(zFar / zNear));

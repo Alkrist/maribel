@@ -29,7 +29,7 @@ public class PSSMCamera {
 		Matrix4f viewMatrix = GLContext.getMainCamera().getViewMatrix();
 		Matrix4f projectionMatrix = GLContext.getMainCamera().getProjectionMatrix();
 		
-		Vector4f lightPos = new Vector4f(sourceLight.getPosition(), 0);
+		Vector4f lightPos = new Vector4f(sourceLight.getDirection(), 0);
         
         //Calculate orthographic projection matrix for each split
         float lastSplitDist = 0.0f;

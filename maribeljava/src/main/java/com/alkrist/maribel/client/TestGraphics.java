@@ -1,6 +1,8 @@
 package com.alkrist.maribel.client;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -20,8 +22,8 @@ import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
 import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
-import com.alkrist.maribel.graphics.components.light.SpotLight;
 import com.alkrist.maribel.graphics.context.GLContext;
+import com.alkrist.maribel.graphics.deferred.DeferredClusteredLighting;
 import com.alkrist.maribel.graphics.filter.contrast.ContrastProperty;
 import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
@@ -58,11 +60,6 @@ import com.alkrist.maribel.utils.Logging;
  *
  */
 public class TestGraphics {
-
-	public static DirectionLight sun = DirectionLight.getInstance();
-	public static PointLight light1 = new PointLight(new Vector3f(-2, 10, -40), new Vector3f(0,0,1), 0.5f, 1, 0.01f, 0.002f);
-	public static SpotLight light2 = new SpotLight(new Vector3f(0, 15, 0), new Vector3f(1,0,1),
-			2f, 1, 0.01f, 0.002f, new Vector3f(-2, 10, -40), 45);
 	
 	//after setup commit
 	public static void main(String[] args) {
@@ -155,16 +152,6 @@ public class TestGraphics {
 		
 		PostProcessingVolume ppeVolume1 = new PostProcessingVolume.PPEComponentBuilder(0.1f).addEffectContrast(contrastProp).get();
 		
-		// LIGHTS TEST
-		PointLight light3 = new PointLight(new Vector3f(-2, 10, -40), new Vector3f(0,0,1), 0.5f, 1, 0.01f, 0.002f);
-		SpotLight light4 = new SpotLight(new Vector3f(0, 15, 0), new Vector3f(1,0,1),
-				2f, 1, 0.01f, 0.002f, new Vector3f(-2, 10, -40), 45);
-		
-		DirectionLight sun = DirectionLight.getInstance();
-		sun.setPosition(10000.0f,10000.0f, 1000.0f);
-		sun.setColor(1,1,1);
-		sun.setIntensity(0.5f);
-		
 		Engine engine = new Engine();
 		engine.addSystem(new RenderSystem());
 		
@@ -181,7 +168,6 @@ public class TestGraphics {
 		e2.addComponent(sampleSceneTransform);
 		e2.addComponent(omRenderer);
 		e2.addComponent(shadowRenderer);
-		e2.addComponent(light3);
 		
 		engine.addEntity(e2);
 		
@@ -215,27 +201,32 @@ public class TestGraphics {
 		canvasEntity.addComponent(wCanvas);
 		engine.addEntity(canvasEntity);*/
 
-		/*TestCluster testCluster = new TestCluster(window.getWidth(), window.getHeight());
-		testCluster.cullLightsCompute();
 		
+		// test lights
 		List<PointLight> pointLights = new ArrayList<PointLight>();
-		pointLights.add(new PointLight(new Vector3f(1), new Vector3f(1, 0, 0), 0.5f, 1, 0.01f, 0.002f, 5.5f));
-		pointLights.add(new PointLight(new Vector3f(-2, 10, -14), new Vector3f(0, 1, 0), 0.5f, 1, 0.01f, 0.002f, 5.5f));
-		pointLights.add(new PointLight(new Vector3f(0, 15, -40), new Vector3f(0, 0, 1), 0.5f, 1, 0.01f, 0.002f, 5.5f));
+		pointLights.add(new PointLight(new Vector3f(-10, 5, -60), new Vector3f(1, 0, 0), 15f, 1, 0.5f));
+		pointLights.add(new PointLight(new Vector3f(20, 5, -60), new Vector3f(0, 1, 0), 15f, 1, 0.5f));
+		pointLights.add(new PointLight(new Vector3f(-30, 5, -60), new Vector3f(0, 0, 1), 15f, 1, 0.5f));
 		
-		testCluster.initLightSSBO(pointLights);
-		testCluster.lightAABBIntersection();*/
+		pointLights.add(new PointLight(new Vector3f(22, 5, -50), new Vector3f(0, 0.55f, 0.65f), 25f, 0.5f, 0.6f));
+		pointLights.add(new PointLight(new Vector3f(34, 5, -80), new Vector3f(1, 1, 1), 15f, 1, 0.5f));
+		pointLights.add(new PointLight(new Vector3f(-45, 5, -20), new Vector3f(0.4f, 0, 0.42f), 25f, 1, 0.2f));
+		pointLights.add(new PointLight(new Vector3f(-50, 5, 0), new Vector3f(0.435f, 0, 1), 25f, 1, 0.7f));
+		pointLights.add(new PointLight(new Vector3f(50, 5, 10), new Vector3f(0, 0.53f, 1), 35f, 0.7f, 0.3f));
+		pointLights.add(new PointLight(new Vector3f(47, 5, -55), new Vector3f(0.71f, 0, 0.666f), 30f, 1, 0.9f));
+		pointLights.add(new PointLight(new Vector3f(-5, 5, -35), new Vector3f(0.44f, 0, 1), 20f, 0.3f, 1));
+		pointLights.add(new PointLight(new Vector3f(70, 7, -75), new Vector3f(0.76f, 0, 0.23f), 25f, 0.5f, 0.5f));
 		
-		// TEST SANDBOX
+		for(PointLight light: pointLights) {
+			Entity e = engine.createEntity();
+			e.addComponent(light);
+			engine.addEntity(e);
+		}
 		
-		float screenX = 1200.0f;
-		float screenY = 700.0f;
-		Vector2f ndcXY = new Vector2f((screenX / 1280) * 2.0f - 1.0f, (screenY / 720) * 2.0f - 1.0f);
-		Vector4f ndc = new Vector4f(ndcXY.x, ndcXY.y, -1.0f, 1.0f);
-		Vector4f viewCoord = new Vector4f();
-		ndc.mul(GLContext.getMainCamera().getInvertedProjectionMatrix(), viewCoord);
-		viewCoord.div(viewCoord.w);
-		System.out.println(viewCoord.x+" "+viewCoord.y+" "+viewCoord.z+" "+viewCoord.w);
+		DirectionLight dirLight = new DirectionLight(new Vector3f(10000.0f,10000.0f, 1000.0f), new Vector3f(1, 0.8f, 0.4f), 0.5f);
+		Entity sun = engine.createEntity();
+		sun.addComponent(dirLight);
+		engine.addEntity(sun);
 		
 		while(!window.isCloseRequested()) {
 			
@@ -243,7 +234,7 @@ public class TestGraphics {
 			
 			
 			GLContext.getMainCamera().update();
-			PSSMCamera.update(sun);
+			PSSMCamera.update(dirLight);
 			dogTransform.rotate(0, 0.1f, 0);
 			text.setTextString("VBOs: "+ResourceLoader.getVBOsCount());
 			text.resize();

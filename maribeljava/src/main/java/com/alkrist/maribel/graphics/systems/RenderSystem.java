@@ -24,9 +24,12 @@ import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
+import com.alkrist.maribel.graphics.components.light.AmbientLight;
+import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.context.GraphicsConfig;
+import com.alkrist.maribel.graphics.deferred.DeferredClusteredLighting;
 import com.alkrist.maribel.graphics.deferred.DeferredLighting;
 import com.alkrist.maribel.graphics.deferred.TestCluster;
 import com.alkrist.maribel.graphics.filter.PostProcessingVolumeRenderer;
@@ -68,8 +71,6 @@ public class RenderSystem extends SystemBase{
 	private SampleCoverage sampleCoverage;
 	private OpaqueTransparencyBlending opaqueTransparencyBlending;
 	
-	private DeferredLighting deferredLighting;
-	
 	private PostProcessingVolumeRenderer ppeVolumeRenderer;
 	
 	
@@ -86,11 +87,14 @@ public class RenderSystem extends SystemBase{
 	private ImmutableArrayList<Entity> windowCanvases;
 	private ImmutableArrayList<Entity> postProcessingVolumes;
 	
+	private ImmutableArrayList<Entity> pointLightEntities;
+	private ImmutableArrayList<Entity> directionLightEntities; //TODO: merge them in one selection
+	
 	private List<PostProcessingVolume> ppeVolumeList;
 	
-	// TEST STUFF
-	List<PointLight> pointLights = new ArrayList<PointLight>();
-	private TestCluster testCluster;
+	
+	//private TestCluster testCluster;
+	private DeferredClusteredLighting deferredClusteredLighting;
 	
 	public RenderSystem() {
 		super();
@@ -100,7 +104,6 @@ public class RenderSystem extends SystemBase{
 		createSceneFBOs();
 		pssmFBO = new ParallelSplitShadowMapsFBO();
 		PSSMCamera.init();
-		deferredLighting = new DeferredLighting(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
 		
 		ssao = new SSAO(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
 		fxaa = new FXAA(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
@@ -111,14 +114,10 @@ public class RenderSystem extends SystemBase{
 		ppeVolumeList = new ArrayList<PostProcessingVolume>();
 		
 		//TEST STUFF
-		pointLights.add(new PointLight(new Vector3f(-10, 5, -60), new Vector3f(1, 0, 0), 1f, 1, 0.01f, 0.002f, 15.0f));
-		pointLights.add(new PointLight(new Vector3f(20, 5, -60), new Vector3f(0, 1, 0), 1f, 1, 0.01f, 0.002f, 15.0f));
-		pointLights.add(new PointLight(new Vector3f(-30, 5, -60), new Vector3f(0, 0, 1), 1f, 1, 0.01f, 0.002f, 15.0f));
-		testCluster = new TestCluster(window.getWidth(), window.getHeight());
+
+		deferredClusteredLighting = new DeferredClusteredLighting(window.getWidth(), window.getHeight());
+		deferredClusteredLighting.computeClusters();
 		
-		testCluster.cullLightsCompute();
-		testCluster.initLightSSBO(pointLights);
-		testCluster.lightAABBIntersection();
 	}
 	
 	@Override
@@ -130,9 +129,11 @@ public class RenderSystem extends SystemBase{
 		windowCanvases = engine.getEntitiesOf(Family.all(WindowCanvas.class).get());	
 		postProcessingVolumes = engine.getEntitiesOf(Family.all(PostProcessingVolume.class).get());
 		
+		pointLightEntities = engine.getEntitiesOf(Family.all(PointLight.class).get());
+		directionLightEntities = engine.getEntitiesOf(Family.all(DirectionLight.class).get());
 		
-		
-		//testCluster.lightAABBIntersection();
+		deferredClusteredLighting.initPointLightSSBO(pointLightEntities);
+		deferredClusteredLighting.initDirectionLightSSBO(directionLightEntities);
 		
 		glFinish();
 	}
@@ -220,32 +221,28 @@ public class RenderSystem extends SystemBase{
 					primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM));
 		}
 		
-		//TODO: enhance lighting system to render it properly:
-		//Deal with multiple light sources as well as dynamic lights
 		//===================================//
 		//      RENDER DEFERRED LIGHTING     //
 		//===================================//
-		//testCluster.updateLightSSBO(pointLights);
-		testCluster.lightAABBIntersection();
-		/*deferredLighting.render(primarySceneFBO.getAttachmentTexture(Attachment.COLOR),
+		
+		deferredClusteredLighting.updatePointLightSSBO(pointLightEntities);
+		
+		deferredClusteredLighting.updateDirectionLightSSBO(directionLightEntities);
+		deferredClusteredLighting.lightAABBIntersection();
+
+		deferredClusteredLighting.render(primarySceneFBO.getAttachmentTexture(Attachment.COLOR),
 				primarySceneFBO.getAttachmentTexture(Attachment.POSITION),
 				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
 				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM),
 				pssmFBO.getDepthMap(),
 				ssao.getBlurSceneTexture(),
-				sampleCoverage.getSampleCoverageMask());*/
-
-		testCluster.render(primarySceneFBO.getAttachmentTexture(Attachment.COLOR), 
-				primarySceneFBO.getAttachmentTexture(Attachment.POSITION), 
-				primarySceneFBO.getAttachmentTexture(Attachment.NORMAL),
-				primarySceneFBO.getAttachmentTexture(Attachment.SPECULAR_EMISSION_DIFFUSE_SSAO_BLOOM));
+				sampleCoverage.getSampleCoverageMask());
 		
-		//deferredLighting.getDeferredSceneTexture()
 		//===================================//
 		//   BLEND OPAQUE/TRANSPARENT SCENE  //
 		//===================================//
 		if(transparentSceneRenderList.size() > 0) {
-			opaqueTransparencyBlending.render(testCluster.getDeferredSceneTexture(),
+			opaqueTransparencyBlending.render(deferredClusteredLighting.getDeferredSceneTexture(),
 					primarySceneFBO.getAttachmentTexture(Attachment.DEPTH),
 					secondarySceneFBO.getAttachmentTexture(Attachment.COLOR),
 					secondarySceneFBO.getAttachmentTexture(Attachment.DEPTH),
@@ -261,10 +258,8 @@ public class RenderSystem extends SystemBase{
 		 * 2) postprocessing carried out via something, so it can be extended later and not controlled from here
 		 * 3) retrieve final ppe result
 		 */
-		//primarySceneFBO.getAttachmentTexture(Attachment.TEST);
-		//testCluster.getDeferredSceneTexture()
 		Texture prePostProcessingScene = transparentSceneRenderList.size() > 0 ? opaqueTransparencyBlending.getBlendedSceneTexture() :
-			testCluster.getDeferredSceneTexture();
+			deferredClusteredLighting.getDeferredSceneTexture();
 		Texture currentScene = prePostProcessingScene;
 		
 		

@@ -2,6 +2,7 @@ package com.alkrist.maribel.graphics.deferred;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.glFinish;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL15.GL_READ_ONLY;
 import static org.lwjgl.opengl.GL15.GL_STATIC_COPY;
@@ -165,6 +166,8 @@ public class TestCluster {
 	}
 	
 	public void render(Texture albedo, Texture position, Texture normal, Texture specularEmissionDiffuseSSAOBloom) {
+		glFinish();
+		
 		lightingShader.bind();
 		glBindImageTexture(0, deferredSceneTexture.getId(), 0, false, 0, GL_WRITE_ONLY, GL_RGBA16F);
 		glBindImageTexture(2, albedo.getId(), 0, false, 0, GL_READ_ONLY, GL_RGBA16F);

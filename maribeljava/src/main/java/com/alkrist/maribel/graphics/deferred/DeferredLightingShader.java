@@ -57,7 +57,7 @@ public class DeferredLightingShader extends ShaderProgram{
 	}
 	
 	public void updateUniforms(Texture pssm) {
-		setUniform("dirLight.direction", TestGraphics.sun.getPosition());
+		/*setUniform("dirLight.direction", TestGraphics.sun.getPosition());
 		setUniform("dirLight.color", TestGraphics.sun.getColor());
 		setUniform("dirLight.intensity", TestGraphics.sun.getIntensity());
 		
@@ -75,7 +75,7 @@ public class DeferredLightingShader extends ShaderProgram{
 		setUniform("spotLight.pl.att.linear", TestGraphics.light2.getAttenuation().getLinear());
 		setUniform("spotLight.pl.att.exponent", TestGraphics.light2.getAttenuation().getExponent());
 		setUniform("spotLight.conedir", TestGraphics.light2.getConeDirection());
-		setUniform("spotLight.cutoff", TestGraphics.light2.getCutOff());
+		setUniform("spotLight.cutoff", TestGraphics.light2.getCutOff());*/
 		
 		setUniform("viewMatrix", GLContext.getMainCamera().getViewMatrix());
 		for(int i=0; i<PSSMCamera.PSSM_SPLITS; i++) {

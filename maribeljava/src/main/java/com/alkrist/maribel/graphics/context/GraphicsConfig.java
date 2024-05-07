@@ -18,13 +18,13 @@ public class GraphicsConfig extends ConfigBase{
 	public int height;
 	public SamplerFilter samplerFilter;
 	public int shadowMapResolution;
+	public int shadowMapQuality;
 	public boolean isShadowMapsEnabled;
 	public boolean isSSAOEnabled;
 	public boolean isFXAAEnabled;
 	public boolean isMultisamplingEnabled;
 	public int multisampleSamplesCount;
-	public float maxLightDistance;
-	public int maxRenderedLights;
+	public int maxDirectionLights;
 	
 	public GraphicsConfig() {}
 	
@@ -44,13 +44,13 @@ public class GraphicsConfig extends ConfigBase{
 		width = Integer.valueOf(prop.getProperty("width", "1280"));
 		height = Integer.valueOf(prop.getProperty("height", "720"));
 		shadowMapResolution = Integer.valueOf(prop.getProperty("shadowmap_resolution", "2048"));
+		shadowMapQuality = Integer.valueOf(prop.getProperty("shadowmap_quality", "2"));
 		isShadowMapsEnabled = Boolean.valueOf(prop.getProperty("shadowmap_enabled", "true"));
 		isSSAOEnabled = Boolean.valueOf(prop.getProperty("ssao_enabled", "true"));
 		isFXAAEnabled = Boolean.valueOf(prop.getProperty("fxaa_enabled", "true"));
 		isMultisamplingEnabled = Boolean.valueOf(prop.getProperty("mulitsampling_enabled", "true"));
 		multisampleSamplesCount = Integer.valueOf(prop.getProperty("multisample_count", "2"));
-		maxLightDistance = Float.valueOf(prop.getProperty("max_light_distance", "500.0"));
-		maxRenderedLights = Integer.valueOf(prop.getProperty("max_rendered_lights", "20"));
+		maxDirectionLights = Integer.valueOf(prop.getProperty("max_direction_lights", "3"));
 	}
 
 	@Override
@@ -67,13 +67,13 @@ public class GraphicsConfig extends ConfigBase{
 		prop.setProperty("width", String.valueOf(width));
 		prop.setProperty("height", String.valueOf(height));
 		prop.setProperty("shadowmap_resolution", String.valueOf(shadowMapResolution));
+		prop.setProperty("shadowmap_quality", String.valueOf(shadowMapQuality));
 		prop.setProperty("shadowmap_enabled", String.valueOf(isShadowMapsEnabled));
 		prop.setProperty("ssao_enabled", String.valueOf(isSSAOEnabled));
 		prop.setProperty("fxaa_enabled", String.valueOf(isFXAAEnabled));
 		prop.setProperty("mulitsampling_enabled", String.valueOf(isMultisamplingEnabled));
 		prop.setProperty("multisample_count", String.valueOf(multisampleSamplesCount));
-		prop.setProperty("max_light_distance", String.valueOf(maxLightDistance));
-		prop.setProperty("max_rendered_lights", String.valueOf(maxRenderedLights));
+		prop.setProperty("max_direction_lights", String.valueOf(maxDirectionLights));
 	}
 
 }

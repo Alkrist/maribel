@@ -1,9 +1,14 @@
 package com.alkrist.maribel.graphics.deferred;
 
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+
 import com.alkrist.maribel.graphics.components.light.AmbientLight;
 import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
+import com.alkrist.maribel.graphics.shadow.PSSMCamera;
+import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.utils.FileUtil;
 
 public class DeferredClusteredLightingShader extends ShaderProgram{
@@ -30,54 +35,52 @@ private static DeferredClusteredLightingShader instance = null;
 		addUniform("viewMatrix");
 		addUniform("cameraPosition");
 		
-		// Direction light
-		addUniform("directionLight.color");
-		addUniform("directionLight.direction");
-		addUniform("directionLight.intensity");
-		addUniform("directionLightEnable");
-		
-		// Ambient light
-		addUniform("ambientLight.color");
-		addUniform("ambientLight.intensity");
-		addUniform("ambientLightEnable");
-		
 		// SSAO
 		addUniform("ssaoEnable");
 		
 		// MSAA
 		addUniform("numSamples");
+		
+		// Shadow
+		addUniform("pssm");
+		addUniform("shadowEnable");
+		addUniform("shadowsQuality");
+		for(int i=0; i<PSSMCamera.PSSM_SPLITS; i++) {
+			addUniform("projViewMatrices["+i+"]");
+			addUniform("splitDistances["+i+"]");
+		}
 	}
 	
-	public void updateUniforms(int width, int height, int gridSizeX, int gridSizeY, int gridSizeZ) {
+	public void updateUniforms(int width, int height, int gridSizeX, int gridSizeY, int gridSizeZ, Texture pssm) {
+		// General uniforms
 		setUniform("zNear", GLContext.getConfig().NEAR_PLANE);
 		setUniform("zFar", GLContext.getConfig().FAR_PLANE);
 		setUniform("screenDimensions", width,height);
 		setUniform("gridSize", gridSizeX, gridSizeY, gridSizeZ);
 		setUniform("viewMatrix", GLContext.getMainCamera().getViewMatrix());
 		setUniform("cameraPosition", GLContext.getMainCamera().getPosition());
-	}
-	
-	public void updateUniforms(DirectionLight dirLight, AmbientLight ambLight) {
-		if(dirLight != null) {
-			setUniform("directionLight.color", dirLight.getColor());
-			setUniform("directionLight.direction", dirLight.getPosition());
-			setUniform("directionLight.intensity", dirLight.getIntensity());
-			setUniformUnsignedInt("directionLightEnable", 1);
-		}else {
-			setUniformUnsignedInt("directionLightEnable", 0);
-		}
 		
-		if(ambLight != null) {
-			setUniform("ambientLight.color", ambLight.getColor());
-			setUniform("ambientLight.intensity", ambLight.getIntensity());
-			setUniformUnsignedInt("ambientLightEnable", 1);
+		// SSAO
+		setUniformUnsignedInt("ssaoEnable", GLContext.getConfig().isSSAOEnabled ? 1 : 0);
+		
+		// MSAA
+		setUniformUnsignedInt("numSamples", GLContext.getConfig().multisampleSamplesCount);
+		
+		// PSSM
+		if(GLContext.getConfig().isShadowMapsEnabled) {
+			for(int i=0; i<PSSMCamera.PSSM_SPLITS; i++) {
+				setUniform("projViewMatrices["+i+"]",PSSMCamera.getProjectionViewMatrices()[i]);
+				setUniform("splitDistances["+i+"]",PSSMCamera.getSplitDistances()[i]);
+			}
+			setUniformUnsignedInt("shadowEnable", 1);
+			setUniformUnsignedInt("shadowsQuality", GLContext.getConfig().shadowMapQuality);
+			
+			glActiveTexture(GL_TEXTURE0);
+			pssm.bind();
+			setUniform("pssm", 0);
+
 		}else {
-			setUniformUnsignedInt("ambientLightEnable", 0);
+			setUniformUnsignedInt("shadowEnable", 0);
 		}
-	}
-	
-	public void updateUniforms(boolean ssaoEnable, int numSamples) {
-		setUniformUnsignedInt("ssaoEnable", ssaoEnable ? 1 : 0);
-		setUniformUnsignedInt("numSamples", numSamples);
-	}
+	}	
 }

@@ -2,7 +2,9 @@ package com.alkrist.maribel.graphics.components.light;
 
 import org.joml.Vector3f;
 
-public class AmbientLight {
+import com.alkrist.maribel.common.ecs.Component;
+
+public class AmbientLight implements Component{
 
 	private Vector3f color;
 	private float intensity;

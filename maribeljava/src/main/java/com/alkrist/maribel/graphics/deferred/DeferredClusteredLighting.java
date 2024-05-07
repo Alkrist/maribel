@@ -130,7 +130,7 @@ public class DeferredClusteredLighting {
 	public void updatePointLightSSBO(ImmutableArrayList<Entity> lightEntities) {
 		ByteBuffer lightData = BufferUtils.createByteBuffer(LIGHT_ALIGNED_SIZE * lightEntities.size());
 		FloatBuffer fv = lightData.asFloatBuffer();
-		
+
 		for(Entity entity: lightEntities) {
 			PointLight light = pointLightMapper.getComponent(entity);
 			
@@ -151,16 +151,17 @@ public class DeferredClusteredLighting {
 		fv.flip();
 		
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, pointLightSSBO);
-		glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, lightData);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, lightData, GL_DYNAMIC_DRAW);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, pointLightSSBO);
 	}
 	
+	//TODO: restrict by max size
 	public void initDirectionLightSSBO(ImmutableArrayList<Entity> lightEntities) {
 		ByteBuffer lightData = BufferUtils.createByteBuffer(48 * lightEntities.size());
 		FloatBuffer fv = lightData.asFloatBuffer();
 		
 		for(Entity entity: lightEntities) {
-			System.out.println("here");
+
 			DirectionLight light = directionLightMapper.getComponent(entity);
 			
 			Vector3f d = light.getDirection();

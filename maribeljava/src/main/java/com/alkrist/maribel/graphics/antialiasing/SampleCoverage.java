@@ -9,7 +9,6 @@ import static org.lwjgl.opengl.GL30.GL_RGBA32F;
 import static org.lwjgl.opengl.GL42.glBindImageTexture;
 import static org.lwjgl.opengl.GL43.glDispatchCompute;
 
-import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.texture.Texture.ImageFormat;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;

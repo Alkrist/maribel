@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWWindowSizeCallback;
-
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -64,8 +61,8 @@ public class RenderSystem extends SystemBase{
 	private int height;
 	
 	private FullScreenQuad fullScreenQuad;
-	private FBO primarySceneFBO; //TODO: resize
-	private FBO secondarySceneFBO; //TODO: resize
+	private FBO primarySceneFBO; //resized
+	private FBO secondarySceneFBO; //resized
 	private ParallelSplitShadowMapsFBO pssmFBO;
 	private SSAO ssao; //resized
 	private FXAA fxaa; //resized
@@ -74,7 +71,7 @@ public class RenderSystem extends SystemBase{
 	
 	private DeferredClusteredLighting deferredClusteredLighting; // resized
 	
-	private PostProcessingVolumeRenderer ppeVolumeRenderer;
+	private PostProcessingVolumeRenderer ppeVolumeRenderer; //TODO: resize
 	
 	
 	private static final ComponentMapper<TestRenderer> testRendererMapper = ComponentMapper.getFor(TestRenderer.class);
@@ -109,15 +106,15 @@ public class RenderSystem extends SystemBase{
 		pssmFBO = new ParallelSplitShadowMapsFBO();
 		PSSMCamera.init();
 		
-		ssao = new SSAO(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
-		fxaa = new FXAA(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
-		sampleCoverage = new SampleCoverage(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
-		opaqueTransparencyBlending = new OpaqueTransparencyBlending(GLContext.getWindow().getWidth(), GLContext.getWindow().getHeight());
+		ssao = new SSAO(width, height);
+		fxaa = new FXAA(width, height);
+		sampleCoverage = new SampleCoverage(width, height);
+		opaqueTransparencyBlending = new OpaqueTransparencyBlending(width, height);
 	
 		ppeVolumeRenderer = new PostProcessingVolumeRenderer();
 		ppeVolumeList = new ArrayList<PostProcessingVolume>();
 		
-		deferredClusteredLighting = new DeferredClusteredLighting(window.getWidth(), window.getHeight());
+		deferredClusteredLighting = new DeferredClusteredLighting(width, height);
 		deferredClusteredLighting.computeClusters();
 	}
 	
@@ -177,7 +174,7 @@ public class RenderSystem extends SystemBase{
 			for(Entity e: shadowSceneRenderList)
 				opaqueModelShadowMapper.getComponent(e).render(e);
 			
-			glViewport(0,0,window.getWidth(), window.getHeight());
+			glViewport(0, 0, width, height);
 			pssmFBO.getParameter().disable();
 			pssmFBO.getFbo().unbind();
 		}
@@ -285,12 +282,12 @@ public class RenderSystem extends SystemBase{
 		}
 		
 		resizeCheck();
-		glViewport(0,0,window.getWidth(), window.getHeight());
+		glViewport(0, 0,width, height);
 	}
 	
 	private void createSceneFBOs() {
-		primarySceneFBO = new OffScreenFBO(window.getWidth(), window.getHeight(), GLContext.getConfig().multisampleSamplesCount);
-		secondarySceneFBO = new TransparencyFBO(window.getWidth(), window.getHeight());
+		primarySceneFBO = new OffScreenFBO(width, height, GLContext.getConfig().multisampleSamplesCount);
+		secondarySceneFBO = new TransparencyFBO(width, height);
 	}
 	
 	private void sortPPEVolumeList() {
@@ -311,7 +308,8 @@ public class RenderSystem extends SystemBase{
 			width = w;
 			height = h;
 			
-			System.out.println("Do resize"); //TODO: remove it later
+			glFinish();
+			
 			// Resize FBOs
 			primarySceneFBO.resize(w, h);
 			secondarySceneFBO.resize(w, h);
@@ -328,7 +326,5 @@ public class RenderSystem extends SystemBase{
 				windowUIMapper.getComponent(e).resize(w, h);
 			}
 		}
-		
-		
 	}
 }

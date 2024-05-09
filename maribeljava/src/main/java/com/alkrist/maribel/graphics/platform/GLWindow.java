@@ -260,7 +260,6 @@ public class GLWindow {
 				width = w;
 				GL11.glViewport(0, 0, width, height);
 				mainCamera.setProjectionMatrix(config.fovY, width, height, config.NEAR_PLANE, config.FAR_PLANE);
-				System.out.println("Width: "+width+", Height: "+height);
 			}
 		});
 

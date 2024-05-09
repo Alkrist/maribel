@@ -42,7 +42,7 @@ import java.util.logging.Level;
 import com.alkrist.maribel.utils.Logging;
 
 public class FrameBuffer {
-
+	
 	private int id;
 	
 	public FrameBuffer() {

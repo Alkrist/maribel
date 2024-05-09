@@ -40,7 +40,7 @@ import com.alkrist.maribel.utils.FileUtil;
 import com.alkrist.maribel.utils.Logging;
 
 public class Texture {
-
+	
 	private int target;
 	
 	private int id;

@@ -7,7 +7,6 @@ import static org.lwjgl.opengl.GL30.GL_RGBA16F;
 import static org.lwjgl.opengl.GL42.glBindImageTexture;
 import static org.lwjgl.opengl.GL43.glDispatchCompute;
 
-import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.render.parameter.AlphaBlendingSrcAlpha;
 import com.alkrist.maribel.graphics.surface.FullScreenQuad;
 import com.alkrist.maribel.graphics.texture.Texture;

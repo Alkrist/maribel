@@ -36,6 +36,8 @@ import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.systems.RenderSystem;
+import com.alkrist.maribel.graphics.target.FrameBuffer;
+import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
@@ -230,8 +232,7 @@ public class TestGraphics {
 		while(!window.isCloseRequested()) {
 			
 			// Update loop now is here
-			
-			
+
 			GLContext.getMainCamera().update();
 			PSSMCamera.update(dirLight);
 			dogTransform.rotate(0, 0.1f, 0);

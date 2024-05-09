@@ -7,7 +7,6 @@ import com.alkrist.maribel.common.connection.packet.packets.PacketLoginReply;
 import com.alkrist.maribel.common.connection.packet.packets.PacketLoginRequest;
 import com.alkrist.maribel.common.connection.packet.packets.PacketLogout;
 import com.alkrist.maribel.common.connection.packet.packets.PacketTick;
-import com.alkrist.maribel.common.event.EventManager;
 
 /**
  * A class to register packets and listeners on PreInit stage.

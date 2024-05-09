@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.alkrist</groupId>
   <artifactId>maribeljava</artifactId>
-  <version>20240417</version>
-  <name>Afterworlds</name>
+  <version>20240509</version>
+  <name>Maribel</name>
   
   	<properties>
 		<maven.compiler.target>11</maven.compiler.target>

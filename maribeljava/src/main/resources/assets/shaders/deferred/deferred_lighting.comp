@@ -76,10 +76,18 @@ uniform uint shadowEnable;
 uniform mat4 projViewMatrices[5];
 uniform float splitDistances[5];
 
-vec3 diffuse(vec3 albedo, vec3 normal, vec3 toLightDirection, vec3 lightColor, float lightIntensity) {
-	float diffuseFactor = max(dot(normal, toLightDirection), 0.0);
+// Fog
+uniform float sightRange;
+uniform vec3 fogColor;
 
-	return albedo * lightColor * diffuseFactor * lightIntensity;
+float calculateFogFactor(float dist, float sightRangeFactor) {
+	return smoothstep(0, 1, -0.0002 / sightRangeFactor * (dist - (zFar) / 10 * sightRangeFactor) + 1);
+}
+
+vec3 diffuse(vec3 albedo, vec3 normal, vec3 toLightDirection, vec3 lightColor, float lightIntensity) {
+	float lambertTerm = max(dot(normal, toLightDirection), 0.0);
+
+	return albedo * lightColor * lambertTerm * lightIntensity;
 }
 
 vec3 specular(vec3 normal, vec3 worldPos, vec3 toLightDir, vec3 lightColor, float reflectance, float emission, float lightIntensity) {
@@ -281,6 +289,11 @@ void main(void){
 				}
 
 				finalColor *= ssao;
+
+				// Fog
+				float distance = length(cameraPosition - position);
+				float fogFactor = calculateFogFactor(distance, sightRange);
+				finalColor = mix(fogColor, finalColor, fogFactor);
 			}else{
 				finalColor = albedo;
 			}
@@ -348,6 +361,11 @@ void main(void){
 			}
 
 			finalColor *= ssao;
+
+			// Fog
+			float distance = length(cameraPosition - position);
+			float fogFactor = calculateFogFactor(distance, sightRange);
+			finalColor = mix(fogColor, finalColor, fogFactor);
 		}else{
 			finalColor = albedo;
 		}

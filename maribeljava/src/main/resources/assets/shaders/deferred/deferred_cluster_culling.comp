@@ -76,3 +76,16 @@ bool testSphereAABB(uint i, Cluster cluster)
 
     return sphereAABBIntersection(center, radius, aabbMin, aabbMax);
 }
+
+void main(void){
+	uint light count = pointLight.length();
+
+	uint tileIndex = gl_WorkGroupID.x * LOCAL_SIZE + gl_LocalInvocationID.x;
+	Cluster cluster = clusters[tileIndex];
+
+	cluster.count = 0; //to dump previous indices
+
+	four(uint i=0; i<lightCount; ++i){
+		if()
+	}
+}

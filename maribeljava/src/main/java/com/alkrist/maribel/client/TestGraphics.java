@@ -95,7 +95,7 @@ public class TestGraphics {
 		TestRenderer renderer = new TestRenderer(new CCW(), shader);
 		OpaqueModelRenderer omRenderer = new OpaqueModelRenderer(new CCW(), gms);
 		ModelShadowRenderer shadowRenderer = new ModelShadowRenderer(new ShadowRenderParameter(), gmss);
-		TransparentModelRenderer transparentRenderer = new TransparentModelRenderer(new AlphaBlendingSrcAlpha(), ts);
+		TransparentModelRenderer transparentRenderer = new TransparentModelRenderer(new CCW(), ts);
 		
 		
 		WindowCanvas wCanvas = new WindowCanvas();
@@ -178,16 +178,15 @@ public class TestGraphics {
 		e3.addComponent(shadowRenderer);
 		e3.addComponent(light4);
 		
-		engine.addEntity(e3);
+		engine.addEntity(e3);*/
 		
 		Entity e4 = engine.createEntity();
 		e4.addComponent(dragonTransform);
 		e4.addComponent(dragonRenderable);
 		e4.addComponent(transparentRenderer);
 		e4.addComponent(shadowRenderer);
-		e4.addComponent(sun);
 		
-		engine.addEntity(e4);*/
+		engine.addEntity(e4);
 		
 		Entity e5 = engine.createEntity();
 		e5.addComponent(sampleSceneRenderable);

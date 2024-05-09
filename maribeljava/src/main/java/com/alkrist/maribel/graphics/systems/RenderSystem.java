@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.joml.Vector3f;
-
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -24,14 +22,11 @@ import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
-import com.alkrist.maribel.graphics.components.light.AmbientLight;
 import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.context.GraphicsConfig;
 import com.alkrist.maribel.graphics.deferred.DeferredClusteredLighting;
-import com.alkrist.maribel.graphics.deferred.DeferredLighting;
-import com.alkrist.maribel.graphics.deferred.TestCluster;
 import com.alkrist.maribel.graphics.filter.PostProcessingVolumeRenderer;
 import com.alkrist.maribel.graphics.occlusion.SSAO;
 import com.alkrist.maribel.graphics.platform.GLUtil;
@@ -71,6 +66,8 @@ public class RenderSystem extends SystemBase{
 	private SampleCoverage sampleCoverage;
 	private OpaqueTransparencyBlending opaqueTransparencyBlending;
 	
+	private DeferredClusteredLighting deferredClusteredLighting;
+	
 	private PostProcessingVolumeRenderer ppeVolumeRenderer;
 	
 	
@@ -93,9 +90,6 @@ public class RenderSystem extends SystemBase{
 	private List<PostProcessingVolume> ppeVolumeList;
 	
 	
-	//private TestCluster testCluster;
-	private DeferredClusteredLighting deferredClusteredLighting;
-	
 	public RenderSystem() {
 		super();
 		this.window = GLContext.getWindow();
@@ -113,8 +107,6 @@ public class RenderSystem extends SystemBase{
 		ppeVolumeRenderer = new PostProcessingVolumeRenderer();
 		ppeVolumeList = new ArrayList<PostProcessingVolume>();
 		
-		//TEST STUFF
-
 		deferredClusteredLighting = new DeferredClusteredLighting(window.getWidth(), window.getHeight());
 		deferredClusteredLighting.computeClusters();
 		
@@ -226,7 +218,6 @@ public class RenderSystem extends SystemBase{
 		//===================================//
 		
 		deferredClusteredLighting.updatePointLightSSBO(pointLightEntities);
-		
 		deferredClusteredLighting.updateDirectionLightSSBO(directionLightEntities);
 		deferredClusteredLighting.lightAABBIntersection();
 

@@ -16,7 +16,6 @@ import com.alkrist.maribel.graphics.texture.Texture.ImageFormat;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
-import com.alkrist.maribel.graphics.texture.Texture2DStorage;
 
 public class SSAO {
 

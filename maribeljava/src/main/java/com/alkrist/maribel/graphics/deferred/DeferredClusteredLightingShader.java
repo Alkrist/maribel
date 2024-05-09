@@ -3,8 +3,8 @@ package com.alkrist.maribel.graphics.deferred;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import com.alkrist.maribel.graphics.components.light.AmbientLight;
-import com.alkrist.maribel.graphics.components.light.DirectionLight;
+import org.joml.Vector3f;
+
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
@@ -49,6 +49,10 @@ private static DeferredClusteredLightingShader instance = null;
 			addUniform("projViewMatrices["+i+"]");
 			addUniform("splitDistances["+i+"]");
 		}
+		
+		//Fog
+		addUniform("sightRange");
+		addUniform("fogColor");
 	}
 	
 	public void updateUniforms(int width, int height, int gridSizeX, int gridSizeY, int gridSizeZ, Texture pssm) {
@@ -82,5 +86,9 @@ private static DeferredClusteredLightingShader instance = null;
 		}else {
 			setUniformUnsignedInt("shadowEnable", 0);
 		}
+		
+		//TODO: to test
+		setUniform("sightRange", 0.5f); //this is a lot, like, for real, trust me xD
+		setUniform("fogColor", new Vector3f(0.5f));
 	}	
 }

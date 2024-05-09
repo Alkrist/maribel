@@ -1,0 +1,29 @@
+#version 430 core
+
+layout (local_size_x = 8, local_size_y = 8) in;
+
+layout (binding = 0, rgba16f) uniform writeonly image2D additiveBlendedBloomSampler;
+
+uniform sampler2D bloomBlurSampler0;
+uniform sampler2D bloomBlurSampler1;
+uniform sampler2D bloomBlurSampler2;
+uniform sampler2D bloomBlurSampler3;
+
+uniform vec2 screenResolution;
+
+void main(void){
+	ivec2 computeCoord = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
+
+	vec2 uv = vec2(computeCoord.x / screenResolution.x, computeCoord.y / screenResolution.y);
+
+	vec3 color = vec3(0);
+	color += texture(bloomBlurSampler0, uv).rgb;
+	color += texture(bloomBlurSampler1, uv).rgb;
+	color += texture(bloomBlurSampler2, uv).rgb;
+	color += texture(bloomBlurSampler3, uv).rgb;
+
+	color /= 4;
+
+	imageStore(additiveBlendedBloomSampler, computeCoord, vec4(color, 1.0));
+}
+

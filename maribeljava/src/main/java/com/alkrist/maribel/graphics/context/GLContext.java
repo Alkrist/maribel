@@ -6,8 +6,6 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import com.alkrist.maribel.common.ecs.Engine;
-import com.alkrist.maribel.graphics.components.light.AmbientLight;
-import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.platform.GLUtil;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.platform.InputHandler;

@@ -152,6 +152,7 @@ public class GLWindow {
 		double currentFrameTime = getCurrentTimeMillis();
 		deltaTime = (currentFrameTime - lastFrameTime) / 1000f;
 		lastFrameTime = currentFrameTime;
+		
 	}
 
 	/**
@@ -259,7 +260,6 @@ public class GLWindow {
 				width = w;
 				GL11.glViewport(0, 0, width, height);
 				mainCamera.setProjectionMatrix(config.fovY, width, height, config.NEAR_PLANE, config.FAR_PLANE);
-				//TODO: fire resize event here
 				System.out.println("Width: "+width+", Height: "+height);
 			}
 		});
@@ -314,4 +314,5 @@ public class GLWindow {
 	private static double getCurrentTimeMillis() {
 		return GLFW.glfwGetTime() * 1000; // getTime gives time in seconds, *1000 for ms
 	}
+
 }

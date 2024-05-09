@@ -47,5 +47,37 @@ public class TransparencyFBO extends FBO{
 		frameBuffer.setDrawBuffers(drawBuffers);
 		frameBuffer.checkStatus();
 		frameBuffer.unbind();
+		
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		this.getAttachmentTexture(Attachment.COLOR).delete();
+		this.getAttachmentTexture(Attachment.ALPHA).delete();
+		this.getAttachmentTexture(Attachment.LIGHT_SCATTERING).delete();
+		this.getAttachmentTexture(Attachment.DEPTH).delete();
+		
+		Texture albedoAttachment = null;
+		Texture alphaAttachment = null;
+		Texture lightScatteringAttachment = null;
+		Texture depthAttachment = null;
+		
+		albedoAttachment = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest);
+		alphaAttachment = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest);
+		lightScatteringAttachment = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest);
+		depthAttachment = new Texture2D(width, height, ImageFormat.DEPTH32FLOAT, SamplerFilter.Nearest);
+		
+		attachments.put(Attachment.COLOR, albedoAttachment);
+		attachments.put(Attachment.ALPHA, alphaAttachment);
+		attachments.put(Attachment.LIGHT_SCATTERING, lightScatteringAttachment);
+		attachments.put(Attachment.DEPTH, depthAttachment);
+		
+		frameBuffer.bind();
+		frameBuffer.createColorTextureAttachment(albedoAttachment.getId(),0);
+		frameBuffer.createColorTextureAttachment(alphaAttachment.getId(),1);
+		frameBuffer.createColorTextureAttachment(lightScatteringAttachment.getId(),2);
+		frameBuffer.createDepthTextureAttachment(depthAttachment.getId());
+		frameBuffer.checkStatus();
+		frameBuffer.unbind();
 	}
 }

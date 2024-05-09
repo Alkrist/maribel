@@ -21,11 +21,25 @@ public class OpaqueTransparencyBlending extends FullScreenQuad{
 	
 	private Texture blendedSceneTexture;
 	
+	private int width;
+	private int height;
+	
 	public OpaqueTransparencyBlending(int width, int height) {
 		super(new AlphaBlendingSrcAlpha());
 		
+		this.width = width;
+		this.height = height;
+		
 		shader = OpaqueTransparencyBlendShader.getInstance();
 		
+		blendedSceneTexture = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest);
+	}
+	
+	public void resize(int w, int h) {
+		width = w;
+		height = h;
+		
+		blendedSceneTexture.delete();
 		blendedSceneTexture = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest);
 	}
 	
@@ -40,7 +54,7 @@ public class OpaqueTransparencyBlending extends FullScreenQuad{
 		
 		shader.updateUniforms(alphaMap, opaqueSceneDepthMap, transparencyLayerDepthMap);
 		
-		glDispatchCompute(GLContext.getConfig().width/16, GLContext.getConfig().height/16, 1);
+		glDispatchCompute(width/16, height/16, 1);
 	}
 	
 	public Texture getBlendedSceneTexture() {

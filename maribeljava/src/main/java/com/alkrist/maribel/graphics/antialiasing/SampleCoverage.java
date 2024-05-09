@@ -23,8 +23,25 @@ public class SampleCoverage {
 	
 	private SampleCoverageShader shader;
 	
+	private int width;
+	private int height;
+	
 	public SampleCoverage(int width,int height) {
+		this.width = width;
+		this.height = height;
+		
 		shader = SampleCoverageShader.getInstance();
+		
+		sampleCoverageMask = new Texture2D(width, height, ImageFormat.R8, SamplerFilter.Nearest, TextureWrapMode.ClampToEdge);
+		specularEmissionBloomSingleSample = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest, TextureWrapMode.ClampToEdge);
+	}
+	
+	public void resize(int w, int h) {
+		width = w;
+		height = h;
+		
+		sampleCoverageMask.delete();
+		specularEmissionBloomSingleSample.delete();
 		
 		sampleCoverageMask = new Texture2D(width, height, ImageFormat.R8, SamplerFilter.Nearest, TextureWrapMode.ClampToEdge);
 		specularEmissionBloomSingleSample = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Nearest, TextureWrapMode.ClampToEdge);
@@ -41,7 +58,7 @@ public class SampleCoverage {
 		
 		shader.updateUniforms();
 		
-		glDispatchCompute(GLContext.getConfig().width/16, GLContext.getConfig().height/16, 1);	
+		glDispatchCompute(width/16, height/16, 1);	
 	}
 	
 	public Texture getSampleCoverageMask() {

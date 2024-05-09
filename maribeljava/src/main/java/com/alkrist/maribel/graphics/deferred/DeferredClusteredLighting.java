@@ -95,6 +95,18 @@ public class DeferredClusteredLighting {
 		glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	}
 	
+	public void resize(int w, int h) {
+		width = w;
+		height = h;
+		
+		deferredSceneTexture.delete();
+		deferredSceneTexture = new Texture2D(width, height, 
+				ImageFormat.RGBA16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge);
+		
+		createSSBO();
+		computeClusters();
+	}
+	
 	public void initPointLightSSBO(ImmutableArrayList<Entity> lightEntities) {
 		
 		ByteBuffer lightData = BufferUtils.createByteBuffer(LIGHT_ALIGNED_SIZE * lightEntities.size());

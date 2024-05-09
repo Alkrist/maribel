@@ -67,6 +67,20 @@ public class SSAO {
 		glDispatchCompute(1,1,1);
 	}
 	
+	public void resize(int w, int h) {
+		width = w;
+		height = h;
+		
+		sceneTexture.delete();
+		blurSceneTexture.delete();
+		debugTexture.delete();
+		
+		sceneTexture = new Texture2D(width, height, ImageFormat.R16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge);
+		blurSceneTexture = new Texture2D(width, height, ImageFormat.R16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge);
+	
+		debugTexture = new Texture2D(width, height, ImageFormat.RGBA16FLOAT, SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge);
+	}
+	
 	public void render(Texture worldPos, Texture normal) {
 		ssaoShader.bind();
 		glBindImageTexture(0, sceneTexture.getId(), 0, false, 0, GL_WRITE_ONLY, GL_R16F);

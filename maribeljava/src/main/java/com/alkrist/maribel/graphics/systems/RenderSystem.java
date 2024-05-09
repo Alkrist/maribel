@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -57,16 +60,19 @@ public class RenderSystem extends SystemBase{
 	private GLWindow window;
 	private GraphicsConfig config;
 	
-	private FullScreenQuad fullScreenQuad;
-	private FBO primarySceneFBO;
-	private FBO secondarySceneFBO;
-	private ParallelSplitShadowMapsFBO pssmFBO;
-	private SSAO ssao;
-	private FXAA fxaa;
-	private SampleCoverage sampleCoverage;
-	private OpaqueTransparencyBlending opaqueTransparencyBlending;
+	private int width;
+	private int height;
 	
-	private DeferredClusteredLighting deferredClusteredLighting;
+	private FullScreenQuad fullScreenQuad;
+	private FBO primarySceneFBO; //TODO: resize
+	private FBO secondarySceneFBO; //TODO: resize
+	private ParallelSplitShadowMapsFBO pssmFBO;
+	private SSAO ssao; //resized
+	private FXAA fxaa; //resized
+	private SampleCoverage sampleCoverage; //resized
+	private OpaqueTransparencyBlending opaqueTransparencyBlending; //resized
+	
+	private DeferredClusteredLighting deferredClusteredLighting; // resized
 	
 	private PostProcessingVolumeRenderer ppeVolumeRenderer;
 	
@@ -85,7 +91,7 @@ public class RenderSystem extends SystemBase{
 	private ImmutableArrayList<Entity> postProcessingVolumes;
 	
 	private ImmutableArrayList<Entity> pointLightEntities;
-	private ImmutableArrayList<Entity> directionLightEntities; //TODO: merge them in one selection
+	private ImmutableArrayList<Entity> directionLightEntities;
 	
 	private List<PostProcessingVolume> ppeVolumeList;
 	
@@ -94,6 +100,10 @@ public class RenderSystem extends SystemBase{
 		super();
 		this.window = GLContext.getWindow();
 		this.config = GLContext.getConfig();
+		
+		this.width = window.getWidth();
+		this.height = window.getHeight();
+		
 		this.fullScreenQuad = new FullScreenQuad(new CCW());
 		createSceneFBOs();
 		pssmFBO = new ParallelSplitShadowMapsFBO();
@@ -109,7 +119,6 @@ public class RenderSystem extends SystemBase{
 		
 		deferredClusteredLighting = new DeferredClusteredLighting(window.getWidth(), window.getHeight());
 		deferredClusteredLighting.computeClusters();
-		
 	}
 	
 	@Override
@@ -141,6 +150,7 @@ public class RenderSystem extends SystemBase{
 	
 	@Override
 	public void update(double deltaTime) {
+		
 		//===================================//
 		//        CLEAR RENDER BUFFER        //
 		//===================================//
@@ -266,7 +276,7 @@ public class RenderSystem extends SystemBase{
 		}
 		
 		//ssao.getDebugTexture()
-		fullScreenQuad.setTexture(currentScene);
+		fullScreenQuad.setTexture(deferredClusteredLighting.getDeferredSceneTexture());
 		fullScreenQuad.render();
 		
 		
@@ -274,6 +284,7 @@ public class RenderSystem extends SystemBase{
 			windowUIMapper.getComponent(e).render();
 		}
 		
+		resizeCheck();
 		glViewport(0,0,window.getWidth(), window.getHeight());
 	}
 	
@@ -290,5 +301,34 @@ public class RenderSystem extends SystemBase{
 		
 		Collections.sort(ppeVolumeList, new PostProcessingVolume.PPEVolumeComparator());
 		Collections.reverse(ppeVolumeList);
+	}
+	
+	private void resizeCheck() {
+		int w = window.getWidth();
+		int h = window.getHeight();
+		
+		if(width != w || height != h) {
+			width = w;
+			height = h;
+			
+			System.out.println("Do resize"); //TODO: remove it later
+			// Resize FBOs
+			primarySceneFBO.resize(w, h);
+			secondarySceneFBO.resize(w, h);
+			
+			// Resize scene images
+			deferredClusteredLighting.resize(w, h);
+			ssao.resize(w, h);
+			fxaa.resize(w, h);
+			sampleCoverage.resize(w, h);
+			opaqueTransparencyBlending.resize(w, h);
+			
+			// Resize UI
+			for(Entity e: windowCanvases) {
+				windowUIMapper.getComponent(e).resize(w, h);
+			}
+		}
+		
+		
 	}
 }

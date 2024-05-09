@@ -131,6 +131,14 @@ public abstract class UICanvas {
 		return texts.get(font);
 	}
 	
+	public void resize(int width, int height) {
+		for(FontType key: texts.keySet()) {
+			for(UIText text: texts.get(key)) {
+				text.resize();
+			}
+		}
+	}
+	
 	public abstract void render();
 	
 	public abstract void update(double deltaTime);

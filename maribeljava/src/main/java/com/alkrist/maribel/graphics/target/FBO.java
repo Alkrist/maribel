@@ -25,6 +25,7 @@ public abstract class FBO {
 		frameBuffer.unbind();
 	}
 	
+	public abstract void resize(int width, int height);
 	
 	public enum Attachment {
 		

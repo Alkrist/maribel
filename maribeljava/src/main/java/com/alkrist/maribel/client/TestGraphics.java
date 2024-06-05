@@ -1,10 +1,11 @@
 package com.alkrist.maribel.client;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -23,7 +24,6 @@ import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
 import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.deferred.DeferredClusteredLighting;
 import com.alkrist.maribel.graphics.filter.contrast.ContrastProperty;
 import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
@@ -31,13 +31,10 @@ import com.alkrist.maribel.graphics.model.Model;
 import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
-import com.alkrist.maribel.graphics.render.parameter.AlphaBlendingSrcAlpha;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.systems.RenderSystem;
-import com.alkrist.maribel.graphics.target.FrameBuffer;
-import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
@@ -51,7 +48,7 @@ import com.alkrist.maribel.graphics.ui.constraints.RelativeConstraint;
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;
 import com.alkrist.maribel.graphics.ui.fonts.FontType;
 import com.alkrist.maribel.graphics.ui.fonts.UIText;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.Logging;
 
 /**
@@ -68,13 +65,13 @@ public class TestGraphics {
 		Logging.initLogger();
 		Settings.load();	
 		
-		GLContext.create("test", "system\\icon32");
+		GLContext.create("test", "system/icon32.png");
 		GLWindow window = GLContext.getWindow();
 		
-		Model dog = ModelCompositeLoader.loadFromJson("dog");
-		Model sampleScene = ModelCompositeLoader.loadFromJson("sample_plane");
-		Model glass = ModelCompositeLoader.loadFromJson("transparent");
-		Model dragon = ModelCompositeLoader.loadFromJson("dragon");
+		Model dog = ModelCompositeLoader.loadFromJson("models/dog.json");
+		Model sampleScene = ModelCompositeLoader.loadFromJson("models/sample_plane.json");
+		Model glass = ModelCompositeLoader.loadFromJson("models/transparent.json");
+		Model dragon = ModelCompositeLoader.loadFromJson("models/dragon.json");
 		
 		//Model demo = ModelCompositeLoader.loadFromJson("demo\\demo");
 		
@@ -125,7 +122,7 @@ public class TestGraphics {
 				.setY(new RelativeConstraint(0.4f));
 		
 		UIElement texturePanel = new UITexturePanel(texturePanelConstraints, 
-				new Texture2D("overlay\\overlay_gasmask_3.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge));
+				new Texture2D("textures/overlay/overlay_gasmask_3.png", SamplerFilter.Nearest, TextureWrapMode.ClampToEdge));
 		
 		wCanvas.addUIElement(colorPanel);
 		//wCanvas.addUIElement(colorPanel);
@@ -133,8 +130,8 @@ public class TestGraphics {
 		colorPanel.addChild(texturePanel);
 		
 		//times_new_roman_extended
-		FontType font = new FontType(new Texture2D("fonts\\harry.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"harry.fnt"));
-		FontType candara = new FontType(new Texture2D("fonts\\candara.png",SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge), new File(FileUtil.getFontsPath()+"candara.fnt"));
+		FontType font = new FontType(new Texture2D("textures/fonts/harry.png",SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtils.getResourceLocation("fonts/harry.fnt")));
+		FontType candara = new FontType(new Texture2D("textures/fonts/candara.png",SamplerFilter.Bilinear, TextureWrapMode.ClampToEdge), new File(FileUtils.getResourceLocation("fonts/candara.fnt")));
 		
 		UIConstraints textConstraints = new UIConstraints()
 				.setX(new RelativeConstraint(0.5f))
@@ -198,9 +195,9 @@ public class TestGraphics {
 		
 		engine.addEntity(e5);
 		
-		/*Entity canvasEntity = engine.createEntity();
+		Entity canvasEntity = engine.createEntity();
 		canvasEntity.addComponent(wCanvas);
-		engine.addEntity(canvasEntity);*/
+		engine.addEntity(canvasEntity);
 
 		
 		// test lights
@@ -229,6 +226,17 @@ public class TestGraphics {
 		sun.addComponent(dirLight);
 		engine.addEntity(sun);
 		
+		/*String basePath = "src/assets";
+        String fullPath = System.getenv("APPDATA") + "\\.maribel\\";
+
+        // Convert string paths to Path objects
+        Path basePathObj = Paths.get(basePath);
+        Path fullPathObj = Paths.get(fullPath);
+
+        Path modelsPathObj = basePathObj.resolve("models/backrooms");
+       
+        System.out.println(FileUtils.getResourceLocation("models/backrooms/wall.obj"));*/
+        
 		while(!window.isCloseRequested()) {
 			
 			// Update loop now is here

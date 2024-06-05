@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 /**
  * {@link UIText} shader program.
@@ -26,8 +26,8 @@ public class UITextShader extends ShaderProgram{
 	protected UITextShader() {
 		super();
 		
-		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"ui\\text_vertex.glsl"));
-		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"ui\\text_fragment.glsl"));
+		addVertexShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/ui/text_vertex.glsl")));
+		addFragmentShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/ui/text_fragment.glsl")));
 		compileShader();
 		
 		addUniform("color");

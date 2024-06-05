@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class UITexturePanelShader extends ShaderProgram{
 
@@ -21,8 +21,8 @@ public class UITexturePanelShader extends ShaderProgram{
 	protected UITexturePanelShader() {
 		super();
 		
-		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"ui\\texture_panel_vertex.glsl"));
-		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"ui\\texture_panel_fragment.glsl"));
+		addVertexShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/ui/texture_panel_vertex.glsl")));
+		addFragmentShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/ui/texture_panel_fragment.glsl")));
 		compileShader();
 		
 		addUniform("transformationMatrix");

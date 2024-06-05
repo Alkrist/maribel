@@ -27,6 +27,10 @@ public class PostProcessingVolumeRenderer {
 	}
 	
 	
+	public void resize(int width, int height) {
+		//TODO: resize controllers
+	}
+	
 	public Texture render(PostProcessingVolume volume, Texture sceneTexture) {
 		
 		Texture volumedSceneTexture = sceneTexture;

@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class FullScreenQuadShader extends ShaderProgram{
 
@@ -22,8 +22,8 @@ public class FullScreenQuadShader extends ShaderProgram{
 	protected FullScreenQuadShader() {
 		super();
 		
-		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"quad\\fullscreen_VS.glsl"));
-		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"quad\\fullscreen_FS.glsl"));
+		addVertexShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/quad/fullscreen_VS.glsl")));
+		addFragmentShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/quad/fullscreen_FS.glsl")));
 		//addGeometryShader(readShaderFromFile(FileUtil.getShadersPath()+"quad\\biba.glsl"));
 		compileShader();
 		

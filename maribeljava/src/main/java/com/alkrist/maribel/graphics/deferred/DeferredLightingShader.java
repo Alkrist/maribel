@@ -3,12 +3,11 @@ package com.alkrist.maribel.graphics.deferred;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import com.alkrist.maribel.client.TestGraphics;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class DeferredLightingShader extends ShaderProgram{
 
@@ -23,7 +22,7 @@ public class DeferredLightingShader extends ShaderProgram{
 	
 	protected DeferredLightingShader() {
 		super();
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"deferred\\deferredLighting.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/deferred/deferredLighting.comp")));
 		compileShader();
 		
 		addUniform("dirLight.color");

@@ -2,7 +2,7 @@ package com.alkrist.maribel.graphics.filter.contrast;
 
 import com.alkrist.maribel.graphics.filter.PPEProperty;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class ContrastShader extends ShaderProgram{
 
@@ -18,7 +18,7 @@ public class ContrastShader extends ShaderProgram{
 	protected ContrastShader() {
 		super();
 		
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"filter\\contrast.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/filter/contrast.comp")));
 		
 		compileShader();
 		addUniform("contrastFactor");

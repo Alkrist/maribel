@@ -3,7 +3,6 @@ package com.alkrist.maribel.client.graphics.shader.shaders;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import org.joml.Vector4f;
 
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -11,7 +10,7 @@ import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.math.MatrixMath;
 
 public class TestShader extends ShaderProgram{
@@ -30,8 +29,8 @@ public class TestShader extends ShaderProgram{
 	protected TestShader() {
 		super();
 		
-		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"test_vs.glsl"));
-		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"test_fs.glsl"));
+		addVertexShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/test_vs.glsl")));
+		addFragmentShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/test_fs.glsl")));
 		compileShader();
 		
 		addUniform("modelTexture");

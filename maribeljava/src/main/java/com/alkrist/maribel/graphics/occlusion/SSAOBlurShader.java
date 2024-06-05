@@ -1,7 +1,7 @@
 package com.alkrist.maribel.graphics.occlusion;
 
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class SSAOBlurShader extends ShaderProgram{
 
@@ -16,7 +16,7 @@ public class SSAOBlurShader extends ShaderProgram{
 	
 	protected SSAOBlurShader() {
 		super();
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"filter\\ssao\\ssao_blur.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/filter/ssao/ssao_blur.comp")));
 		compileShader();
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"plane":{
-		"mesh": "transparent",
-		"material": "glass"
+		"mesh": "models/transparent.obj",
+		"material": "models/glass.mm"
 	}
 }

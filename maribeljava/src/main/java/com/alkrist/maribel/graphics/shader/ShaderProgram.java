@@ -2,21 +2,23 @@ package com.alkrist.maribel.graphics.shader;
 
 import static org.lwjgl.opengl.GL20.glUniform1f;
 import static org.lwjgl.opengl.GL20.glUniform1i;
-import static org.lwjgl.opengl.GL30.glUniform2ui;
-import static org.lwjgl.opengl.GL30.glUniform3ui;
-import static org.lwjgl.opengl.GL30.glUniform1ui;
 import static org.lwjgl.opengl.GL20.glUniform2f;
 import static org.lwjgl.opengl.GL20.glUniform3f;
 import static org.lwjgl.opengl.GL20.glUniform4f;
 import static org.lwjgl.opengl.GL20.glUniformMatrix3fv;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL30.glBindFragDataLocation;
+import static org.lwjgl.opengl.GL30.glUniform1ui;
+import static org.lwjgl.opengl.GL30.glUniform2ui;
+import static org.lwjgl.opengl.GL30.glUniform3ui;
 import static org.lwjgl.opengl.GL31.glUniformBlockBinding;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +38,7 @@ import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.filter.PPEProperty;
 import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.ui.fonts.UIText;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public abstract class ShaderProgram {
 
@@ -236,7 +238,7 @@ public abstract class ShaderProgram {
 		return shaderSource.toString();
 	}
 	
-	protected static String readShaderFromFile(String fileName, String libName) {
+	/*protected static String readShaderFromFile(String fileName, String libPath) {
 		
 		//load shader source
 		String shaderResource = readShaderFromFile(fileName);
@@ -245,7 +247,7 @@ public abstract class ShaderProgram {
 		StringBuilder libSource = new StringBuilder();
 		try {
 
-			BufferedReader reader = new BufferedReader(new FileReader(FileUtil.getShadersPath()+"lib\\"+libName));
+			BufferedReader reader = new BufferedReader(new FileReader(FileUtils.getResourceLocation(libPath)));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				libSource.append(line).append("\n");
@@ -259,8 +261,49 @@ public abstract class ShaderProgram {
 		}
 		
 		String libResource = libSource.toString();
+		Path path = Paths.get(libPath);
+		String libName = path.getFileName().toString();
 		String libHeader = "#"+libName;
 		
 		return shaderResource.replaceFirst(libHeader, libResource);
+	}*/
+	
+	protected static String readShaderFromFile(String fileName, String ... libPaths ) {
+		
+		//load shader source
+		String shaderResource = readShaderFromFile(fileName);
+		
+		// load libs
+		for(String libPath: libPaths) {
+			String libResource = readLibFile(libPath);
+			Path path = Paths.get(libPath);
+			String libName = path.getFileName().toString();
+			
+			String libHeader = "#"+libName;
+
+			shaderResource = shaderResource.replaceFirst(libHeader, libResource);
+		}
+		
+		return shaderResource;
+	}
+	
+	private static String readLibFile(String libPath) {
+		//load library source
+		StringBuilder libSource = new StringBuilder();
+		try {
+
+			BufferedReader reader = new BufferedReader(new FileReader(libPath));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				libSource.append(line).append("\n");
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			System.err.println("Could not read the file!"); // TODO: logging
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		return libSource.toString();
 	}
 }

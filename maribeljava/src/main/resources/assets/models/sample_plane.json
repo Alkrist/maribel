@@ -1,6 +1,6 @@
 {
 	"plane":{
-		"mesh": sample_plane,
-		"material": sample_scene
+		"mesh": "models/sample_plane.obj",
+		"material": "models/sample_scene.mm"
 	}
 }

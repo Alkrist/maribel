@@ -22,7 +22,7 @@ import org.lwjgl.system.MemoryStack;
 import com.alkrist.maribel.graphics.context.Camera;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.context.GraphicsConfig;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.Logging;
 
 /**
@@ -233,8 +233,7 @@ public class GLWindow {
 			System.exit(-1);
 		}
 
-		setIcon(FileUtil.getTexturesPath() + iconPath + ".png");
-
+		setIcon(FileUtils.getResourceLocation("textures/"+iconPath));
 		// Set window resize callback
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1);

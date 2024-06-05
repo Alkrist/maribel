@@ -2,7 +2,7 @@ package com.alkrist.maribel.graphics.deferred;
 
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class DeferredLightAABBCullingShader extends ShaderProgram{
 
@@ -18,7 +18,7 @@ public class DeferredLightAABBCullingShader extends ShaderProgram{
 	
 	protected DeferredLightAABBCullingShader() {
 		super();
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"deferred\\deferred_cluster_culling.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/deferred/deferred_cluster_culling.comp")));
 		compileShader();
 		
 		addUniform("viewMatrix");

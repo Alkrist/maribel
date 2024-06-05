@@ -9,7 +9,7 @@ import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.math.MatrixMath;
 
 public class TestTransparencyShader extends ShaderProgram{
@@ -29,8 +29,8 @@ public class TestTransparencyShader extends ShaderProgram{
 	protected TestTransparencyShader() {
 		super();
 		
-		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"transparency\\sample_model_vertex.glsl"));
-		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"transparency\\sample_model_fragment.glsl"));
+		addVertexShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/transparency/sample_model_vertex.glsl")));
+		addFragmentShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/transparency/sample_model_fragment.glsl")));
 		compileShader();
 		
 		addUniform("diffusemap");

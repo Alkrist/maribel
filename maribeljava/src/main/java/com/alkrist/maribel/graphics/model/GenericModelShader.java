@@ -12,7 +12,7 @@ import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.math.MatrixMath;
 
 public class GenericModelShader extends ShaderProgram{
@@ -32,9 +32,8 @@ public class GenericModelShader extends ShaderProgram{
 	
 	protected GenericModelShader() {
 		super();
-		
-		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"model\\generic_model_vertex.glsl"));
-		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"model\\generic_model_fragment.glsl"));
+		addVertexShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/model/generic_model_vertex.glsl")));
+		addFragmentShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/model/generic_model_fragment.glsl")));
 		compileShader();
 		
 		addUniform("material.diffusemap");

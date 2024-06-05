@@ -1,6 +1,6 @@
 n dog
-dm dog
-nm dog
+dm textures/dog.png
+nm textures/dog_n.png
 c 1 1 0
 hs 1
 ws 1

@@ -1,6 +1,6 @@
 n plane
-dm sample_scene
-nm sample_scene
+dm textures/sample_scene.png
+nm textures/sample_scene_n.png
 c 1 1 0
 hs 1
 ws 1

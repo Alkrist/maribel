@@ -7,7 +7,7 @@ import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.math.MatrixMath;
 
 public class GenericModelShadowShader extends ShaderProgram{
@@ -25,10 +25,9 @@ public class GenericModelShadowShader extends ShaderProgram{
 	
 	protected GenericModelShadowShader() {
 		super();
-		
-		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"model\\gms_shadow_vertex.glsl"));
-		addGeometryShader(readShaderFromFile(FileUtil.getShadersPath()+"model\\gms_shadow_geometry.glsl"));
-		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"model\\gms_shadow_fragment.glsl"));
+		addVertexShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/model/gms_shadow_vertex.glsl")));
+		addGeometryShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/model/gms_shadow_geometry.glsl")));
+		addFragmentShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/model/gms_shadow_fragment.glsl")));
 		compileShader();
 		
 		for(int i = 0; i < PSSMCamera.PSSM_SPLITS; i++) {

@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class FXAAShader extends ShaderProgram{
 
@@ -22,7 +22,7 @@ public class FXAAShader extends ShaderProgram{
 	protected FXAAShader() {
 		super();
 		
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"antialiasing\\fxaa.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/antialiasing/fxaa.comp")));
 		
 		compileShader();
 		addUniform("sceneSampler");

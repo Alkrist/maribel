@@ -2,7 +2,7 @@ package com.alkrist.maribel.graphics.deferred;
 
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class DeferredClusterShader extends ShaderProgram{
 
@@ -18,7 +18,7 @@ public class DeferredClusterShader extends ShaderProgram{
 	
 	protected DeferredClusterShader() {
 		super();
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"deferred\\deferred_cluster_build.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/deferred/deferred_cluster_build.comp")));
 		compileShader();
 		
 		addUniform("zNear");

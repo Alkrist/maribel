@@ -1,7 +1,7 @@
 package com.alkrist.maribel.graphics.occlusion;
 
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class SSAONoiseShader extends ShaderProgram{
 
@@ -16,7 +16,7 @@ public class SSAONoiseShader extends ShaderProgram{
 	
 	protected SSAONoiseShader() {
 		super();
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"filter\\ssao\\ssao_noise.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/filter/ssao/ssao_noise.comp")));
 		compileShader();
 		
 		for (int i=0; i<16; i++){

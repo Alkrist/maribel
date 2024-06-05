@@ -10,10 +10,9 @@ import org.joml.Vector3f;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.context.GraphicsConfig;
 import com.alkrist.maribel.graphics.resources.ResourceCache;
-import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 /**
  * Material class represents the material for renderable object.
@@ -142,14 +141,14 @@ public class Material {
 	};
 
 	
-	public static Material loadMaterial(String filename) {
-		if(filename == null)
+	public static Material loadMaterial(String fileName) {
+		if(fileName == null)
 			return GENERIC_MATERIAL;
 		
 		FileReader fr = null;
 		
 		try {
-			fr  = new FileReader(new File(FileUtil.getModelsPath()+filename+".mm"));
+			fr  = new FileReader(new File(FileUtils.getResourceLocation(fileName)));
 		} catch (FileNotFoundException e) {
 			System.err.println("Couldn't load file!");
 			e.printStackTrace(); //TODO: logging
@@ -252,22 +251,22 @@ public class Material {
 				material.setDiffuseMap(diffuse);
 			}
 			if(!normalPath.equals("")) {
-				Texture2D normal = getMaterialTexture(normalPath+"_n", Integer.valueOf(wrapMode));
+				Texture2D normal = getMaterialTexture(normalPath, Integer.valueOf(wrapMode));
 				setNumOfRows(normal, numOfRows);
 				material.setNormalMap(normal);
 			}
 			if(!ambientPath.equals("")) {
-				Texture2D ambient = getMaterialTexture(ambientPath+"_amb", Integer.valueOf(wrapMode));
+				Texture2D ambient = getMaterialTexture(ambientPath, Integer.valueOf(wrapMode));
 				setNumOfRows(ambient, numOfRows);
 				material.setAmbientMap(ambient);
 			}
 			if(!specularPath.equals("")) {
-				Texture2D specular = getMaterialTexture(specularPath+"_s", Integer.valueOf(wrapMode));
+				Texture2D specular = getMaterialTexture(specularPath, Integer.valueOf(wrapMode));
 				setNumOfRows(specular, numOfRows);
 				material.setSpecularMap(specular);
 			}
 			if(!alphamapPath.equals("")) {
-				Texture2D alpha = getMaterialTexture(alphamapPath+"_a", Integer.valueOf(wrapMode));
+				Texture2D alpha = getMaterialTexture(alphamapPath, Integer.valueOf(wrapMode));
 				setNumOfRows(alpha, numOfRows);
 				material.setAlphamap(alpha);
 			}
@@ -288,15 +287,15 @@ public class Material {
 	
 	private static Texture2D getMaterialTexture(String path, int wrapMode) {
 		if(wrapMode == 1) {
-			return new Texture2D(path+".png", config.samplerFilter, TextureWrapMode.ClampToEdge);
+			return new Texture2D(path, config.samplerFilter, TextureWrapMode.ClampToEdge);
 		}else if(wrapMode == 2) {
-			return new Texture2D(path+".png", config.samplerFilter, TextureWrapMode.ClampToBorder);
+			return new Texture2D(path, config.samplerFilter, TextureWrapMode.ClampToBorder);
 		}else if(wrapMode == 3) {
-			return new Texture2D(path+".png", config.samplerFilter, TextureWrapMode.Repeat);
+			return new Texture2D(path, config.samplerFilter, TextureWrapMode.Repeat);
 		}else if(wrapMode == 4) {
-			return new Texture2D(path+".png", config.samplerFilter, TextureWrapMode.MirrorRepeat);
+			return new Texture2D(path, config.samplerFilter, TextureWrapMode.MirrorRepeat);
 		}else {
-			return new Texture2D(path+".png", config.samplerFilter);
+			return new Texture2D(path, config.samplerFilter);
 		}	
 	}
 }

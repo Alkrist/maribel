@@ -1,7 +1,7 @@
 package com.alkrist.maribel.graphics.ui;
 
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class UIColorPanelShader extends ShaderProgram{
 
@@ -17,8 +17,8 @@ public class UIColorPanelShader extends ShaderProgram{
 	protected UIColorPanelShader() {
 		super();
 		
-		addVertexShader(readShaderFromFile(FileUtil.getShadersPath()+"ui\\color_panel_vertex.glsl"));
-		addFragmentShader(readShaderFromFile(FileUtil.getShadersPath()+"ui\\color_panel_fragment.glsl", "gui_lib.glsl"));
+		addVertexShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/ui/color_panel_vertex.glsl")));
+		addFragmentShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/ui/color_panel_fragment.glsl"), FileUtils.getResourceLocation("shaders/lib/gui_lib.glsl")));
 		compileShader();
 		
 		addUniform("transformationMatrix");

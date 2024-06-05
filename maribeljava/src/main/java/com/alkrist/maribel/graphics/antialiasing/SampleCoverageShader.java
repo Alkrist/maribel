@@ -2,7 +2,7 @@ package com.alkrist.maribel.graphics.antialiasing;
 
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class SampleCoverageShader extends ShaderProgram{
 
@@ -18,7 +18,7 @@ private static SampleCoverageShader instance = null;
 	protected SampleCoverageShader() {
 		super();
 		
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"antialiasing\\sample_coverage.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/antialiasing/sample_coverage.comp")));
 		compileShader();
 		
 		addUniform("multisamples");

@@ -1,5 +1,5 @@
 n dragon
-dm glass
+dm textures/glass.png
 hs 1
 ws 1
 wm 3

@@ -1,5 +1,5 @@
 n glass
-dm transparent
+dm textures/transparent.png
 hs 1
 ws 1
 wm 3

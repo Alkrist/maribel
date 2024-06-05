@@ -15,19 +15,20 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.json.JSONObject;
 
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.Logging;
 
 public class ModelCompositeLoader {
 
 	/*
 	 * TODO: implement me later, when you're fucking ready
+	 * Note: later you do fucking correct messages because now a year later i know shit what did you mean
 	 */
 	
-	public static Model loadFromJson(String fileNoFormat) {
+	public static Model loadFromJson(String filePath) {
 		try {
 			
-			String contents = readFileAsString(FileUtil.getModelsPath()+fileNoFormat+".json");
+			String contents = readFileAsString(FileUtils.getResourceLocation(filePath));
 			JSONObject jsonObject = new JSONObject(contents);
 			
 			Iterator<String> keys = jsonObject.keys();
@@ -77,13 +78,13 @@ public class ModelCompositeLoader {
         return new String(Files.readAllBytes(Paths.get(file)));
     }
 	
-	public static Model loadFromMMC(String fileNoFormat) {
+	public static Model loadFromMMC(String filePath) {
 		FileReader fr = null;
 		
 		try {
-			fr  = new FileReader(new File(FileUtil.getModelsPath()+fileNoFormat+".mmc"));
+			fr  = new FileReader(new File(FileUtils.getResourceLocation(filePath)));
 		} catch (FileNotFoundException e) {
-			Logging.getLogger().log(Level.WARNING, "Failed to load model, no contents loaded.",e);
+			Logging.getLogger().log(Level.WARNING, "Failed to load model, no contents loaded.", e);
 		}
 		
 		BufferedReader reader = new BufferedReader(fr);
@@ -191,7 +192,7 @@ public class ModelCompositeLoader {
 						normalPoints.add(Float.parseFloat(currentLine[i]));
 					}
 					if(normalPoints.size() % 3 != 0) {
-						Logging.getLogger().log(Level.WARNING, "Failed to load model, mmc structure corrupt: wrong normal vectors.");
+						Logging.getLogger().log(Level.WARNING, "Failed to load model, MMC structure corrupt: wrong normal vectors.");
 						reader.close();
 						fr.close();
 						return null;
@@ -209,7 +210,7 @@ public class ModelCompositeLoader {
 				}
 				if(verticesNM != null && textureVertices != null && normalVertices != null && current != null && !indexPoints.isEmpty()) {
 					if(indexPoints.isEmpty()) {
-						Logging.getLogger().log(Level.WARNING, "Failed to load model, mmc structure corrupt: no indices found.");
+						Logging.getLogger().log(Level.WARNING, "Failed to load model, MMC structure corrupt: no indices found.");
 						reader.close();
 						fr.close();
 						return null;
@@ -246,7 +247,7 @@ public class ModelCompositeLoader {
 			return current;
 			
 		}catch(Exception e) {
-			Logging.getLogger().log(Level.WARNING, "Failed to load model, mmc structure corrupt.", e);
+			Logging.getLogger().log(Level.WARNING, "Failed to load model, MMC structure corrupt.", e);
 		}
 		return null;
 	}

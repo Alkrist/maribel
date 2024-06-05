@@ -11,7 +11,7 @@ import java.util.List;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 /**
  * This class can load an .obj file from assets, includes tangents calculation.
@@ -32,7 +32,7 @@ public class OBJLoader {
 	 */
 	public static Mesh loadOBJmodel(String fileName) {
 		FileReader isr = null;
-		File objFile = new File(FileUtil.getModelsPath() + fileName + ".obj");
+		File objFile = new File(FileUtils.getResourceLocation(fileName));
 		try {
 			isr = new FileReader(objFile);
 		} catch (FileNotFoundException e) {

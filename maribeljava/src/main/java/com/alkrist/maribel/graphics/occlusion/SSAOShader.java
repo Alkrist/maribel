@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class SSAOShader extends ShaderProgram{
 
@@ -19,7 +19,7 @@ public class SSAOShader extends ShaderProgram{
 	
 	protected SSAOShader() {
 		super();
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"filter\\ssao\\ssao_scene.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/filter/ssao/ssao_scene.comp")));
 		compileShader();
 		
 		addUniform("viewMatrix");

@@ -1,6 +1,6 @@
 {
 	"dog":{
-		"mesh": doxie,
-		"material": dog
+		"mesh": "models/doxie.obj",
+		"material": "models/dog.mm"
 	}
 }

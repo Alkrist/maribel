@@ -71,7 +71,7 @@ public class RenderSystem extends SystemBase{
 	
 	private DeferredClusteredLighting deferredClusteredLighting; // resized
 	
-	private PostProcessingVolumeRenderer ppeVolumeRenderer; //TODO: resize
+	private PostProcessingVolumeRenderer ppeVolumeRenderer; //resized
 	
 	
 	private static final ComponentMapper<TestRenderer> testRendererMapper = ComponentMapper.getFor(TestRenderer.class);
@@ -320,6 +320,9 @@ public class RenderSystem extends SystemBase{
 			fxaa.resize(w, h);
 			sampleCoverage.resize(w, h);
 			opaqueTransparencyBlending.resize(w, h);
+			
+			// Resize PPEs
+			ppeVolumeRenderer.resize(w, h);
 			
 			// Resize UI
 			for(Entity e: windowCanvases) {

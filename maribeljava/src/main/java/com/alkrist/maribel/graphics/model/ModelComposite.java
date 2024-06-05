@@ -16,7 +16,7 @@ import java.util.logging.Level;
 
 import org.json.JSONObject;
 
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.Logging;
 
 /**
@@ -113,15 +113,15 @@ public class ModelComposite {
 	/**
 	 * Creates a new Model Composite from JSON file
 	 * 
-	 * @param filename - JSON file path
+	 * @param filename - JSON file path in format full/path/in/assets/model.json
 	 * @param loader - loader to read JSON
 	 * @return new Model Composite
 	 */
-	public static ModelComposite loadFromJson(String filename) {
+	public static ModelComposite loadFromJson(String fileName) {
 		
 		try {
 			
-			String contents = readFileAsString(FileUtil.getModelsPath()+filename+".json");
+			String contents = readFileAsString(FileUtils.getResourceLocation(fileName));
 			JSONObject jsonObject = new JSONObject(contents);
 			
 			String name = jsonObject.getString("name");
@@ -137,10 +137,10 @@ public class ModelComposite {
 				String key = keys.next();
 				if (jsonObject.get(key) instanceof JSONObject) {
 					  
-			          String modelPath = jsonObject.getJSONObject(key).getString("mesh");
+			          String modelPath = jsonObject.getJSONObject(key).getString("mesh"); //TODO: define what kind of path will it be
 			          
-			          String materialPath = jsonObject.getJSONObject(key).getString("material");
-			          Material material = getMaterial(materialPath);
+			          String materialPath = jsonObject.getJSONObject(key).getString("material"); //TODO: define what kind of path will it be
+			          Material material = getMaterial(materialPath+".mm");
 			          
 			          Mesh mesh = OBJLoader.loadOBJmodel(modelPath);
 			          
@@ -171,11 +171,11 @@ public class ModelComposite {
 	 * @param loader - loader to read MMC file
 	 * @return new Model Composite
 	 */
-	public static ModelComposite loadFromMMC(String filename) {
+	public static ModelComposite loadFromMMC(String fileName) {
 		FileReader fr = null;
 		
 		try {
-			fr  = new FileReader(new File(FileUtil.getModelsPath()+filename+".mmc"));
+			fr  = new FileReader(new File(FileUtils.getResourceLocation(fileName))); //TODO: define type of path
 		} catch (FileNotFoundException e) {
 			System.err.println("Couldn't load file!");
 			e.printStackTrace(); //TODO: logging

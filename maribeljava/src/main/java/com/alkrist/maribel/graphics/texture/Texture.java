@@ -36,7 +36,7 @@ import java.util.logging.Level;
 import org.lwjgl.opengl.GL;
 
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.Logging;
 
 public class Texture {
@@ -59,7 +59,7 @@ public class Texture {
 	public Texture(String path) {
 		this.id = glGenTextures();
 		this.target = GL_TEXTURE_2D;
-		this.meta = ImageLoader.loadImage(FileUtil.getTexturesPath()+path, id);
+		this.meta = ImageLoader.loadImage(FileUtils.getResourceLocation(path), id);
 	}
 	
 	public void bind() {

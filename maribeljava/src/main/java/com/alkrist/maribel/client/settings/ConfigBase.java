@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.Logging;
 
 public abstract class ConfigBase {
 
 public void load(String filename) {
 		
-		File file = new File(FileUtil.getConfigPath()+filename+".properties");
+		File file = new File(FileUtils.getConfigLocation(filename+".properties"));
 		if(!file.exists() || file.isDirectory()) {
 			try {
 				
@@ -47,7 +47,7 @@ public void load(String filename) {
 	}
 
 public void save(String filename) {
-	File file = new File(FileUtil.getConfigPath()+filename+".properties");
+	File file = new File(FileUtils.getConfigLocation(filename+".properties"));
 	if(!file.exists() || file.isDirectory()) {
 		try {
 			

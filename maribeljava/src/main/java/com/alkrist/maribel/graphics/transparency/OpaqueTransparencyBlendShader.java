@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class OpaqueTransparencyBlendShader extends ShaderProgram{
 
@@ -24,7 +24,7 @@ public class OpaqueTransparencyBlendShader extends ShaderProgram{
 	protected OpaqueTransparencyBlendShader() {
 		super();
 		
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"transparency\\opaque_transparency_blend.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/transparency/opaque_transparency_blend.comp")));
 		compileShader();
 		
 		addUniform("width");

@@ -42,12 +42,12 @@ public class Logging {
 
 			try {
 				
-				File file = new File(FileUtil.getLogPath()+"latest.log");
+				File file = new File(FileUtils.getLogLocation("latest.log"));
 				
 				if(file.exists() && !file.isDirectory()) {
 					BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
 					LocalDateTime ldt = LocalDateTime.ofInstant(attr.lastModifiedTime().toInstant(), ZoneId.systemDefault());
-					String zipName = FileUtil.getLogPath();
+					String zipName = FileUtils.getLogLocation();
 					zipName += ldt.getYear() + "-";
 					zipName += ldt.getMonthValue() + "-";
 					zipName += ldt.getDayOfMonth() + "-";
@@ -63,7 +63,7 @@ public class Logging {
 				file.createNewFile();
 				
 				formatter = new MaribelFormatter();
-				fh = new FileHandler(FileUtil.getLogPath()+"latest.log");
+				fh = new FileHandler(FileUtils.getLogLocation("latest.log"));
 				logger.addHandler(fh);
 				fh.setFormatter(formatter);
 				logger.info("Logger started.");

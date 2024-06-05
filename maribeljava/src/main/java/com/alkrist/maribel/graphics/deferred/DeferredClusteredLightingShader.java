@@ -9,7 +9,7 @@ import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.utils.FileUtil;
+import com.alkrist.maribel.utils.FileUtils;
 
 public class DeferredClusteredLightingShader extends ShaderProgram{
 
@@ -24,7 +24,7 @@ private static DeferredClusteredLightingShader instance = null;
 	
 	protected DeferredClusteredLightingShader() {
 		super();
-		addComputeShader(readShaderFromFile(FileUtil.getShadersPath()+"deferred\\deferred_lighting.comp"));
+		addComputeShader(readShaderFromFile(FileUtils.getResourceLocation("shaders/deferred/deferred_lighting.comp")));
 		compileShader();
 		
 		// General uniforms

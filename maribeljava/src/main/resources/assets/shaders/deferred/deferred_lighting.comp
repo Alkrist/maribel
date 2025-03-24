@@ -85,34 +85,54 @@ float calculateFogFactor(float dist, float sightRangeFactor) {
 }
 
 vec3 diffuse(vec3 albedo, vec3 normal, vec3 toLightDirection, vec3 lightColor, float lightIntensity) {
-	float lambertTerm = max(dot(normal, toLightDirection), 0.0);
-
+	float lambertTerm = max(dot(normal, toLightDirection), 0.0); //TODO: adjust
 	return albedo * lightColor * lambertTerm * lightIntensity;
 }
 
-vec3 specular(vec3 normal, vec3 worldPos, vec3 toLightDir, vec3 lightColor, float reflectance, float emission, float lightIntensity) {
-	vec3 cameraDirection = normalize(cameraPosition - worldPos);
+vec3 specular(vec3 albedo, vec3 normal, vec3 worldPos, vec3 toLightDir, vec3 lightColor, float reflectance, float emission, float lightIntensity) {
+	vec4 camPosViewSpace = viewMatrix * vec4(cameraPosition, 1.0);
+
+	vec3 cameraDirection = normalize(camPosViewSpace.xyz - worldPos);
 
 	vec3 fromLightDir = -toLightDir;
 
-	vec3 reflectedLight = normalize(reflect(fromLightDir, normal));
+	vec3 reflectedLight = reflect(fromLightDir, normal);
 
 	float specularFactor = max(dot(cameraDirection, reflectedLight), 0.0);
-	specularFactor = pow(specularFactor, emission);
+	specularFactor = pow(specularFactor, reflectance) * emission;
 
-	return lightIntensity * specularFactor * reflectance * lightColor;
+	return albedo * lightIntensity * specularFactor * lightColor;
 }
 
 //vec3 calculateAmbientLight(AmbientLight light, float emission){
 //	return light.color * light.intensity * emission;
 //}
+/*vec3 specular(vec3 direction, vec3 normal, vec3 vertexPosition, float reflectence, float emissionFactor, vec3 lightColor, float intensity)
+{
+	vec4 camPosViewSpace = viewMatrix * vec4(cameraPosition, 1.0);
+
+	vec3 reflectionVector = normalize(reflect(direction, normal));
+	vec3 vertexToEye = normalize(camPosViewSpace.xyz - vertexPosition);
+	float specular = max(0.0, dot(vertexToEye, reflectionVector));
+
+	float specularFactor = pow(specular, reflectence) * emissionFactor;
+	return specularFactor * lightColor * intensity;
+}*/
 
 vec3 calculateDirectionLight(vec3 albedo, vec3 worldPos, vec3 normal, DirectionLight light, float reflectance, float emission){
-	vec3 nDirection = normalize(light.direction.xyz);
+
+	vec3 lightPos = light.direction.xyz;
+
+	vec3 toLightDirection = lightPos - worldPos;
+	vec3 nDirection = normalize(toLightDirection);
+	//vec3 nDirection = normalize(light.direction.xyz);
 	vec3 diffuse = diffuse(albedo, normal, nDirection, light.color.rgb,
 			light.intensity);
-	vec3 specular = specular(normal, worldPos, nDirection, light.color.rgb,
+
+	vec3 specular = specular(albedo, normal, worldPos, nDirection, light.color.rgb,
 			reflectance, emission, light.intensity);
+
+	//vec3 specular = specular(lightPos, normal, worldPos, reflectance, emission, light.color.rgb, light.intensity);
 
 	return diffuse + specular;
 }
@@ -129,8 +149,10 @@ vec3 calculatePointLight(vec3 albedo, vec3 worldPos, vec3 normal, PointLight lig
 
 	vec3 diffuse = diffuse(albedo, normal, toLightDir, light.color.rgb,
 			light.intensity);
-	vec3 specular = specular(normal, worldPos, toLightDir, light.color.rgb,
+	vec3 specular = specular(albedo, normal, worldPos, toLightDir, light.color.rgb,
 			reflectance, emission, light.intensity);
+
+	//vec3 specular = albedo * specular(toLightDir, normal, worldPos, reflectance, emission, light.color.rgb, light.intensity);
 
 	float attenuation = pow(smoothstep(light.radius, 0, distance), light.exp);
 
@@ -229,7 +251,7 @@ void main(void){
 	if(imageLoad(sampleCoverageMask, computeCoord).r == 1.0){
 		for (int i=0; i<numSamples; i++){
 			albedo = imageLoad(albedoSampler, computeCoord,i).rgb;
-			normal = imageLoad(normalSampler, computeCoord,i).rbga;
+			normal = imageLoad(normalSampler, computeCoord,i).rgba;
 
 			if (normal.a != 0){
 				position = imageLoad(worldPositionSampler, computeCoord,i).rgb;
@@ -299,9 +321,10 @@ void main(void){
 			}
 		}
 		finalColor /= numSamples;
+		//finalColor = normal.xyz; //TODO: test
 	}else{
 		albedo = imageLoad(albedoSampler, computeCoord,0).rgb;
-		normal = imageLoad(normalSampler, computeCoord,0).rbga;
+		normal = imageLoad(normalSampler, computeCoord,0).rgba;
 
 		if (normal.a != 0){
 			position = imageLoad(worldPositionSampler, computeCoord,0).rgb;
@@ -366,6 +389,7 @@ void main(void){
 			float distance = length(cameraPosition - position);
 			float fogFactor = calculateFogFactor(distance, sightRange);
 			finalColor = mix(fogColor, finalColor, fogFactor);
+			//finalColor = normal.xyz; //TODO: test
 		}else{
 			finalColor = albedo;
 		}

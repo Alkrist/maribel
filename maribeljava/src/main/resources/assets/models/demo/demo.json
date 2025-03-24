@@ -1,18 +1,18 @@
 {
 	"wall":{
-		"mesh": "demo_wall",
-		"material": "wall",
+		"mesh": "models/demo/demo_wall.obj",
+		"material": "models/demo/wall.mm",
 		"floor":{
-			"mesh":"demo_floor",
-			"material":"floor"
+			"mesh":"models/demo/demo_floor.obj",
+			"material":"models/demo/floor.mm"
 		},
 		"ceiling":{
-			"mesh":"demo_ceiling",
-			"material":"ceiling"
+			"mesh":"models/demo/demo_ceiling.obj",
+			"material":"models/demo/ceiling.mm"
 		},
 		"barrier":{
-			"mesh":"demo_barrier",
-			"material":"barrier"
+			"mesh":"models/demo/demo_barrier.obj",
+			"material":"models/demo/barrier.mm"
 		}
 	}
 }

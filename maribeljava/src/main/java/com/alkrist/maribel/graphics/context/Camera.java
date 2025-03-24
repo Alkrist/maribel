@@ -64,6 +64,16 @@ public class Camera {
 			isMoved = true;
 		}
 		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_Z)) {
+			yaw -= 0.5f;
+			isMoved = true;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_X)) {
+			yaw += 0.5f;
+			isMoved = true;
+		}
+		
 		if(input.isKeyHolding(GLFW.GLFW_KEY_W)) {
 			position.z += 0.1f;
 			isMoved = true;

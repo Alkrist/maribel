@@ -1,0 +1,6 @@
+{
+	"bunny":{
+		"mesh": "models/bunny/bunny.obj",
+		"material": "models/bunny/bunny.mm"
+	}
+}

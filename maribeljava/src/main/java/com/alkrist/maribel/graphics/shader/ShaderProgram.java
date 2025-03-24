@@ -38,7 +38,6 @@ import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.filter.PPEProperty;
 import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.ui.fonts.UIText;
-import com.alkrist.maribel.utils.FileUtils;
 
 public abstract class ShaderProgram {
 
@@ -52,6 +51,7 @@ public abstract class ShaderProgram {
 		uniforms = new HashMap<String, Integer>();
 		
 		if (programID == 0){
+			//TODO: logging
 			System.err.println("Shader creation failed");
 			System.exit(1);
 		}	
@@ -87,6 +87,7 @@ public abstract class ShaderProgram {
 		if (shader == 0)
 		{
 			System.err.println(this.getClass().getName() + " Shader creation failed");
+			//TODO: logging
 			System.exit(1);
 		}	
 		

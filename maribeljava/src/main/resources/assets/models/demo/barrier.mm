@@ -1,6 +1,6 @@
-n wall
-dm demo/barrier
-nm demo/barrier
+n barrier
+dm textures/demo/barrier.png
+nm textures/demo/barrier_n.png
 c 1 1 0
 hs 1
 ws 1

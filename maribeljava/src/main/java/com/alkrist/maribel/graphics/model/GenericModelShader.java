@@ -2,6 +2,7 @@ package com.alkrist.maribel.graphics.model;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import org.joml.Matrix4f;
@@ -69,7 +70,7 @@ public class GenericModelShader extends ShaderProgram{
 		setUniform("material.diffusemap", 0);
 		
 		glActiveTexture(GL_TEXTURE1);
-		renderable.material.getDiffuseMap().bind();
+		renderable.material.getNormalMap().bind();
 		setUniform("material.normalmap", 1);
 		
 		setUniform("material.shininess", renderable.material.getShininess());

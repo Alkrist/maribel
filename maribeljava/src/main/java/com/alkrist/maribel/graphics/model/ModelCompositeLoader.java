@@ -396,6 +396,6 @@ public class ModelCompositeLoader {
 	}
 	
 	private static Material getMaterial(String name) {
-		return Material.loadMaterial(name.toUpperCase());
+		return Material.loadMaterial(name);
 	}
 }

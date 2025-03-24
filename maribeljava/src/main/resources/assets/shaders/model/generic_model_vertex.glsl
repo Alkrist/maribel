@@ -18,8 +18,8 @@ out vec3 position_FS;
 
 void main(void){
 
-	mat4 viewModelMatrix = viewMatrix * modelMatrix;
 	vec4 outWorldPosition = modelMatrix * vec4(position, 1.0);
+	mat4 viewModelMatrix = viewMatrix * modelMatrix;
 	vec4 outViewPosition  = viewMatrix * outWorldPosition;
 
 	gl_Position   = projectionMatrix * outViewPosition;
@@ -48,4 +48,3 @@ void main(void){
 	textureCoords_FS = textureCoords;
 	position_FS = outWorldPosition.xyz;
 }
-

@@ -273,7 +273,7 @@ public class RenderSystem extends SystemBase{
 		}
 		
 		//ssao.getDebugTexture()
-		fullScreenQuad.setTexture(deferredClusteredLighting.getDeferredSceneTexture());
+		fullScreenQuad.setTexture(currentScene);
 		fullScreenQuad.render();
 		
 		

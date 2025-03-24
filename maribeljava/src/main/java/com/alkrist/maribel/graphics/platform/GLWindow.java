@@ -140,6 +140,9 @@ public class GLWindow {
 		}
 	}
 
+	public void pollEvents() {
+		GLFW.glfwPollEvents();
+	}
 	/**
 	 * Update the window.
 	 */
@@ -147,11 +150,11 @@ public class GLWindow {
 		//InputHandlerOld.update();
 
 		GLFW.glfwSwapBuffers(window);
-		GLFW.glfwPollEvents();
-		// Delta time measurement code
-		double currentFrameTime = getCurrentTimeMillis();
-		deltaTime = (currentFrameTime - lastFrameTime) / 1000f;
-		lastFrameTime = currentFrameTime;
+		
+		// Delta time measurement code TODO: will be deleted
+		//double currentFrameTime = getCurrentTimeMillis();
+		//deltaTime = (currentFrameTime - lastFrameTime) / 1000f;
+		//lastFrameTime = currentFrameTime;
 		
 	}
 

@@ -152,9 +152,9 @@ public class GLWindow {
 		GLFW.glfwSwapBuffers(window);
 		
 		// Delta time measurement code TODO: will be deleted
-		//double currentFrameTime = getCurrentTimeMillis();
-		//deltaTime = (currentFrameTime - lastFrameTime) / 1000f;
-		//lastFrameTime = currentFrameTime;
+		double currentFrameTime = getCurrentTimeMillis();
+		deltaTime = (currentFrameTime - lastFrameTime) / 1000f;
+		lastFrameTime = currentFrameTime;
 		
 	}
 
@@ -315,5 +315,6 @@ public class GLWindow {
 	private static double getCurrentTimeMillis() {
 		return GLFW.glfwGetTime() * 1000; // getTime gives time in seconds, *1000 for ms
 	}
+
 
 }

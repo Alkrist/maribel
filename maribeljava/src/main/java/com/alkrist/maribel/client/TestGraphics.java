@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFW;
 
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
@@ -29,6 +30,7 @@ import com.alkrist.maribel.graphics.model.Model;
 import com.alkrist.maribel.graphics.model.ModelCompositeLoader;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
+import com.alkrist.maribel.graphics.platform.InputHandler;
 import com.alkrist.maribel.graphics.platform.RenderEngine;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
@@ -253,20 +255,20 @@ public class TestGraphics {
 		engine.addEntity(e6);
 		
 		// test lights
-		/*List<PointLight> pointLights = new ArrayList<PointLight>();
+		List<PointLight> pointLights = new ArrayList<PointLight>();
 		Vector3f lampColor = new Vector3f(1);
-		pointLights.add(new PointLight(new Vector3f(1.13805f, 1.3f, 18.3666f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(2.28304f, 1.3f, 11.2137f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(2.86169f, 1.3f, 5.44496f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(3.99158f, 1.3f, 0.859641f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(3.99158f, 1.3f, -4.87329f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(0.58399f, 1.3f, -2.56364f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(-4.00033f, 1.3f, -3.71998f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(-2.87043f, 1.3f, 3.15177f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(-9.79827f, 1.3f, 1.99022f), lampColor, 6f, 0.2f, 2.8f));
-		pointLights.add(new PointLight(new Vector3f(-15.615f, 1.3f, 3.17519f), lampColor, 6f, 0.2f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(1.13805f, 0f, 18.3666f), lampColor, 4f, 1f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(2.28304f, 1f, 11.2137f), lampColor, 3f, 1f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(2.86169f, 0f, 5.44496f), lampColor, 4f, 0.2f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(3.99158f, 1f, 0.859641f), lampColor, 3f, 0.2f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(3.99158f, 1f, -4.87329f), lampColor, 3f, 0.2f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(0.58399f, 1f, -2.56364f), lampColor, 3f, 0.2f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(-4.00033f, 1f, -3.71998f), lampColor, 3f, 0.2f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(-2.87043f, 1f, 3.15177f), lampColor, 3f, 0.2f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(-9.79827f, 1f, 1.99022f), lampColor, 3f, 0.2f, 2.8f));
+		//pointLights.add(new PointLight(new Vector3f(-15.615f, 1f, 3.17519f), lampColor, 3f, 0.2f, 2.8f));
 		
-		for(PointLight light: pointLights) {
+		/*for(PointLight light: pointLights) {
 			Entity e = engine.createEntity();
 			e.addComponent(light);
 			engine.addEntity(e);
@@ -333,8 +335,6 @@ public class TestGraphics {
 			window.pollEvents();
 			// Update loop now is here
 			GLContext.getInput().update();
-			GLContext.getMainCamera().update();
-			PSSMCamera.update(dirLight);
 			bunnyTransform.rotate(0, 0.1f, 0);
 			text.setTextString("VBOs: "+ResourceLoader.getVBOsCount());
 			text.resize();
@@ -342,8 +342,8 @@ public class TestGraphics {
 			
 			engine.update(0);
 			renderEngine.render();
+			update(window.deltaTime());
 			window.updateWindow();
-			
 			
 		}window.destroyWindow();
 		
@@ -351,8 +351,45 @@ public class TestGraphics {
 		Settings.save();
 	}
 	
-	public static void update(long dt) {
-		GLContext.getMainCamera().update();
+	public static void update(double dt) {
+		InputHandler input = GLContext.getInput();
+		float dx = 0; float dy = 0; float dz = 0;
+		float pitch = 0; float yaw = 0; float roll = 0;
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_Q)) {
+			roll = 10f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_E)) {
+			roll = -10f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_Z)) {
+			yaw = 10f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_X)) {
+			yaw = -10f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_W)) {
+			dz = 1f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_S)) {
+			dz = -1f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_A)) {
+			dx = -1f;
+		}
+		
+		if(input.isKeyHolding(GLFW.GLFW_KEY_D)) {
+			dx = 1f;
+		}
+		
+		System.out.println(Math.floor(1/dt));
+		GLContext.getMainCamera().update(dx, dy, dz, pitch, yaw, roll, dt);
 		PSSMCamera.update(dirLight);
 	}
 }

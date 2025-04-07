@@ -99,7 +99,7 @@ vec3 specular(vec3 albedo, vec3 normal, vec3 worldPos, vec3 toLightDir, vec3 lig
 	vec3 reflectedLight = reflect(fromLightDir, normal);
 
 	float specularFactor = max(dot(cameraDirection, reflectedLight), 0.0);
-	specularFactor = pow(specularFactor, reflectance) * emission;
+	specularFactor = pow(specularFactor, emission) * reflectance;
 
 	return albedo * lightIntensity * specularFactor * lightColor;
 }
@@ -138,6 +138,7 @@ vec3 calculateDirectionLight(vec3 albedo, vec3 worldPos, vec3 normal, DirectionL
 }
 
 vec3 calculatePointLight(vec3 albedo, vec3 worldPos, vec3 normal, PointLight light, float reflectance, float emission) {
+
 	vec3 lightDirection = light.position.xyz - worldPos;
 	float distance = length(lightDirection);
 
@@ -154,12 +155,10 @@ vec3 calculatePointLight(vec3 albedo, vec3 worldPos, vec3 normal, PointLight lig
 
 	//vec3 specular = albedo * specular(toLightDir, normal, worldPos, reflectance, emission, light.color.rgb, light.intensity);
 
-	float attenuation = pow(smoothstep(light.radius, 0, distance), light.exp);
+	//float attenuation = pow(smoothstep(light.radius, 0, distance), light.exp);
+	float attenuation = 1;
+	return (light.color.xyz) * attenuation;
 
-	diffuse *= attenuation;
-	specular *= attenuation;
-
-	return diffuse + specular;
 }
 
 float varianceShadow(vec3 projCoords, int split, int kernels){

@@ -22,13 +22,14 @@ struct Material
 uniform Material material;
 
 
+
 void main(void){
 
 	//NORMAL MAP
-	//mat3 TBN = mat3(tangent_FS, normal_FS, bitangent_FS);
-	mat3 TBN = mat3(tangent_FS.x, bitangent_FS.x, normal_FS.x,
+	//mat3 TBN = mat3(tangent_FS, bitangent_FS, normal_FS);
+	/*mat3 TBN = mat3(tangent_FS.x, bitangent_FS.x, normal_FS.x,
 		tangent_FS.y, bitangent_FS.y, normal_FS.y,
-		tangent_FS.z, bitangent_FS.z, normal_FS.z);
+		tangent_FS.z, bitangent_FS.z, normal_FS.z);*/
 
 	vec3 normal = normalize(2*(texture(material.normalmap, textureCoords_FS).rgb)-1);
 

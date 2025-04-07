@@ -42,13 +42,35 @@ public class Camera {
 	}
 	
 	public void init() {
-		//setProjectionMatrix(GLContext.getConfig().fovY, width, height, GLContext.getConfig().NEAR_PLANE, GLContext.getConfig().FAR_PLANE);
 		updateViewMatrix();
-		//viewMatrix = MatrixMath.createViewMatrix(position, pitch, yaw, roll);
 		updateFrustum();
 	}
 	
-	//TODO: change camera update method based on type, this is just a TEST METHOD!!!
+	private void move(float dx, float dy, float dz, double deltaTime) {
+		position.x += dx * deltaTime;
+		position.y += dy * deltaTime;
+		position.z += dz * deltaTime;
+		
+		isMoved = !isMoved ? dx != 0.0f || dy != 0.0f || dz != 0.0f : isMoved;
+	}
+	
+	private void rotate(float dPitch, float dYaw, float dRoll, double deltaTime) {
+		pitch += dPitch * deltaTime;
+		yaw += dYaw * deltaTime;
+		roll += dRoll * deltaTime;
+		
+		isMoved = !isMoved ? dPitch != 0.0f || dYaw != 0.0f || dRoll != 0.0f : isMoved;
+	}
+	
+	public void update(float dx, float dy, float dz, float dPitch, float dYaw, float dRoll, double deltaTime) {
+		move(dx, dy, dz, deltaTime);
+		rotate(dPitch, dYaw, dRoll, deltaTime);
+		
+		updateViewMatrix();
+		updateFrustum();
+	}
+	
+	//TODO: LEGACY test, remove it when tested
 	public void update() {
 		
 		InputHandler input = GLContext.getInput();

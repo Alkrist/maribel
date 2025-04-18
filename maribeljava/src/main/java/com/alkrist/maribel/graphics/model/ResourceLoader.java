@@ -86,7 +86,7 @@ public class ResourceLoader {
 		storeDataInAttributeList(2, 3, normals);
 		storeDataInAttributeList(3, 3, normals);
 		unbindVAO();
-
+		
 		return new Mesh(vaoID, indices.length, boundingRadius);
 	}
 

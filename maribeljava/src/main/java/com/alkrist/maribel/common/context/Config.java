@@ -1,4 +1,4 @@
-package com.alkrist.maribel.client.settings;
+package com.alkrist.maribel.common.context;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.Logging;
 
-public abstract class ConfigBase {
+public abstract class Config {
 
 public void load(String filename) {
 		

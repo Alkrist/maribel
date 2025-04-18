@@ -19,9 +19,10 @@ import org.lwjgl.opengl.WGLEXTSwapControl;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
+import com.alkrist.maribel.client.core.VideoConfig;
+import com.alkrist.maribel.client.util.Constants;
 import com.alkrist.maribel.graphics.context.Camera;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.context.GraphicsConfig;
 import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.Logging;
 
@@ -34,7 +35,7 @@ import com.alkrist.maribel.utils.Logging;
  */
 public class GLWindow {
 
-	private GraphicsConfig config;
+	private VideoConfig config;
 	private Camera mainCamera;
 	
 	// window sizes for fullscreen and windowed
@@ -261,7 +262,7 @@ public class GLWindow {
 				height = h;
 				width = w;
 				GL11.glViewport(0, 0, width, height);
-				mainCamera.setProjectionMatrix(config.fovY, width, height, config.NEAR_PLANE, config.FAR_PLANE);
+				mainCamera.setProjectionMatrix(config.fovY, width, height, Constants.ZNEAR, Constants.ZFAR);
 			}
 		});
 
@@ -274,7 +275,7 @@ public class GLWindow {
 		GL.createCapabilities();
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glViewport(0, 0, width, height);
-		mainCamera.setProjectionMatrix(config.fovY, width, height, config.NEAR_PLANE, config.FAR_PLANE);
+		mainCamera.setProjectionMatrix(config.fovY, width, height, Constants.ZNEAR, Constants.ZFAR);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.alkrist.maribel.graphics.deferred;
 
+import com.alkrist.maribel.client.util.Constants;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtils;
@@ -29,8 +30,8 @@ public class DeferredClusterShader extends ShaderProgram{
 	}
 	
 	public void updateUniforms(int width, int height) {
-		setUniform("zNear", GLContext.getConfig().NEAR_PLANE);
-		setUniform("zFar", GLContext.getConfig().FAR_PLANE);
+		setUniform("zNear", Constants.ZNEAR);
+		setUniform("zFar", Constants.ZFAR);
 		setUniform("inverseProjection", GLContext.getMainCamera().getInvertedProjectionMatrix());
 		setUniform("screenDimensions", width, height);
 		setUniform("gridSize", 

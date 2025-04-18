@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.alkrist.maribel.client.core.VideoConfig;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
+import com.alkrist.maribel.client.util.GLUtil;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -25,7 +27,6 @@ import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
 import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.context.GraphicsConfig;
 import com.alkrist.maribel.graphics.deferred.DeferredClusteredLighting;
 import com.alkrist.maribel.graphics.filter.PostProcessingVolumeRenderer;
 import com.alkrist.maribel.graphics.occlusion.SSAO;
@@ -55,7 +56,7 @@ public class RenderEngine {
 	private Engine engine;
 	
 	private GLWindow window;
-	private GraphicsConfig config;
+	private VideoConfig config;
 	
 	private int width;
 	private int height;
@@ -241,16 +242,16 @@ public class RenderEngine {
 			deferredClusteredLighting.getDeferredSceneTexture();
 		Texture currentScene = prePostProcessingScene;
 		
-		if(GLContext.getConfig().isFXAAEnabled && GLContext.getMainCamera().isMoved()) {
+		/*if(GLContext.getConfig().isFXAAEnabled && GLContext.getMainCamera().isMoved()) {
 			fxaa.render(currentScene);
 			currentScene = fxaa.getFXAASceneTexture();
-		}
+		}*/
 		
-		sortPPEVolumeList();
+		/*sortPPEVolumeList();
 		for(PostProcessingVolume volume: ppeVolumeList) {
 			if(volume.isEnabled())
 				currentScene = ppeVolumeRenderer.render(volume, currentScene);
-		}
+		}*/
 		
 		fullScreenQuad.setTexture(currentScene);
 		fullScreenQuad.render();

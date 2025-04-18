@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import org.joml.Vector3f;
 
+import com.alkrist.maribel.client.util.Constants;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
@@ -57,8 +58,8 @@ private static DeferredClusteredLightingShader instance = null;
 	
 	public void updateUniforms(int width, int height, int gridSizeX, int gridSizeY, int gridSizeZ, Texture pssm) {
 		// General uniforms
-		setUniform("zNear", GLContext.getConfig().NEAR_PLANE);
-		setUniform("zFar", GLContext.getConfig().FAR_PLANE);
+		setUniform("zNear", Constants.ZNEAR);
+		setUniform("zFar", Constants.ZFAR);
 		setUniform("screenDimensions", width,height);
 		setUniform("gridSize", gridSizeX, gridSizeY, gridSizeZ);
 		setUniform("viewMatrix", GLContext.getMainCamera().getViewMatrix());

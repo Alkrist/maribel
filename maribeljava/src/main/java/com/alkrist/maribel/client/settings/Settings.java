@@ -1,6 +1,8 @@
 package com.alkrist.maribel.client.settings;
 
-import com.alkrist.maribel.graphics.context.GraphicsConfig;
+import com.alkrist.maribel.client.core.ClientConfig;
+import com.alkrist.maribel.client.core.Context;
+import com.alkrist.maribel.client.core.VideoConfig;
 
 /**
  * Singleton class.
@@ -14,8 +16,8 @@ import com.alkrist.maribel.graphics.context.GraphicsConfig;
  */
 public class Settings {
 	
-	public static final CoreConfig CORE = new CoreConfig();
-	public static final GraphicsConfig GRAPHICS = new GraphicsConfig();
+	public static final ClientConfig CORE = Context.getClientConfig();
+	public static final VideoConfig GRAPHICS = Context.getVideoConfig();
 	
 	public static void load() {
 		CORE.load("core");

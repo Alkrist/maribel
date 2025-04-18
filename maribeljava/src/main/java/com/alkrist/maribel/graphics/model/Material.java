@@ -7,8 +7,8 @@ import java.io.FileReader;
 
 import org.joml.Vector3f;
 
+import com.alkrist.maribel.client.core.VideoConfig;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.context.GraphicsConfig;
 import com.alkrist.maribel.graphics.resources.ResourceCache;
 import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.texture.Texture2D;
@@ -22,7 +22,7 @@ import com.alkrist.maribel.utils.FileUtils;
 public class Material {
 
 	private static final Material GENERIC_MATERIAL = getGenericMaterial();
-	private static final GraphicsConfig config = GLContext.getConfig();
+	private static final VideoConfig config = GLContext.getConfig();
 	
 	private String name;
 	

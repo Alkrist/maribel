@@ -1,13 +1,21 @@
-package com.alkrist.maribel.client.settings;
+package com.alkrist.maribel.client.core;
 
 import java.util.Properties;
 
-public class CoreConfig extends ConfigBase{
+import com.alkrist.maribel.common.context.Config;
+
+public class ClientConfig extends Config{
 
 	public String username;
 	public int port;
 	
-	protected CoreConfig() {}
+	protected ClientConfig() {
+		load("client");
+	}
+	
+	public void save() {
+		super.save("client");
+	}
 	
 	@Override
 	protected void loadProperties(Properties prop) {

@@ -1,16 +1,13 @@
-package com.alkrist.maribel.graphics.context;
+package com.alkrist.maribel.client.core;
 
 import java.util.Properties;
 
-import com.alkrist.maribel.client.settings.ConfigBase;
+import com.alkrist.maribel.common.context.Config;
 import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
 
-public class GraphicsConfig extends ConfigBase{
-
-	public final float NEAR_PLANE = 0.1f;
-	public final float FAR_PLANE = 10000.0f; 
+public class VideoConfig extends Config{
 	
-	
+	// warning: a LOT OF BULLSHIT is here, remove the shite outa here
 	public float fovY;
 	public boolean vsyncEnabled;
 	public boolean fullscreen;
@@ -26,7 +23,13 @@ public class GraphicsConfig extends ConfigBase{
 	public int multisampleSamplesCount;
 	public int maxDirectionLights;
 	
-	public GraphicsConfig() {}
+	protected VideoConfig() {
+		load("video");
+	}
+	
+	public void save() {
+		super.save("video");
+	}
 	
 	@Override
 	protected void loadProperties(Properties prop) {

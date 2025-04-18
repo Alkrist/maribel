@@ -60,6 +60,7 @@ public class Texture {
 		this.id = glGenTextures();
 		this.target = GL_TEXTURE_2D;
 		this.meta = ImageLoader.loadImage(FileUtils.getResourceLocation(path), id);
+		//this.meta = ImageLoader.loadImage(path, id); TODO: for assimp, change it to new relative path
 	}
 	
 	public void bind() {

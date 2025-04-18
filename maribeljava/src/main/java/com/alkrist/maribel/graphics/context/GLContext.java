@@ -5,8 +5,9 @@ import java.util.logging.Level;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
+import com.alkrist.maribel.client.core.VideoConfig;
+import com.alkrist.maribel.client.util.GLUtil;
 import com.alkrist.maribel.common.ecs.Engine;
-import com.alkrist.maribel.graphics.platform.GLUtil;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.platform.InputHandler;
 import com.alkrist.maribel.utils.Logging;
@@ -14,14 +15,14 @@ import com.alkrist.maribel.utils.Logging;
 public class GLContext {
 
 	private static GLWindow window;
-	private static GraphicsConfig config;
+	private static VideoConfig config;
 	private static InputHandler inputHandler;
 	private static Camera camera;
 	
 	private static Engine engine;
 	
 	public static void create(String windowTitle, String iconPath) {
-		config = new GraphicsConfig();
+		//config = new VideoConfig();
 		window = new GLWindow();
 		inputHandler = new InputHandler();
 		camera = new Camera(new Vector3f(0), 0, 0, 0);
@@ -46,7 +47,7 @@ public class GLContext {
 		return window;
 	}
 	
-	public static GraphicsConfig getConfig() {
+	public static VideoConfig getConfig() {
 		return config;
 	}
 	

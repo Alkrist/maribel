@@ -1,8 +1,8 @@
 package com.alkrist.maribel.graphics.filter;
 
+import com.alkrist.maribel.client.texture.Texture;
 import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.filter.contrast.ContrastController;
-import com.alkrist.maribel.graphics.texture.Texture;
 
 public class PostProcessingVolumeRenderer {
 

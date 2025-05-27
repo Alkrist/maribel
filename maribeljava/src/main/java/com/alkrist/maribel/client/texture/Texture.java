@@ -1,4 +1,4 @@
-package com.alkrist.maribel.graphics.texture;
+package com.alkrist.maribel.client.texture;
 
 
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT;
@@ -59,8 +59,8 @@ public class Texture {
 	public Texture(String path) {
 		this.id = glGenTextures();
 		this.target = GL_TEXTURE_2D;
-		this.meta = ImageLoader.loadImage(FileUtils.getResourceLocation(path), id);
-		//this.meta = ImageLoader.loadImage(path, id); TODO: for assimp, change it to new relative path
+		//this.meta = ImageLoader.loadImage(FileUtils.getResourceLocation(path), id);
+		this.meta = ImageLoader.loadImage(path, id); //TODO: for assimp, change it to new relative path
 	}
 	
 	public void bind() {

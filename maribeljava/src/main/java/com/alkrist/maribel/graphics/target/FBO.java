@@ -3,7 +3,7 @@ package com.alkrist.maribel.graphics.target;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alkrist.maribel.graphics.texture.Texture;
+import com.alkrist.maribel.client.texture.Texture;
 
 public abstract class FBO {
 

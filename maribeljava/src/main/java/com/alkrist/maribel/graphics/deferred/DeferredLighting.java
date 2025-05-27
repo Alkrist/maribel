@@ -10,12 +10,12 @@ import static org.lwjgl.opengl.GL30.GL_R8;
 import static org.lwjgl.opengl.GL42.glBindImageTexture;
 import static org.lwjgl.opengl.GL43.glDispatchCompute;
 
+import com.alkrist.maribel.client.texture.Texture;
+import com.alkrist.maribel.client.texture.Texture2D;
+import com.alkrist.maribel.client.texture.Texture.ImageFormat;
+import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.graphics.texture.Texture.ImageFormat;
-import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
-import com.alkrist.maribel.graphics.texture.Texture2D;
 
 public class DeferredLighting {
 

@@ -1,46 +1,52 @@
-package com.alkrist.maribel.graphics.texture;
+package com.alkrist.maribel.client.texture;
 
 import static org.lwjgl.opengl.GL30.GL_DEPTH_COMPONENT32F;
 import static org.lwjgl.opengl.GL30.GL_R16F;
 import static org.lwjgl.opengl.GL30.GL_R32F;
+import static org.lwjgl.opengl.GL30.GL_RGB32F;
 import static org.lwjgl.opengl.GL30.GL_RGBA16F;
 import static org.lwjgl.opengl.GL30.GL_RGBA32F;
-import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
+import static org.lwjgl.opengl.GL31.GL_RGBA8_SNORM;
+import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 
 import java.util.logging.Level;
 
 import com.alkrist.maribel.utils.Logging;
 
-public class Texture2DArray extends Texture{
+public class Texture2DMultisample extends Texture{
 
-	public Texture2DArray(int width, int height, int layers, ImageFormat imageFormat){
-		super(GL_TEXTURE_2D_ARRAY, width, height);
+	public Texture2DMultisample(int width, int height, int samples, ImageFormat imageFormat) {
+		super(GL_TEXTURE_2D_MULTISAMPLE, width, height);
 		
 		bind();
 		
 		switch(imageFormat)
 		{
+			case RGBA8_SNORM:
+				allocateImage2DMultisample(samples, GL_RGBA8_SNORM); break;
 			case RGBA16FLOAT:
-				allocateStorage3D(1, layers, GL_RGBA16F); break;
+				allocateImage2DMultisample(samples, GL_RGBA16F); break;
 			case RGBA32FLOAT:
-				allocateStorage3D(1, layers, GL_RGBA32F); break;
+				allocateImage2DMultisample(samples, GL_RGBA32F); break;
+			case RGB32FLOAT:
+				allocateImage2DMultisample(samples, GL_RGB32F); break;
 			case DEPTH32FLOAT:
-				allocateStorage3D(1, layers, GL_DEPTH_COMPONENT32F); break;
+				allocateImage2DMultisample(samples, GL_DEPTH_COMPONENT32F); break;
 			case R16FLOAT:
-				allocateStorage3D(1, layers, GL_R16F); break;
+				allocateImage2DMultisample(samples, GL_R16F); break;
 			case R32FLOAT:
-				allocateStorage3D(1, layers, GL_R32F); break;
+				allocateImage2DMultisample(samples, GL_R32F); break;
 			default:
 				Logging.getLogger().log(Level.WARNING, "Image format is not supported! Allocating default format: GL_RGBA16F");
-				allocateStorage3D(1, layers, GL_RGBA16F);
+				allocateImage2DMultisample(samples, GL_RGBA16F);
 		}
 		
 		unbind();
 	}
 
-	public Texture2DArray(int width, int height, int layers,
+	public Texture2DMultisample(int width, int height, int samples,
 			ImageFormat imageFormat, SamplerFilter samplerFilter){
-		this(width, height, layers, imageFormat);
+		this(width, height, samples, imageFormat);
 		
 		bind();
 		
@@ -59,9 +65,9 @@ public class Texture2DArray extends Texture{
 		unbind();
 	}
 	
-	public Texture2DArray(int width, int height, int layers,
+	public Texture2DMultisample(int width, int height, int samples,
 			ImageFormat imageFormat, SamplerFilter samplerFilter, TextureWrapMode textureWrapMode) {
-		this(width, height, layers, imageFormat, samplerFilter);
+		this(width, height, samples, imageFormat, samplerFilter);
 		
 		bind();
 		

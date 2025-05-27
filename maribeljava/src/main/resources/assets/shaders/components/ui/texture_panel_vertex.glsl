@@ -1,0 +1,13 @@
+#version 330
+
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoord;
+
+out vec2 texCoord_fs;
+
+uniform mat4 orthographicMatrix;
+
+void main(void) {
+	gl_Position = orthographicMatrix * vec4(position, 1);
+	texCoord_fs = texCoord;
+}

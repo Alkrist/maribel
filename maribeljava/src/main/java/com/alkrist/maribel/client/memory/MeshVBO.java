@@ -76,7 +76,6 @@ public class MeshVBO implements VBO{
 	public void draw()
 	{
 			glBindVertexArray(vaoId);
-			
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
 			glEnableVertexAttribArray(2);

@@ -5,11 +5,11 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import org.joml.Vector3f;
 
+import com.alkrist.maribel.client.texture.Texture;
 import com.alkrist.maribel.client.util.Constants;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
-import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class DeferredClusteredLightingShader extends ShaderProgram{

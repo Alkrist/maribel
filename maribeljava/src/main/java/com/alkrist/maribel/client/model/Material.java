@@ -2,9 +2,10 @@ package com.alkrist.maribel.client.model;
 
 import org.joml.Vector3f;
 
-import com.alkrist.maribel.graphics.texture.Texture2D;
+import com.alkrist.maribel.client.scenegraph.NodeComponent;
+import com.alkrist.maribel.client.texture.Texture2D;
 
-public class Material {
+public class Material extends NodeComponent{
 	private String name;
 	private Texture2D diffusemap;
 	private Texture2D normalmap;

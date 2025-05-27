@@ -8,10 +8,10 @@ import java.io.FileReader;
 import org.joml.Vector3f;
 
 import com.alkrist.maribel.client.core.VideoConfig;
+import com.alkrist.maribel.client.texture.Texture2D;
+import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.resources.ResourceCache;
-import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
-import com.alkrist.maribel.graphics.texture.Texture2D;
 import com.alkrist.maribel.utils.FileUtils;
 
 /**

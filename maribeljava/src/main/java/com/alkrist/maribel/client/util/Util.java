@@ -39,8 +39,7 @@ public class Util {
 		return vertices;
 	}
 	
-	public static FloatBuffer createFlippedBufferAOS(Vertex[] vertices)
-	{
+	public static FloatBuffer createFlippedBufferAOS(Vertex[] vertices){
 		FloatBuffer buffer = createFloatBuffer(vertices.length * Vertex.FLOATS);
 		
 		for(int i = 0; i < vertices.length; i++)
@@ -63,6 +62,34 @@ public class Util {
 				buffer.put(vertices[i].getBitangent().z);
 			}
 		}
+		
+		buffer.flip();
+		
+		return buffer;
+	}
+	
+	public static FloatBuffer createFlippedBufferSOA(Vertex[] vertices){
+		FloatBuffer buffer = createFloatBuffer(vertices.length * Vertex.FLOATS);
+		
+		for(int i = 0; i < vertices.length; i++)
+		{
+			buffer.put(vertices[i].getPosition().x);
+			buffer.put(vertices[i].getPosition().y);
+			buffer.put(vertices[i].getPosition().z);
+		}
+		
+		for(int i = 0; i < vertices.length; i++)
+		{
+			buffer.put(vertices[i].getNormal().x);
+			buffer.put(vertices[i].getNormal().y);
+			buffer.put(vertices[i].getNormal().z);
+		}
+			
+		for(int i = 0; i < vertices.length; i++)
+		{
+			buffer.put(vertices[i].getTextureCoord().x);
+			buffer.put(vertices[i].getTextureCoord().y);
+		}	
 		
 		buffer.flip();
 		
@@ -120,5 +147,28 @@ public class Util {
 		buffer.flip();
 		
 		return buffer;
+	}
+	
+	public static FloatBuffer createFlippedBuffer(List<Vector2f> vector){
+		FloatBuffer buffer = createFloatBuffer(vector.size() * Float.BYTES * 2);
+		
+		for (Vector2f v : vector)
+		{
+			buffer.put(v.x);
+			buffer.put(v.y);	
+		}
+		
+		buffer.flip();
+		
+		return buffer;
+	}
+	
+	public static int[] toIntArray(Integer[] data){
+		int[] result = new int[data.length];
+		
+		for(int i=0; i < data.length; i++)
+			result[i] = data[i].intValue();
+		
+		return result;
 	}
 }

@@ -3,6 +3,7 @@ package com.alkrist.maribel.client.core;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_HIDDEN;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -42,6 +44,13 @@ public class Input {
 	private GLFWCursorPosCallback cursorPosCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
 	private GLFWScrollCallback scrollCallback;
+	
+	
+	/* TODO: TEST */
+	private Vector2f lastMousePosition = new Vector2f();
+	private Vector2f mouseDelta = new Vector2f();
+	private float mouseSensitivity = 0.001f; // Adjust as needed
+	private boolean isMouseLocked = false;
 	
 	protected Input(){
 		cursorPosition = new Vector2f();
@@ -72,6 +81,19 @@ public class Input {
 
             @Override
             public void invoke(long window, int button, int action, int mods) {
+            	
+            	// TEST
+            	if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                    isMouseLocked = true;
+                }
+
+            	// TEST
+                if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                    isMouseLocked = false;
+                }
+                
                 if((button == 2 || button == 0) && action == GLFW_PRESS) {
                 	lockedCursorPosition = new Vector2f(cursorPosition.x, cursorPosition.y);
                 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -95,7 +117,7 @@ public class Input {
             }
 		}));
 		
-		glfwSetCursorPosCallback(window, (cursorPosCallback = new GLFWCursorPosCallback() {
+		/*glfwSetCursorPosCallback(window, (cursorPosCallback = new GLFWCursorPosCallback() {
 
             @Override
             public void invoke(long window, double xpos, double ypos) {
@@ -103,6 +125,25 @@ public class Input {
             	cursorPosition.y = (float) ypos;
             }
 
+		}));*/
+		
+		// TEST
+		glfwSetCursorPosCallback(window, (cursorPosCallback = new GLFWCursorPosCallback() {
+		    @Override
+		    public void invoke(long window, double xpos, double ypos) {
+		        float newX = (float) xpos;
+		        float newY = (float) ypos;
+
+		        // Compute delta only if mouse is locked (for camera rotation)
+		        if (isMouseLocked) {
+		            mouseDelta.x = (newX - lastMousePosition.x) * mouseSensitivity;
+		            mouseDelta.y = (newY - lastMousePosition.y) * mouseSensitivity;
+		        }
+
+		        cursorPosition.x = newX;
+		        cursorPosition.y = newY;
+		        lastMousePosition.set(newX, newY);
+		    }
 		}));
 		
 		glfwSetScrollCallback(window, (scrollCallback = new GLFWScrollCallback() {
@@ -204,5 +245,14 @@ public class Input {
 
 	public Set<Integer> getPushedButtons() {
 		return pushedButtons;
+	}
+	
+	// TODO: TEST
+	public boolean isMouseLocked() {
+		return isMouseLocked;
+	}
+	
+	public Vector2f getMouseDelta() {
+		return mouseDelta;
 	}
 }

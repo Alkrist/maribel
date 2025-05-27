@@ -33,7 +33,7 @@ public class GLUtil {
 	public static void init() {
 
 		// culling and vertex order
-		glFrontFace(GL_CW);				
+		//glFrontFace(GL_CW);	still have to figure out why it was even like that in oreon-engine			
 		glEnable(GL_CULL_FACE);	
 		glCullFace(GL_BACK);
 		
@@ -63,5 +63,4 @@ public class GLUtil {
 		glClearDepth(1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-	
 }

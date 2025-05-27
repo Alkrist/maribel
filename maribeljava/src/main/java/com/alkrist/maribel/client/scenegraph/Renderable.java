@@ -53,4 +53,12 @@ public class Renderable extends Node{
 		
 		super.record(renderList);
 	}
+	
+	public void render() {
+		if (components.containsKey("main")){
+			components.get("main").render();
+		}
+		
+		super.render();
+	}
 }

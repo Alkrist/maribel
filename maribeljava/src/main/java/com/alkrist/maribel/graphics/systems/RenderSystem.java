@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.alkrist.maribel.client.core.VideoConfig;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
+import com.alkrist.maribel.client.texture.Texture;
 import com.alkrist.maribel.client.util.GLUtil;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
@@ -39,7 +40,6 @@ import com.alkrist.maribel.graphics.target.FBO;
 import com.alkrist.maribel.graphics.target.FBO.Attachment;
 import com.alkrist.maribel.graphics.target.OffScreenFBO;
 import com.alkrist.maribel.graphics.target.TransparencyFBO;
-import com.alkrist.maribel.graphics.texture.Texture;
 import com.alkrist.maribel.graphics.transparency.OpaqueTransparencyBlending;
 import com.alkrist.maribel.graphics.ui.WindowCanvas;
 import com.alkrist.maribel.utils.ImmutableArrayList;

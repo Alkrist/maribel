@@ -14,6 +14,8 @@ import com.alkrist.maribel.client.util.GLUtil;
 public class Context {
 
 	private static ClientConfig clientConfig;
+	private static CoreEngine coreEngine;
+	
 	private static VideoConfig videoConfig;
 	private static Window window;
 	private static Input input;
@@ -24,6 +26,7 @@ public class Context {
 		
 		// Client core
 		clientConfig = new ClientConfig();
+		coreEngine = new CoreEngine();
 		
 		// TODO: init Core engine which will be inherited from ECS engine (for client, it will include render engine)
 		
@@ -34,18 +37,22 @@ public class Context {
 		window = new Window("Maribel", videoConfig.width, videoConfig.height);
 		camera = new Camera(new Vector3f(0f), new Vector3f(0f), videoConfig.fovY, videoConfig.width, videoConfig.height);
 		
+		renderEngine = new RenderEngine();
+		
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 		
 		window.create();
 		
 		GLUtil.init();
+		renderEngine.init();
 	}
 	
 	public static void shutdown() {
 		// OpenGL
 		window.dispose();
 		videoConfig.save();
+		input.shutdown();
 		
 		// client core
 		clientConfig.save();
@@ -71,11 +78,11 @@ public class Context {
 		return camera;
 	}
 	
-	public static void setRenderEngine(RenderEngine theRenderEngine) {
-		renderEngine = theRenderEngine;
+	public static RenderEngine getRenderEngine() {
+		return renderEngine;
 	}
 	
-	public RenderEngine getRenderEngine() {
-		return renderEngine;
+	public static CoreEngine getCoreEngine() {
+		return coreEngine;
 	}
 }

@@ -1,4 +1,4 @@
-package com.alkrist.maribel.graphics.texture;
+package com.alkrist.maribel.client.texture;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_COMPONENT32F;

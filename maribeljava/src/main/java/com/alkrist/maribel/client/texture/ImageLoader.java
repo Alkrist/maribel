@@ -1,4 +1,4 @@
-package com.alkrist.maribel.graphics.texture;
+package com.alkrist.maribel.client.texture;
 
 import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_RGBA;

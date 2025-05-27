@@ -34,8 +34,8 @@ import com.alkrist.maribel.client.model.Material;
 import com.alkrist.maribel.client.model.Mesh;
 import com.alkrist.maribel.client.model.Model;
 import com.alkrist.maribel.client.model.Vertex;
-import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.graphics.texture.Texture2D;
+import com.alkrist.maribel.client.texture.Texture2D;
+import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
 
 /**
  * @author oreon3D
@@ -273,7 +273,7 @@ public class AssimpModelLoader {
 		Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, diffPath, (IntBuffer) null, null, null,
 				null, null, null);
 		String diffTexPath = diffPath.dataString();
-
+		
 		Texture2D diffuseTexture = null;
 		if (diffTexPath != null && diffTexPath.length() > 0) {
 			diffuseTexture = new Texture2D(texturesDir + "/" + diffTexPath, SamplerFilter.Trilinear);
@@ -284,7 +284,7 @@ public class AssimpModelLoader {
 		Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_NORMALS, 0, normalPath, (IntBuffer) null, null,
 				null, null, null, null);
 		String normalTexPath = normalPath.dataString();
-
+		
 		Texture2D normalTexture = null;
 		if (normalTexPath != null && normalTexPath.length() > 0) {
 			normalTexture = new Texture2D(texturesDir + "/" + normalTexPath, SamplerFilter.Trilinear);

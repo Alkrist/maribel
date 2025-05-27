@@ -25,16 +25,16 @@ import java.nio.FloatBuffer;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
+import com.alkrist.maribel.client.texture.Texture;
+import com.alkrist.maribel.client.texture.Texture2D;
+import com.alkrist.maribel.client.texture.Texture.ImageFormat;
+import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.texture.Texture;
-import com.alkrist.maribel.graphics.texture.Texture.ImageFormat;
-import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
-import com.alkrist.maribel.graphics.texture.Texture2D;
 import com.alkrist.maribel.utils.ImmutableArrayList;
 
 public class DeferredClusteredLighting {

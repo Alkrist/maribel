@@ -1,4 +1,4 @@
-package com.alkrist.maribel.graphics.texture;
+package com.alkrist.maribel.client.texture;
 
 public class ImageMeta {
 

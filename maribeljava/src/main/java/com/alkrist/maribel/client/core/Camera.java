@@ -1,166 +1,138 @@
 package com.alkrist.maribel.client.core;
 
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import com.alkrist.maribel.client.util.Constants;
 
 public class Camera {
 
-	
-	private Matrix4f viewMatrix;
-	private Matrix4f projectionMatrix;
-	//private Matrix4f viewProjectionMatrix;
-	
-	private boolean cameraMoved;
-	private boolean cameraRotated;
-	
-	private float width;
-	private float height;
-	private float fovY;
-	
-	private Vector3f position;
-	private Vector3f previousPosition;
-	private Vector3f direction;
-	private Vector3f right;
-	private Vector3f up;
-	
-	private Vector3f rotation;
-	
-	protected Camera(Vector3f position, Vector3f rotation, float fovY, float width, float height) {
-		direction = new Vector3f();
-        right = new Vector3f();
-        up = new Vector3f();
+    private Matrix4f viewMatrix;
+    private Matrix4f projectionMatrix;
+    private Matrix4f viewProjectionMatrix;
+    
+    private float width;
+    private float height;
+    private float fovY;
+    
+    private Vector3f position;
+    private Vector3f previousPosition;
+    private Quaternionf orientation;
+    
+    public Camera(Vector3f position, Vector3f rotation, float fovY, float width, float height) {
+        this.position = new Vector3f(position);
+        this.previousPosition = new Vector3f(position);
+        this.orientation = new Quaternionf()
+            .rotateX(rotation.x)
+            .rotateY(rotation.y)
+            .rotateZ(rotation.z);
         
-        this.position = position;
-        this.rotation = rotation;
-        
-        this.previousPosition = position;
-        
-        // mind the order
+        viewMatrix = new Matrix4f();
+        viewProjectionMatrix = new Matrix4f();
         setProjectionMatrix(fovY, width, height);
         updateViewMatrix();
-
-	}
-	
-	public void update() {
-		// TODO: ???
-		if(cameraMoved || cameraRotated) {
-			updateViewMatrix();
-		}
-	}
-	
-	 	public void moveBackwards(float inc) {
-	        viewMatrix.positiveZ(direction).negate().mul(inc);
-	        position.sub(direction);
-	        cameraMoved = true;
-	    }
-
-	    public void moveDown(float inc) {
-	        viewMatrix.positiveY(up).mul(inc);
-	        position.sub(up);
-	        cameraMoved = true;
-	        
-	    }
-
-	    public void moveForward(float inc) {
-	        viewMatrix.positiveZ(direction).negate().mul(inc);
-	        position.add(direction);
-	        cameraMoved = true;
-	    }
-
-	    public void moveLeft(float inc) {
-	        viewMatrix.positiveX(right).mul(inc);
-	        position.sub(right);
-	        cameraMoved = true;
-	    }
-
-	    public void moveRight(float inc) {
-	        viewMatrix.positiveX(right).mul(inc);
-	        position.add(right);
-	        cameraMoved = true;
-	    }
-
-	    public void moveUp(float inc) {
-	        viewMatrix.positiveY(up).mul(inc);
-	        position.add(up);
-	        cameraMoved = true;
-	    }
-
-	    public void addRotation(float x, float y, float z) {
-	        rotation.add(x, y, z);
-	        cameraRotated = true;
-	    }
-	    
-	public void setProjectionMatrix(float fovY, float width, float height) {
-		this.fovY = fovY;
-		this.width = width;
-		this.height = height;
-		
-		float aspectRatio = width / height;
-		
-		this.projectionMatrix = new Matrix4f().perspective(fovY, aspectRatio, Constants.ZNEAR, Constants.ZFAR);
-	}
-	
-	public Matrix4f getProjectionMatrix() {
-		return projectionMatrix;
-	}
-	
-	public void updateViewMatrix() {
-		viewMatrix.identity();
-		viewMatrix
-		.rotateX(rotation.x)
-		.rotateY(rotation.y)
-		.rotateZ(rotation.z)
-		.translate(-position.x, -position.y, -position.z);
-	}
-	
-	public Vector3f getRotation() {
-		return rotation;
-	}
-	
-	public void setRotation(Vector3f rotation) {
-		this.rotation = rotation;
-	}
-	
-	public float getFovY(){
-		return fovY;
-	}
-	
-	public float getWidth(){
-		return width;
-	}
-
-	public float getHeight(){
-		return height;
-	}
-	
-	public boolean isCameraMoved() {
-		return cameraMoved;
-	}
-
-	public boolean isCameraRotated() {
-		return cameraRotated;
-	}
-	
-	public Vector3f getPosition() {
-		return position;
-	}
-	
-	public void setPosition(Vector3f position) {
-		this.position = position;
-	}
-	
-	public Vector3f getPreviousPosition() {
-		return previousPosition;
-	}
-	
-	public void setPreviousPositon(Vector3f previousPosition) {
-		this.previousPosition = previousPosition;
-	}
-	
-	/*private void updateViewProjection() {
-		viewProjectionMatrix.zero();
-		viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
-	}*/
+        updateViewProjection();
+    }
+    
+    /**
+     * Updates camera matrices based on current position and orientation
+     * @param deltaTime time since last update in seconds
+     */
+    public void update(double deltaTime) {
+        updateViewMatrix();
+        updateViewProjection();
+        previousPosition.set(position);
+    }
+    
+    /**
+     * Moves camera by specified offsets in local space
+     * @param dx movement in local X axis
+     * @param dy movement in local Y axis
+     * @param dz movement in local Z axis
+     */
+    public void moveLocal(float dx, float dy, float dz) {
+        // Transform movement vector from local to world space
+        Vector3f move = new Vector3f(dx, dy, dz);
+        move.rotate(orientation);
+        position.add(move);
+    }
+    
+    /**
+     * Rotates camera by specified angles around local axes
+     * @param pitch rotation around local X axis (radians)
+     * @param yaw rotation around local Y axis (radians)
+     * @param roll rotation around local Z axis (radians)
+     */
+    public void rotateLocal(float pitch, float yaw, float roll) {
+        Quaternionf rot = new Quaternionf()
+            .rotateLocalX(pitch)
+            .rotateLocalY(yaw)
+            .rotateLocalZ(roll);
+        orientation.mul(rot);
+    }
+    
+    /**
+     * Sets the projection matrix with given parameters
+     */
+    public void setProjectionMatrix(float fovY, float width, float height) {
+        this.fovY = fovY;
+        this.width = width;
+        this.height = height;
+        
+        float aspectRatio = width / height;
+        this.projectionMatrix = new Matrix4f().perspective(fovY, aspectRatio, 
+            Constants.ZNEAR, Constants.ZFAR);
+    }
+    
+    /**
+     * Updates the view matrix based on current position and orientation
+     */
+    public void updateViewMatrix() {
+        viewMatrix.identity()
+            .rotate(orientation.invert(new Quaternionf())) // Invert rotation
+            .translate(-position.x, -position.y, -position.z);
+    }
+    
+    /**
+     * Updates the combined view-projection matrix
+     */
+    private void updateViewProjection() {
+        viewProjectionMatrix.set(projectionMatrix).mul(viewMatrix);
+    }
+    
+    public Matrix4f getProjectionMatrix() { return new Matrix4f(projectionMatrix); }
+    public Matrix4f getViewMatrix() { return new Matrix4f(viewMatrix); }
+    public Matrix4f getViewProjectionMatrix() { return new Matrix4f(viewProjectionMatrix); }
+    
+    public Vector3f getPosition() { return new Vector3f(position); }
+    public void setPosition(Vector3fc position) { this.position.set(position); }
+    
+    public Vector3f getPreviousPosition() { return new Vector3f(previousPosition); }
+    public void setPreviousPosition(Vector3fc previousPosition) { 
+        this.previousPosition.set(previousPosition); 
+    }
+    
+    public Quaternionf getOrientation() { return new Quaternionf(orientation); }
+    public void setOrientation(Quaternionf orientation) { 
+        this.orientation.set(orientation); 
+    }
+    
+    public Vector3f getRotationEuler() {
+        Vector3f euler = new Vector3f();
+        orientation.getEulerAnglesXYZ(euler);
+        return euler;
+    }
+    
+    public void setRotationEuler(Vector3fc rotation) {
+        orientation.identity()
+            .rotateX(rotation.x())
+            .rotateY(rotation.y())
+            .rotateZ(rotation.z());
+    }
+    
+    public float getFovY() { return fovY; }
+    public float getWidth() { return width; }
+    public float getHeight() { return height; }
 }

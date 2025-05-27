@@ -1,4 +1,4 @@
-package com.alkrist.maribel.graphics.texture;
+package com.alkrist.maribel.client.texture;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -107,7 +107,6 @@ public class Texture2D extends Texture{
 			case Anisotropic:
 				anisotropicFilter(); break;
 		}
-		
 		unbind();
 	}
 	

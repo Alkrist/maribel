@@ -12,6 +12,9 @@ import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
 import com.alkrist.maribel.client.graphics.shader.shaders.TestTransparencyShader;
 import com.alkrist.maribel.client.settings.Settings;
+import com.alkrist.maribel.client.texture.Texture2D;
+import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.ModelShadowRenderer;
@@ -35,9 +38,6 @@ import com.alkrist.maribel.graphics.platform.RenderEngine;
 import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
-import com.alkrist.maribel.graphics.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.graphics.texture.Texture.TextureWrapMode;
-import com.alkrist.maribel.graphics.texture.Texture2D;
 import com.alkrist.maribel.graphics.ui.UIColorPanel;
 import com.alkrist.maribel.graphics.ui.UIElement;
 import com.alkrist.maribel.graphics.ui.UITexturePanel;
@@ -340,7 +340,7 @@ public class TestGraphics {
 			text.resize();
 			//End of update loop
 			
-			engine.update(0);
+			//engine.update(0);
 			renderEngine.render();
 			update(window.deltaTime());
 			window.updateWindow();

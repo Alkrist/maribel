@@ -2,15 +2,14 @@ package com.alkrist.maribel.graphics.model;
 
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import org.joml.Matrix4f;
 
-import com.alkrist.maribel.common.ecs.ComponentMapper;
+import com.alkrist.maribel.client.math.Transform;
+import com.alkrist.maribel.client.scenegraph.Renderable;
 import com.alkrist.maribel.common.ecs.Entity;
-import com.alkrist.maribel.graphics.components.Renderable;
-import com.alkrist.maribel.graphics.components.Transform;
+//import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtils;
@@ -20,8 +19,8 @@ public class GenericModelShader extends ShaderProgram{
 	
 	private static GenericModelShader instance = null;
 	
-	private static final ComponentMapper<Renderable> renderableComponentMapper = ComponentMapper.getFor(Renderable.class);
-	private static final ComponentMapper<Transform> transformComponentMapper = ComponentMapper.getFor(Transform.class);
+	//private static final ComponentMapper<Renderable> renderableComponentMapper = ComponentMapper.getFor(Renderable.class);
+	//private static final ComponentMapper<Transform> transformComponentMapper = ComponentMapper.getFor(Transform.class);
 
 	
 	public static GenericModelShader getInstance() {
@@ -52,13 +51,13 @@ public class GenericModelShader extends ShaderProgram{
 	}
 	
 	public void updateUniforms(Entity e) {
-		Renderable renderable = renderableComponentMapper.getComponent(e);
-		Transform transform = transformComponentMapper.getComponent(e);
+		//Renderable renderable = renderableComponentMapper.getComponent(e);
+		//Transform transform = transformComponentMapper.getComponent(e);
 		Matrix4f viewMatrix = GLContext.getMainCamera().getViewMatrix();
-		Matrix4f modelMatrix = MatrixMath.createTransformationMatrix(transform.position, transform.rotation, transform.scale);
+		//Matrix4f modelMatrix = MatrixMath.createTransformationMatrix(transform.position, transform.rotation, transform.scale);
 		
 		setUniform("viewMatrix", viewMatrix);
-		setUniform("modelMatrix", modelMatrix);
+		//setUniform("modelMatrix", modelMatrix);
 		setUniform("projectionMatrix", GLContext.getMainCamera().getProjectionMatrix());
 		
 		/*for(int i=0; i<6; i++) {
@@ -66,14 +65,27 @@ public class GenericModelShader extends ShaderProgram{
 		}*/
 		
 		glActiveTexture(GL_TEXTURE0);
-		renderable.material.getDiffuseMap().bind();
+		//renderable.material.getDiffuseMap().bind();
 		setUniform("material.diffusemap", 0);
 		
 		glActiveTexture(GL_TEXTURE1);
-		renderable.material.getNormalMap().bind();
+		//renderable.material.getNormalMap().bind();
 		setUniform("material.normalmap", 1);
 		
-		setUniform("material.shininess", renderable.material.getShininess());
-		setUniform("material.emission", renderable.material.getEmission());
+		//setUniform("material.shininess", renderable.material.getShininess());
+		//setUniform("material.emission", renderable.material.getEmission());
+	}
+	
+	public void updateUniforms(Renderable object) {
+		Transform transform = object.getWorldTransform();
+		Matrix4f modelMatrix = MatrixMath.createTransformationMatrix(transform.getTranslation(), transform.getRotation(), transform.getScaling().x);
+		
+		Material material = (Material) object.getComponent("material");
+		glActiveTexture(GL_TEXTURE0);
+		setUniform("material.diffusemap", 0);
+		
+		glActiveTexture(GL_TEXTURE1);
+		setUniform("material.normalmap", 1);
+		//setUniform("material.shininess", object.e);
 	}
 }

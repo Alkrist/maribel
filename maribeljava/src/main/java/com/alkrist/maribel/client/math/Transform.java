@@ -1,6 +1,9 @@
 package com.alkrist.maribel.client.math;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
+
+import com.alkrist.maribel.client.core.Context;
 
 public class Transform {
 
@@ -96,5 +99,20 @@ public class Transform {
 	
 	public void setLocalScaling(float x, float y, float z) {
 		this.localScaling = new Vector3f(x, y, z);
-	}	
+	}
+	
+	public Matrix4f getWorldMatrix(){
+		final Matrix4f matrix = new Matrix4f();
+		matrix.identity().translate(translation).
+		rotate((float)Math.toRadians(rotation.x), new Vector3f(1,0,0)).
+		rotate((float)Math.toRadians(rotation.y), new Vector3f(0,1,0)).
+		rotate((float)Math.toRadians(rotation.z), new Vector3f(0,0,1)).
+		scale(scaling);
+		
+		return matrix;
+	}
+	
+	public Matrix4f getModelViewProjectionMatrix(){
+		return Context.getCamera().getViewProjectionMatrix().mul(getWorldMatrix());
+	}
 }

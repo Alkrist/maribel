@@ -5,7 +5,6 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 
-import com.alkrist.maribel.client.MaribelTest;
 import com.alkrist.maribel.client.util.Constants;
 import com.alkrist.maribel.common.ecs.Engine;
 
@@ -98,7 +97,7 @@ public class CoreEngine extends Engine{
 	        }
 	        /*else {
 	            try {
-	                Thread.sleep(10);
+	                Thread.sleep(1);
 	            } catch (InterruptedException e) {
 	                e.printStackTrace();
 	            }
@@ -116,9 +115,6 @@ public class CoreEngine extends Engine{
 		input.update();
 		super.update(delta);
 		// TODO: ECS engine update here
-		
-		//TEST!!!!!!!
-		MaribelTest.cameraTestUpdater(delta);
 		
 		Context.getCamera().update(delta);
 	}

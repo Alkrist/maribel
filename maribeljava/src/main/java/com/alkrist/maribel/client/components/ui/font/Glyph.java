@@ -1,42 +1,69 @@
 package com.alkrist.maribel.client.components.ui.font;
 
-import org.joml.Vector2f;
-
 public class Glyph {
 
-	private char character;
-    private Vector2f position;
-    private Vector2f size;
-    private Vector2f bearing;
-    private float advance;
-    
-    public Glyph(char character, Vector2f position, Vector2f size, Vector2f bearing, float advance) {
-        this.character = character;
-        this.position = position;
-        this.size = size;
-        this.bearing = bearing;
-        this.advance = advance;
-    }
+	private int id;
+	private double xTextureCoord;
+	private double yTextureCoord;
+	private double xMaxTextureCoord;
+	private double yMaxTextureCoord;
+	private double xOffset;
+	private double yOffset;
+	private double sizeX;
+	private double sizeY;
+	private double xAdvance;
 
-	public char getCharacter() {
-		return character;
+	protected Glyph(int id, double xTextureCoord, double yTextureCoord, double xTexSize, double yTexSize,
+			double xOffset, double yOffset, double sizeX, double sizeY, double xAdvance) {
+		this.id = id;
+		this.xTextureCoord = xTextureCoord;
+		this.yTextureCoord = yTextureCoord;
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		this.xMaxTextureCoord = xTexSize + xTextureCoord;
+		this.yMaxTextureCoord = yTexSize + yTextureCoord;
+		this.xAdvance = xAdvance;
 	}
 
-	public Vector2f getPosition() {
-		return position;
+	protected int getId() {
+		return id;
 	}
 
-	public Vector2f getSize() {
-		return size;
+	protected double getxTextureCoord() {
+		return xTextureCoord;
 	}
 
-	public Vector2f getBearing() {
-		return bearing;
+	protected double getyTextureCoord() {
+		return yTextureCoord;
 	}
 
-	public float getAdvance() {
-		return advance;
+	protected double getXMaxTextureCoord() {
+		return xMaxTextureCoord;
 	}
-    
-    
+
+	protected double getYMaxTextureCoord() {
+		return yMaxTextureCoord;
+	}
+
+	protected double getxOffset() {
+		return xOffset;
+	}
+
+	protected double getyOffset() {
+		return yOffset;
+	}
+
+	protected double getSizeX() {
+		return sizeX;
+	}
+
+	protected double getSizeY() {
+		return sizeY;
+	}
+
+	protected double getxAdvance() {
+		return xAdvance;
+	}
 }

@@ -66,7 +66,7 @@ public class Logging {
 				fh = new FileHandler(FileUtils.getLogLocation("latest.log"));
 				logger.addHandler(fh);
 				fh.setFormatter(formatter);
-				logger.info("Logger started.");
+				logger.info("Sup fuckers!");
 
 			} catch (SecurityException | IOException e) {
 				e.printStackTrace();
@@ -107,7 +107,7 @@ public class Logging {
 	
 	private static class MaribelFormatter extends Formatter{
 
-		private final DateFormat df = new SimpleDateFormat("hh:mm:ss.SSS");
+		private final DateFormat df = new SimpleDateFormat("hh:mm:ss");
 		
 		@Override
 		public String format(LogRecord record) {

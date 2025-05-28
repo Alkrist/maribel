@@ -19,8 +19,20 @@ import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 
+import static org.lwjgl.opengl.GL11.GL_VERSION;
+import static org.lwjgl.opengl.GL11.GL_VENDOR;
+import static org.lwjgl.opengl.GL11.GL_RENDERER;
+import static org.lwjgl.opengl.GL11.GL_MAX_TEXTURE_SIZE;
+import static org.lwjgl.opengl.GL11.glGetString;
+import static org.lwjgl.opengl.GL11.glGetIntegerv;
+import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
+import static org.lwjgl.opengl.GL30.GL_NUM_EXTENSIONS;
+import static org.lwjgl.opengl.GL40.GL_MAX_UNIFORM_BUFFER_BINDINGS;
+
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.logging.Level;
 
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -28,8 +40,10 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.WGLEXTSwapControl;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import com.alkrist.maribel.utils.FileUtils;
+import com.alkrist.maribel.utils.Logging;
 
 public class Window {
 
@@ -79,6 +93,8 @@ public class Window {
 		}
 		
 		GL.createCapabilities();
+		
+		printHardwareInfo();
 	}
 	
 	public void show() {
@@ -154,5 +170,36 @@ public class Window {
 		images.put(0, image);
 
 		glfwSetWindowIcon(getId(), images);
+	}
+	
+	private void printHardwareInfo() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\n");
+	    sb.append("=== Hardware Information ===\n");
+	    sb.append("OpenGL Version: ").append(glGetString(GL_VERSION)).append("\n");
+	    sb.append("GLSL Version: ").append(glGetString(GL_SHADING_LANGUAGE_VERSION)).append("\n");
+	    sb.append("Vendor: ").append(glGetString(GL_VENDOR)).append("\n");
+	    sb.append("Renderer: ").append(glGetString(GL_RENDERER)).append("\n");
+	    
+	    // Get extensions count
+	    IntBuffer numExtensions = MemoryUtil.memAllocInt(1);
+	    glGetIntegerv(GL_NUM_EXTENSIONS, numExtensions);
+	    sb.append("Available Extensions: ").append(numExtensions.get(0)).append("\n");
+	    MemoryUtil.memFree(numExtensions);
+	    
+	    // Get maximum texture size
+	    IntBuffer maxTextureSize = MemoryUtil.memAllocInt(1);
+	    glGetIntegerv(GL_MAX_TEXTURE_SIZE, maxTextureSize);
+	    sb.append("Max Texture Size: ").append(maxTextureSize.get(0)).append("\n");
+	    MemoryUtil.memFree(maxTextureSize);
+	    
+	    // Get maximum uniform buffer bindings
+	    IntBuffer maxUBOBindings = MemoryUtil.memAllocInt(1);
+	    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, maxUBOBindings);
+	    sb.append("Max UBO Bindings: ").append(maxUBOBindings.get(0)).append("\n");
+	    MemoryUtil.memFree(maxUBOBindings);
+	    
+	    sb.append("============================");
+	    Logging.getLogger().log(Level.INFO, sb.toString());
 	}
 }

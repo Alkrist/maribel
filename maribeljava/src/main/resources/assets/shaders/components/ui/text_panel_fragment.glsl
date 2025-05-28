@@ -11,9 +11,9 @@ void main(void) {
 
 	vec4 rgba = texture2D(texture, texCoord_fs);
 
-	if (rgba.a < 1.0){
+	/*if (rgba.a < 1.0){
 		discard;
-	}
+	}*/
 
 	fragColor = color;
 }

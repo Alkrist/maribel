@@ -30,12 +30,12 @@ import org.lwjgl.assimp.AIString;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
 
-import com.alkrist.maribel.client.model.Material;
-import com.alkrist.maribel.client.model.Mesh;
-import com.alkrist.maribel.client.model.Model;
-import com.alkrist.maribel.client.model.Vertex;
-import com.alkrist.maribel.client.texture.Texture2D;
-import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.render.model.Material;
+import com.alkrist.maribel.client.render.model.Mesh;
+import com.alkrist.maribel.client.render.model.Model;
+import com.alkrist.maribel.client.render.model.Vertex;
+import com.alkrist.maribel.client.render.texture.Texture2D;
+import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
 
 /**
  * @author oreon3D

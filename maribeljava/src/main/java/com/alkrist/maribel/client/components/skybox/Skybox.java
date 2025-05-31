@@ -1,15 +1,15 @@
 package com.alkrist.maribel.client.components.skybox;
 
-import com.alkrist.maribel.client.memory.MeshVBO;
-import com.alkrist.maribel.client.model.Material;
-import com.alkrist.maribel.client.model.Mesh;
-import com.alkrist.maribel.client.scenegraph.Renderable;
-import com.alkrist.maribel.client.scenegraph.Renderer;
-import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.client.texture.Texture2D;
+import com.alkrist.maribel.client.render.memory.MeshVBO;
+import com.alkrist.maribel.client.render.model.Material;
+import com.alkrist.maribel.client.render.model.Mesh;
+import com.alkrist.maribel.client.render.pipeline.CullFaceDisable;
+import com.alkrist.maribel.client.render.scenegraph.Renderable;
+import com.alkrist.maribel.client.render.scenegraph.Renderer;
+import com.alkrist.maribel.client.render.texture.Texture2D;
+import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.client.util.AssimpModelLoader;
 import com.alkrist.maribel.client.util.Constants;
-import com.alkrist.maribel.graphics.render.parameter.CullFaceDisable;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class Skybox extends Renderable{

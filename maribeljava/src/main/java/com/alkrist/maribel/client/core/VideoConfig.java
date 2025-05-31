@@ -2,7 +2,7 @@ package com.alkrist.maribel.client.core;
 
 import java.util.Properties;
 
-import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.common.context.Config;
 
 public class VideoConfig extends Config{

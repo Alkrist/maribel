@@ -8,10 +8,9 @@ import java.io.FileReader;
 import org.joml.Vector3f;
 
 import com.alkrist.maribel.client.core.VideoConfig;
-import com.alkrist.maribel.client.texture.Texture2D;
-import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
+import com.alkrist.maribel.client.render.texture.Texture2D;
+import com.alkrist.maribel.client.render.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.resources.ResourceCache;
 import com.alkrist.maribel.utils.FileUtils;
 
 /**
@@ -48,7 +47,6 @@ public class Material {
 		
 		m.setColor(new Vector3f(0.965f, 0, 1));
 		m.setEmission(0.5f);
-		ResourceCache.addMaterial(m);
 		return m;
 	}
 	
@@ -182,7 +180,7 @@ public class Material {
 					if(currentLine.length == 2) {
 						materialName = currentLine[1].toUpperCase();
 					}
-					material = ResourceCache.getMaterial(materialName);
+					material = null;
 					if(material == null)
 						material = new Material(materialName);
 					else {
@@ -275,7 +273,6 @@ public class Material {
 			return GENERIC_MATERIAL;
 		}
 		
-		ResourceCache.addMaterial(material);
 		return material;
 	}
 

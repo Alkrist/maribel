@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import org.joml.Matrix4f;
 
-import com.alkrist.maribel.client.texture.Texture;
+import com.alkrist.maribel.client.render.texture.Texture;
 import com.alkrist.maribel.graphics.model.Mesh;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.ui.constraints.UIConstraints;

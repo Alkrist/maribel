@@ -5,15 +5,29 @@ in vec2 texCoord_fs;
 layout(location = 0) out vec4 fragColor;
 
 uniform sampler2D texture;
-uniform vec4 color;
+uniform vec3 primaryColor;
+
+//Smooth edge parameters
+const float width = 0.5;
+const float edge = 0.05;
+
+//Border parameters
+uniform float borderWidth;
+uniform float borderEdge;
+
+//Outline parameters
+uniform vec3 outlineColor;
+uniform vec2 outlineOffset;
 
 void main(void) {
 
-	vec4 rgba = texture2D(texture, texCoord_fs);
+	float distance = 1.0 - texture(texture, texCoord_fs).a;
+	float alpha = 1.0 - smoothstep(width, width + edge, distance);
 
-	/*if (rgba.a < 1.0){
-		discard;
-	}*/
+	float distance2 = 1.0 - texture(texture, texCoord_fs + outlineOffset).a;
+	float outlineAlpha = 1.0 - smoothstep(borderWidth, borderWidth + borderEdge, distance2);
 
-	fragColor = color;
+	float totalAlpha = alpha + (1.0 - alpha) * outlineAlpha;
+	vec3 totalColor = mix(outlineColor, primaryColor, alpha / totalAlpha);
+	fragColor = vec4(totalColor, totalAlpha);
 }

@@ -1,6 +1,6 @@
 package com.alkrist.maribel.graphics.occlusion;
 
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class SSAONoiseShader extends ShaderProgram{

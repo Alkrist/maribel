@@ -5,9 +5,9 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
+import com.alkrist.maribel.client.render.pipeline.AlphaBlendingSrcAlpha;
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
 import com.alkrist.maribel.common.ecs.Component;
-import com.alkrist.maribel.graphics.render.RenderParameter;
-import com.alkrist.maribel.graphics.render.parameter.AlphaBlendingSrcAlpha;
 import com.alkrist.maribel.graphics.ui.fonts.FontType;
 import com.alkrist.maribel.graphics.ui.fonts.UIText;
 import com.alkrist.maribel.graphics.ui.fonts.UITextShader;

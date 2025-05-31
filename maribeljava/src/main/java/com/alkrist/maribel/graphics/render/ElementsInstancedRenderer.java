@@ -4,9 +4,10 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL31.glDrawElementsInstanced;
 
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.InstancedRenderable;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
 
 public abstract class ElementsInstancedRenderer extends Renderer{
 	

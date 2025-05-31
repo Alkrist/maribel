@@ -5,9 +5,9 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import com.alkrist.maribel.client.texture.Texture;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
+import com.alkrist.maribel.client.render.texture.Texture;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class OpaqueTransparencyBlendShader extends ShaderProgram{

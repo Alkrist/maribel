@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-import com.alkrist.maribel.graphics.render.RenderParameter;
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
 
 public class SkyboxRenderParameter implements RenderParameter{
 

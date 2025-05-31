@@ -8,10 +8,10 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import com.alkrist.maribel.client.texture.Texture;
-import com.alkrist.maribel.client.texture.Texture2D;
-import com.alkrist.maribel.client.texture.Texture.ImageFormat;
-import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.render.texture.Texture;
+import com.alkrist.maribel.client.render.texture.Texture2D;
+import com.alkrist.maribel.client.render.texture.Texture.ImageFormat;
+import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
 
 public class TransparencyFBO extends FBO{
 

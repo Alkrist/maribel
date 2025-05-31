@@ -3,9 +3,10 @@ package com.alkrist.maribel.graphics.render;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.InstancedRenderable;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
 
 public abstract class ArraysInstancedRenderer extends Renderer{
 	

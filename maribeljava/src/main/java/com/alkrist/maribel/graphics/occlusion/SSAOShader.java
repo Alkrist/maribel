@@ -3,7 +3,7 @@ package com.alkrist.maribel.graphics.occlusion;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class SSAOShader extends ShaderProgram{

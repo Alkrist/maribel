@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import com.alkrist.maribel.client.memory.UIVAO;
-import com.alkrist.maribel.client.model.Mesh;
-import com.alkrist.maribel.client.model.Vertex;
-import com.alkrist.maribel.client.scenegraph.RenderList;
-import com.alkrist.maribel.client.texture.Texture;
+import com.alkrist.maribel.client.render.memory.UIVAO;
+import com.alkrist.maribel.client.render.model.Mesh;
+import com.alkrist.maribel.client.render.model.Vertex;
+import com.alkrist.maribel.client.render.scenegraph.RenderList;
+import com.alkrist.maribel.client.render.texture.Texture;
 import com.alkrist.maribel.client.util.Util;
 
 public class GUI {

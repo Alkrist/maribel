@@ -2,7 +2,7 @@ package com.alkrist.maribel.client.components.ui;
 
 import org.joml.Matrix4f;
 
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class UITexturePanelShader extends ShaderProgram{

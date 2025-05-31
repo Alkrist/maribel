@@ -10,8 +10,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.alkrist.maribel.client.core.VideoConfig;
-import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
-import com.alkrist.maribel.client.texture.Texture;
+import com.alkrist.maribel.client.render.pipeline.CCW;
+import com.alkrist.maribel.client.render.texture.Texture;
 import com.alkrist.maribel.client.util.GLUtil;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Engine;
@@ -21,7 +21,6 @@ import com.alkrist.maribel.graphics.antialiasing.FXAA;
 import com.alkrist.maribel.graphics.antialiasing.SampleCoverage;
 import com.alkrist.maribel.graphics.components.ModelShadowRenderer;
 import com.alkrist.maribel.graphics.components.OpaqueModelRenderer;
-import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
@@ -29,9 +28,7 @@ import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.deferred.DeferredClusteredLighting;
-import com.alkrist.maribel.graphics.filter.PostProcessingVolumeRenderer;
 import com.alkrist.maribel.graphics.occlusion.SSAO;
-import com.alkrist.maribel.graphics.render.parameter.CCW;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.shadow.ParallelSplitShadowMapsFBO;
 import com.alkrist.maribel.graphics.surface.FullScreenQuad;
@@ -45,13 +42,10 @@ import com.alkrist.maribel.utils.ImmutableArrayList;
 
 public class RenderEngine {
 
-	//TODO: remove test mapper
-	private static final ComponentMapper<TestRenderer> testRendererMapper = ComponentMapper.getFor(TestRenderer.class);
 	private static final ComponentMapper<OpaqueModelRenderer> opaqueModelRendererMapper = ComponentMapper.getFor(OpaqueModelRenderer.class);
 	private static final ComponentMapper<ModelShadowRenderer> opaqueModelShadowMapper = ComponentMapper.getFor(ModelShadowRenderer.class);
 	private static final ComponentMapper<TransparentModelRenderer> transparentRendererMapper = ComponentMapper.getFor(TransparentModelRenderer.class);
 	private static final ComponentMapper<WindowCanvas> windowUIMapper = ComponentMapper.getFor(WindowCanvas.class);
-	private static final ComponentMapper<PostProcessingVolume> ppeVolumeMapper = ComponentMapper.getFor(PostProcessingVolume.class);
 	
 	private Engine engine;
 	
@@ -71,9 +65,6 @@ public class RenderEngine {
 	private OpaqueTransparencyBlending opaqueTransparencyBlending; //resized
 	
 	private DeferredClusteredLighting deferredClusteredLighting; // resized
-	
-	private PostProcessingVolumeRenderer ppeVolumeRenderer; //resized
-	private List<PostProcessingVolume> ppeVolumeList;
 	
 	private ImmutableArrayList<Entity> opaqueSceneRenderList;
 	private ImmutableArrayList<Entity> transparentSceneRenderList;
@@ -100,20 +91,16 @@ public class RenderEngine {
 		fxaa = new FXAA(width, height);
 		sampleCoverage = new SampleCoverage(width, height);
 		opaqueTransparencyBlending = new OpaqueTransparencyBlending(width, height);
-	
-		ppeVolumeRenderer = new PostProcessingVolumeRenderer();
-		ppeVolumeList = new ArrayList<PostProcessingVolume>();
 		
 		deferredClusteredLighting = new DeferredClusteredLighting(width, height);
 		deferredClusteredLighting.computeClusters();
 		
 		this.engine = engine;
 		//TODO: no test renderer later
-		opaqueSceneRenderList = engine.getEntitiesOf(Family.one(OpaqueModelRenderer.class, TestRenderer.class).all(Transform.class, Renderable.class).get());
+		opaqueSceneRenderList = engine.getEntitiesOf(Family.all(OpaqueModelRenderer.class, Transform.class, Renderable.class).get());
 		transparentSceneRenderList = engine.getEntitiesOf(Family.all(Transform.class, Renderable.class, TransparentModelRenderer.class).get());
 		shadowSceneRenderList = engine.getEntitiesOf(Family.all(ModelShadowRenderer.class, Transform.class, Renderable.class).get());
 		windowCanvases = engine.getEntitiesOf(Family.all(WindowCanvas.class).get());
-		postProcessingVolumes = engine.getEntitiesOf(Family.all(PostProcessingVolume.class).get());
 		pointLightEntities = engine.getEntitiesOf(Family.all(PointLight.class).get());
 		directionLightEntities = engine.getEntitiesOf(Family.all(DirectionLight.class).get());
 		
@@ -145,8 +132,6 @@ public class RenderEngine {
 		pssmFBO.getFbo().bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		pssmFBO.getFbo().unbind();
-				
-		ppeVolumeList.clear();
 		
 		//===================================//
 		//        RENDER SHADOW MAPS         //
@@ -169,8 +154,6 @@ public class RenderEngine {
 		//===================================//
 		primarySceneFBO.bind();
 		for(Entity e: opaqueSceneRenderList) {
-			if(testRendererMapper.hasComponent(e))
-				testRendererMapper.getComponent(e).render(e);
 			if(opaqueModelRendererMapper.hasComponent(e))
 				opaqueModelRendererMapper.getComponent(e).render(e);
 		}
@@ -268,16 +251,6 @@ public class RenderEngine {
 		//TODO; clean up
 	}
 	
-	private void sortPPEVolumeList() {
-		for(Entity e: postProcessingVolumes) {
-			PostProcessingVolume volume = ppeVolumeMapper.getComponent(e);
-			ppeVolumeList.add(volume);
-		}
-		
-		Collections.sort(ppeVolumeList, new PostProcessingVolume.PPEVolumeComparator());
-		Collections.reverse(ppeVolumeList);
-	}
-	
 	private void resizeCheck() {
 		int w = window.getWidth();
 		int h = window.getHeight();
@@ -298,9 +271,6 @@ public class RenderEngine {
 			fxaa.resize(w, h);
 			sampleCoverage.resize(w, h);
 			opaqueTransparencyBlending.resize(w, h);
-			
-			// Resize PPEs
-			ppeVolumeRenderer.resize(w, h);
 			
 			// Resize UI
 			for(Entity e: windowCanvases) {

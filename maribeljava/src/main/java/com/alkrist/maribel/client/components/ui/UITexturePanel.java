@@ -1,14 +1,11 @@
 package com.alkrist.maribel.client.components.ui;
 
-import com.alkrist.maribel.client.memory.UIVAO;
-import com.alkrist.maribel.client.texture.Texture;
-import com.alkrist.maribel.graphics.render.RenderParameter;
-import com.alkrist.maribel.graphics.render.parameter.AlphaBlending;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
+import com.alkrist.maribel.client.render.memory.UIVAO;
+import com.alkrist.maribel.client.render.pipeline.AlphaBlendingSrcAlpha;
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
+import com.alkrist.maribel.client.render.texture.Texture;
 
-
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
@@ -24,7 +21,7 @@ public class UITexturePanel extends UIElement{
 		super(xPos, yPos, scaleX, scaleY);
 		shader = UITexturePanelShader.getInstance();
 		vao = panelMeshBuffer;
-		config = new AlphaBlending(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		config = new AlphaBlendingSrcAlpha();
 		this.texture = texture; // reuse'n'recycle, bitch
 	}
 

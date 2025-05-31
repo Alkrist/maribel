@@ -3,7 +3,7 @@ package com.alkrist.maribel.client.components.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alkrist.maribel.client.scenegraph.RenderList;
+import com.alkrist.maribel.client.render.scenegraph.RenderList;
 
 public class UIScreen {
 

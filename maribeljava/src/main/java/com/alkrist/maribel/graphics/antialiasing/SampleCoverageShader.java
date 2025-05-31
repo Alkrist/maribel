@@ -1,7 +1,7 @@
 package com.alkrist.maribel.graphics.antialiasing;
 
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class SampleCoverageShader extends ShaderProgram{

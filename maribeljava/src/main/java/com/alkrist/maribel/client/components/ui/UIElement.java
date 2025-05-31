@@ -3,7 +3,7 @@ package com.alkrist.maribel.client.components.ui;
 import org.joml.Matrix4f;
 
 import com.alkrist.maribel.client.core.Context;
-import com.alkrist.maribel.client.scenegraph.Renderable;
+import com.alkrist.maribel.client.render.scenegraph.Renderable;
 
 public abstract class UIElement extends Renderable{
 

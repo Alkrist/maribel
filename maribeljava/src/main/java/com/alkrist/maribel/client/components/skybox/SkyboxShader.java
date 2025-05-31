@@ -6,9 +6,9 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import org.joml.Matrix4f;
 
 import com.alkrist.maribel.client.core.Context;
-import com.alkrist.maribel.client.model.Material;
-import com.alkrist.maribel.client.scenegraph.Renderable;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
+import com.alkrist.maribel.client.render.model.Material;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
+import com.alkrist.maribel.client.render.scenegraph.Renderable;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class SkyboxShader extends ShaderProgram{

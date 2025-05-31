@@ -8,7 +8,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
-import com.alkrist.maribel.client.model.Vertex;
+import com.alkrist.maribel.client.render.model.Vertex;
 
 public class Util {
 

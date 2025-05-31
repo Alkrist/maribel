@@ -12,19 +12,19 @@ import com.alkrist.maribel.client.components.ui.GUI;
 import com.alkrist.maribel.client.components.ui.UIColorPanel;
 import com.alkrist.maribel.client.components.ui.UIScreen;
 import com.alkrist.maribel.client.components.ui.UITextPanel;
-import com.alkrist.maribel.client.components.ui.font.FontType;
+import com.alkrist.maribel.client.components.ui.fonts.FontType;
 import com.alkrist.maribel.client.core.Context;
-import com.alkrist.maribel.client.memory.MeshVBO;
-import com.alkrist.maribel.client.model.Model;
-import com.alkrist.maribel.client.scenegraph.Renderable;
-import com.alkrist.maribel.client.scenegraph.Renderer;
+import com.alkrist.maribel.client.render.memory.MeshVBO;
+import com.alkrist.maribel.client.render.model.Model;
+import com.alkrist.maribel.client.render.pipeline.DefaultRenderParameter;
+import com.alkrist.maribel.client.render.scenegraph.Renderable;
+import com.alkrist.maribel.client.render.scenegraph.Renderer;
+import com.alkrist.maribel.client.render.texture.Texture2D;
+import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.render.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.client.sound.SoundBuffer;
-import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
-import com.alkrist.maribel.client.texture.Texture2D;
 import com.alkrist.maribel.client.util.AssimpModelLoader;
 import com.alkrist.maribel.graphics.components.TestModelShader;
-import com.alkrist.maribel.graphics.render.parameter.DefaultRenderParameter;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class TestSceneHandler {
@@ -35,10 +35,10 @@ public class TestSceneHandler {
 	
 	private SoundBuffer bibaSound;
 	
-	private FontType harryFnt;
-	
 	private TestCameraSystem cameraSys;
 	
+	private FontType harry;
+
 	public void register() {
 		registerInitializationTasks();
 		registerPostInitializationTasks();
@@ -57,7 +57,7 @@ public class TestSceneHandler {
 	}
 	
 	private void loadFonts() {
-		harryFnt = new FontType(new Texture2D(FileUtils.getResourceLocation("textures/fonts/harry.png"),SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtils.getResourceLocation("fonts/harry.fnt")));
+		harry = new FontType(new Texture2D(FileUtils.getResourceLocation("textures/fonts/harry.png"),SamplerFilter.Nearest, TextureWrapMode.ClampToEdge), new File(FileUtils.getResourceLocation("fonts/harry.fnt")));
 	}
 	
 	private void loadModels() {
@@ -74,11 +74,12 @@ public class TestSceneHandler {
 		gui = new GUI();
 		gui.init();
 		
-		UITextPanel textPanel = new UITextPanel("biba", harryFnt, new Vector4f(1), 100, 100, 100, 50);
+		
 		UIScreen testUIScreen = new UIScreen();
 		testUIScreen.getElements().add(new UIColorPanel(new Vector4f(1, 1, 1, 0.5f), 200, 100, 200, 200, gui.getPanelMeshBuffer()));
-		testUIScreen.getElements().add(textPanel);
 		
+		UITextPanel textPanel = new UITextPanel("biba", harry, new Vector3f(1), 100, 100, 100, 50);
+		testUIScreen.getElements().add(textPanel);
 		//Texture2D sampleGUITexture = new Texture2D(FileUtils.getResourceLocation("textures/sample_gui.jpg"), SamplerFilter.Bilinear);
 		//testUIScreen.getElements().add(new UITexturePanel(sampleGUITexture, 200, 300, 375, 375, gui.getPanelMeshBuffer()));
 		

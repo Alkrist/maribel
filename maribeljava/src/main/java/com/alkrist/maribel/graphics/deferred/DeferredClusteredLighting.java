@@ -25,11 +25,11 @@ import java.nio.FloatBuffer;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
-import com.alkrist.maribel.client.texture.Texture;
-import com.alkrist.maribel.client.texture.Texture2D;
-import com.alkrist.maribel.client.texture.Texture.ImageFormat;
-import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
+import com.alkrist.maribel.client.render.texture.Texture;
+import com.alkrist.maribel.client.render.texture.Texture2D;
+import com.alkrist.maribel.client.render.texture.Texture.ImageFormat;
+import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.render.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.light.DirectionLight;

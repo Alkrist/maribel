@@ -2,7 +2,7 @@ package com.alkrist.maribel.graphics.ui.fonts;
 
 import java.io.File;
 
-import com.alkrist.maribel.client.texture.Texture;
+import com.alkrist.maribel.client.render.texture.Texture;
 
 public class FontType {
 

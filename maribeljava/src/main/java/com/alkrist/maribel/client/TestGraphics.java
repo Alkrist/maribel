@@ -8,25 +8,22 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
-import com.alkrist.maribel.client.graphics.shader.shaders.TestRenderer;
-import com.alkrist.maribel.client.graphics.shader.shaders.TestShader;
-import com.alkrist.maribel.client.graphics.shader.shaders.TestTransparencyShader;
+import com.alkrist.maribel.client.render.pipeline.CCW;
+import com.alkrist.maribel.client.render.pipeline.ShadowRenderParameter;
+import com.alkrist.maribel.client.render.texture.Texture2D;
+import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.render.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.client.settings.Settings;
-import com.alkrist.maribel.client.texture.Texture2D;
-import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.ModelShadowRenderer;
 import com.alkrist.maribel.graphics.components.OpaqueModelRenderer;
-import com.alkrist.maribel.graphics.components.PostProcessingVolume;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.components.TransparentModelRenderer;
 import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.filter.contrast.ContrastProperty;
 import com.alkrist.maribel.graphics.model.GenericModelShader;
 import com.alkrist.maribel.graphics.model.GenericModelShadowShader;
 import com.alkrist.maribel.graphics.model.Model;
@@ -35,8 +32,6 @@ import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.platform.InputHandler;
 import com.alkrist.maribel.graphics.platform.RenderEngine;
-import com.alkrist.maribel.graphics.render.parameter.CCW;
-import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.ui.UIColorPanel;
 import com.alkrist.maribel.graphics.ui.UIElement;
@@ -100,15 +95,12 @@ public class TestGraphics {
 		
 		Renderable bunnyRenderable = new Renderable(bunny.getChild("bunny").getMesh(), bunny.getChild("bunny").getMaterial());
 		
-		TestShader shader = TestShader.getInstance();
 		GenericModelShader gms = GenericModelShader.getInstance();
 		GenericModelShadowShader gmss = GenericModelShadowShader.getInstance();
-		TestTransparencyShader ts = TestTransparencyShader.getInstance();
 		
-		TestRenderer renderer = new TestRenderer(new CCW(), shader);
 		OpaqueModelRenderer omRenderer = new OpaqueModelRenderer(new CCW(), gms);
 		ModelShadowRenderer shadowRenderer = new ModelShadowRenderer(new ShadowRenderParameter(), gmss);
-		TransparentModelRenderer transparentRenderer = new TransparentModelRenderer(new CCW(), ts);
+		TransparentModelRenderer transparentRenderer = new TransparentModelRenderer(new CCW(), gms);
 		
 		
 		WindowCanvas wCanvas = new WindowCanvas();
@@ -160,10 +152,6 @@ public class TestGraphics {
 		
 		System.out.println("position: "+colorPanel.getConstraits().getPosition().x+" "+colorPanel.getConstraits().getPosition().y);
 		System.out.println("scale: "+colorPanel.getConstraits().getScale().x+" "+colorPanel.getConstraits().getScale().y);
-		//Test post processing pipeline
-		ContrastProperty contrastProp = new ContrastProperty(new Vector3f(1f), new Vector3f(1f));
-		
-		PostProcessingVolume ppeVolume1 = new PostProcessingVolume.PPEComponentBuilder(0.1f).addEffectContrast(contrastProp).get();
 		
 		Engine engine = new Engine();
 		//engine.addSystem(new RenderSystem());

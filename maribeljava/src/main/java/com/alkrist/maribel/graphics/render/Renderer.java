@@ -1,12 +1,13 @@
 package com.alkrist.maribel.graphics.render;
 
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.InstancedRenderable;
 import com.alkrist.maribel.graphics.components.Renderable;
 import com.alkrist.maribel.graphics.components.Transform;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
 
 public abstract class Renderer {
 

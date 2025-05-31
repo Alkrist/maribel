@@ -3,8 +3,8 @@ package com.alkrist.maribel.graphics.ui;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import com.alkrist.maribel.client.texture.Texture;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
+import com.alkrist.maribel.client.render.texture.Texture;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class UITexturePanelShader extends ShaderProgram{

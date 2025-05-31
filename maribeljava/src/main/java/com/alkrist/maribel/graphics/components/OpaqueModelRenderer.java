@@ -4,11 +4,11 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.common.ecs.Component;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.render.ElementsRenderer;
-import com.alkrist.maribel.graphics.render.RenderParameter;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
 
 public class OpaqueModelRenderer extends ElementsRenderer implements Component{
 

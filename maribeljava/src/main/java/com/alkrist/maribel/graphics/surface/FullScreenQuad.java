@@ -6,11 +6,11 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-import com.alkrist.maribel.client.texture.Texture;
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
+import com.alkrist.maribel.client.render.texture.Texture;
 import com.alkrist.maribel.graphics.model.Mesh;
 import com.alkrist.maribel.graphics.model.ResourceLoader;
-import com.alkrist.maribel.graphics.render.RenderParameter;
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
 
 public class FullScreenQuad {
 

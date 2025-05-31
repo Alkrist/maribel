@@ -4,8 +4,8 @@ import static org.lwjgl.opengl.GL11.glFinish;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import com.alkrist.maribel.client.components.ui.GUI;
-import com.alkrist.maribel.client.scenegraph.RenderList;
-import com.alkrist.maribel.client.scenegraph.Scenegraph;
+import com.alkrist.maribel.client.render.scenegraph.RenderList;
+import com.alkrist.maribel.client.render.scenegraph.Scenegraph;
 import com.alkrist.maribel.client.util.GLUtil;
 
 public class RenderEngine {

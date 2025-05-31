@@ -6,14 +6,14 @@ import static org.lwjgl.opengl.GL20.glDrawBuffers;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 
-import com.alkrist.maribel.client.texture.Texture;
-import com.alkrist.maribel.client.texture.Texture2DArray;
-import com.alkrist.maribel.client.texture.Texture.ImageFormat;
-import com.alkrist.maribel.client.texture.Texture.SamplerFilter;
-import com.alkrist.maribel.client.texture.Texture.TextureWrapMode;
+import com.alkrist.maribel.client.render.pipeline.RenderParameter;
+import com.alkrist.maribel.client.render.pipeline.ShadowRenderParameter;
+import com.alkrist.maribel.client.render.texture.Texture;
+import com.alkrist.maribel.client.render.texture.Texture2DArray;
+import com.alkrist.maribel.client.render.texture.Texture.ImageFormat;
+import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
+import com.alkrist.maribel.client.render.texture.Texture.TextureWrapMode;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.render.RenderParameter;
-import com.alkrist.maribel.graphics.render.parameter.ShadowRenderParameter;
 import com.alkrist.maribel.graphics.target.FrameBuffer;
 
 public class ParallelSplitShadowMapsFBO {

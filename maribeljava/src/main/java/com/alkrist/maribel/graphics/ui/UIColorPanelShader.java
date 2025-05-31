@@ -1,6 +1,6 @@
 package com.alkrist.maribel.graphics.ui;
 
-import com.alkrist.maribel.graphics.shader.ShaderProgram;
+import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class UIColorPanelShader extends ShaderProgram{

@@ -4,9 +4,9 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
+import com.alkrist.maribel.client.render.shadows.PSSMCamera;
 import com.alkrist.maribel.client.render.texture.Texture;
 import com.alkrist.maribel.graphics.context.GLContext;
-import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class DeferredLightingShader extends ShaderProgram{

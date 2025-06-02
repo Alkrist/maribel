@@ -21,6 +21,8 @@ public class Camera {
     private Vector3f previousPosition;
     private Quaternionf orientation;
     
+    private boolean isMoved;
+    
     public Camera(Vector3f position, Vector3f rotation, float fovY, float width, float height) {
         this.position = new Vector3f(position);
         this.previousPosition = new Vector3f(position);
@@ -34,6 +36,8 @@ public class Camera {
         setProjectionMatrix(fovY, width, height);
         updateViewMatrix();
         updateViewProjection();
+        
+        isMoved = false;
     }
     
     /**
@@ -41,6 +45,9 @@ public class Camera {
      * @param deltaTime time since last update in seconds
      */
     public void update(double deltaTime) {
+    	
+    	isMoved = !position.equals(previousPosition);
+    	
         updateViewMatrix();
         updateViewProjection();
         previousPosition.set(position);
@@ -135,4 +142,5 @@ public class Camera {
     public float getFovY() { return fovY; }
     public float getWidth() { return width; }
     public float getHeight() { return height; }
+    public boolean isMoved() { return isMoved; }
 }

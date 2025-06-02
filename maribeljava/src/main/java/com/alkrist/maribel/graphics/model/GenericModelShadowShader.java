@@ -3,10 +3,10 @@ package com.alkrist.maribel.graphics.model;
 import org.joml.Matrix4f;
 
 import com.alkrist.maribel.client.render.pipeline.ShaderProgram;
+import com.alkrist.maribel.client.render.shadows.PSSMCamera;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.graphics.components.Transform;
-import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.utils.FileUtils;
 import com.alkrist.maribel.utils.math.MatrixMath;
 

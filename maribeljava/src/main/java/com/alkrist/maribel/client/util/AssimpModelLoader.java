@@ -305,6 +305,9 @@ public class AssimpModelLoader {
 		material.setColor(diffuseColor);
 
 		//TODO: emissive and reflectence params
+		material.setShininess(2.0f);
+		material.setEmission(0.5f);
+		
 		return material;
 	}
 }

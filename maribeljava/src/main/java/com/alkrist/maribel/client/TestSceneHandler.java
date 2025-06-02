@@ -11,25 +11,27 @@ import com.alkrist.maribel.client.components.skybox.Skybox;
 import com.alkrist.maribel.client.components.ui.GUI;
 import com.alkrist.maribel.client.components.ui.UIColorPanel;
 import com.alkrist.maribel.client.components.ui.UIScreen;
-import com.alkrist.maribel.client.components.ui.UITextPanel;
 import com.alkrist.maribel.client.components.ui.fonts.FontType;
 import com.alkrist.maribel.client.core.Context;
+import com.alkrist.maribel.client.render.light.DirectionLight;
 import com.alkrist.maribel.client.render.memory.MeshVBO;
 import com.alkrist.maribel.client.render.model.Model;
 import com.alkrist.maribel.client.render.pipeline.DefaultRenderParameter;
 import com.alkrist.maribel.client.render.scenegraph.Renderable;
 import com.alkrist.maribel.client.render.scenegraph.Renderer;
-import com.alkrist.maribel.client.render.texture.Texture2D;
 import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.client.render.texture.Texture.TextureWrapMode;
+import com.alkrist.maribel.client.render.texture.Texture2D;
 import com.alkrist.maribel.client.sound.SoundBuffer;
 import com.alkrist.maribel.client.util.AssimpModelLoader;
-import com.alkrist.maribel.graphics.components.TestModelShader;
 import com.alkrist.maribel.utils.FileUtils;
 
 public class TestSceneHandler {
 
 	private List<Model> rockModels = new ArrayList<>();
+	//private Model cubeModel;
+	private Model floorModel;
+	
 	private List<Renderable> rockRenderables = new ArrayList<>();
 	private GUI gui;
 	
@@ -39,6 +41,8 @@ public class TestSceneHandler {
 	
 	private FontType harry;
 
+	private DirectionLight directionLight;
+	
 	public void register() {
 		registerInitializationTasks();
 		registerPostInitializationTasks();
@@ -64,6 +68,9 @@ public class TestSceneHandler {
         // Load your rock models
         List<Model> models = AssimpModelLoader.loadModel("assets/models", "rock01.obj");
         rockModels.addAll(models);
+        //cubeModel =  AssimpModelLoader.loadModel("assets/models", "cube.obj").get(0);
+        
+        floorModel = AssimpModelLoader.loadModel("assets/models", "chess_floor.obj").get(0);
     }
 	
 	private void loadSoundBuffers() {
@@ -78,8 +85,8 @@ public class TestSceneHandler {
 		UIScreen testUIScreen = new UIScreen();
 		testUIScreen.getElements().add(new UIColorPanel(new Vector4f(1, 1, 1, 0.5f), 200, 100, 200, 200, gui.getPanelMeshBuffer()));
 		
-		UITextPanel textPanel = new UITextPanel("biba", harry, new Vector3f(1), 100, 100, 100, 50);
-		testUIScreen.getElements().add(textPanel);
+		//UITextPanel textPanel = new UITextPanel("biba", harry, new Vector3f(1), 100, 100, 100, 50);
+		//testUIScreen.getElements().add(textPanel);
 		//Texture2D sampleGUITexture = new Texture2D(FileUtils.getResourceLocation("textures/sample_gui.jpg"), SamplerFilter.Bilinear);
 		//testUIScreen.getElements().add(new UITexturePanel(sampleGUITexture, 200, 300, 375, 375, gui.getPanelMeshBuffer()));
 		
@@ -102,18 +109,58 @@ public class TestSceneHandler {
                 meshBuffer
             );
             
+            Renderer shadowRenderInfo = new Renderer(
+                    TestModelShadowShader.getInstance(), 
+                    new DefaultRenderParameter(), 
+                    meshBuffer
+            );
+            
             Renderable object = new Renderable();
             object.addComponent("main", renderInfo);
+            object.addComponent("shadow", shadowRenderInfo);
             object.addComponent("material", model.getMaterial());
             object.getWorldTransform().setTranslation(new Vector3f(0, -1, -5));
     		object.getWorldTransform().setRotation(20, 50, 10);
     		Context.getRenderEngine().getScenegraph().addObject(object);
             rockRenderables.add(object);
         }
+        
+        MeshVBO floorBuffer = new MeshVBO();
+        floorBuffer.addData(floorModel.getMesh());
+        Renderer floorRenderInfo = new Renderer(TestModelShader.getInstance(),
+        		 new DefaultRenderParameter(), 
+        		 floorBuffer
+        		);
+        
+        Renderable floorRenderable = new Renderable();
+        floorRenderable.addComponent("main", floorRenderInfo);
+        floorRenderable.addComponent("material", floorModel.getMaterial());
+        floorRenderable.getWorldTransform().setTranslation(new Vector3f(0, -5, -5));
+        Context.getRenderEngine().getScenegraph().addObject(floorRenderable);
+        
+        
+        /*MeshVBO cubeBuffer = new MeshVBO();
+        cubeBuffer.addData(cubeModel.getMesh());
+        Renderer cubeRenderInfo = new Renderer(
+                TestModelShader.getInstance(),
+                new AlphaBlendingSrcAlpha(), 
+                cubeBuffer
+        );
+        Renderable cubeRenderable = new Renderable();
+        cubeRenderable.addComponent("main", cubeRenderInfo);
+        cubeRenderable.addComponent("material", cubeModel.getMaterial());
+        cubeRenderable.getWorldTransform().setTranslation(new Vector3f(5, 0, 10));
+        Context.getRenderEngine().getScenegraph().addTransparentObject(cubeRenderable);*/
 	}
 	
 	private void registerSystems() {
 		cameraSys = new TestCameraSystem(bibaSound);
 		Context.getCoreEngine().addSystem(cameraSys);
+		
+		Vector3f ambient = new Vector3f(0.9f);
+		Vector3f color = new Vector3f(1, 0.95f, 0.368f);
+		Vector3f direction = new Vector3f(0, 10000, 0);
+		directionLight = new DirectionLight(direction, color, ambient, 0.6f);
+		Context.getRenderEngine().getScenegraph().addChild(directionLight);
 	}
 }

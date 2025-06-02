@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.alkrist.maribel.client.render.pipeline.CCW;
 import com.alkrist.maribel.client.render.pipeline.ShadowRenderParameter;
+import com.alkrist.maribel.client.render.shadows.PSSMCamera;
 import com.alkrist.maribel.client.render.texture.Texture2D;
 import com.alkrist.maribel.client.render.texture.Texture.SamplerFilter;
 import com.alkrist.maribel.client.render.texture.Texture.TextureWrapMode;
@@ -32,7 +33,6 @@ import com.alkrist.maribel.graphics.model.ResourceLoader;
 import com.alkrist.maribel.graphics.platform.GLWindow;
 import com.alkrist.maribel.graphics.platform.InputHandler;
 import com.alkrist.maribel.graphics.platform.RenderEngine;
-import com.alkrist.maribel.graphics.shadow.PSSMCamera;
 import com.alkrist.maribel.graphics.ui.UIColorPanel;
 import com.alkrist.maribel.graphics.ui.UIElement;
 import com.alkrist.maribel.graphics.ui.UITexturePanel;

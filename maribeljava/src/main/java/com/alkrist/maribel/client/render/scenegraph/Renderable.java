@@ -61,4 +61,12 @@ public class Renderable extends Node{
 		
 		super.render();
 	}
+	
+	public void renderShadows() {
+		if (components.containsKey("shadow")){
+			components.get("shadow").render();
+		}
+		
+		super.renderShadows();
+	}
 }

@@ -10,15 +10,22 @@ import java.util.Collections;
 import java.util.List;
 
 import com.alkrist.maribel.client.core.VideoConfig;
+import com.alkrist.maribel.client.render.antialiasing.FXAA;
+import com.alkrist.maribel.client.render.antialiasing.SampleCoverage;
+import com.alkrist.maribel.client.render.filter.ssao.SSAO;
 import com.alkrist.maribel.client.render.pipeline.CCW;
+import com.alkrist.maribel.client.render.shadows.PSSMCamera;
+import com.alkrist.maribel.client.render.shadows.ParallelSplitShadowMapsFBO;
+import com.alkrist.maribel.client.render.surface.FullScreenQuad;
+import com.alkrist.maribel.client.render.target.FBO;
+import com.alkrist.maribel.client.render.target.FBO.Attachment;
 import com.alkrist.maribel.client.render.texture.Texture;
+import com.alkrist.maribel.client.render.transparency.OpaqueTransparencyBlending;
 import com.alkrist.maribel.client.util.GLUtil;
 import com.alkrist.maribel.common.ecs.ComponentMapper;
 import com.alkrist.maribel.common.ecs.Engine;
 import com.alkrist.maribel.common.ecs.Entity;
 import com.alkrist.maribel.common.ecs.Family;
-import com.alkrist.maribel.graphics.antialiasing.FXAA;
-import com.alkrist.maribel.graphics.antialiasing.SampleCoverage;
 import com.alkrist.maribel.graphics.components.ModelShadowRenderer;
 import com.alkrist.maribel.graphics.components.OpaqueModelRenderer;
 import com.alkrist.maribel.graphics.components.Renderable;
@@ -28,15 +35,8 @@ import com.alkrist.maribel.graphics.components.light.DirectionLight;
 import com.alkrist.maribel.graphics.components.light.PointLight;
 import com.alkrist.maribel.graphics.context.GLContext;
 import com.alkrist.maribel.graphics.deferred.DeferredClusteredLighting;
-import com.alkrist.maribel.graphics.occlusion.SSAO;
-import com.alkrist.maribel.graphics.shadow.PSSMCamera;
-import com.alkrist.maribel.graphics.shadow.ParallelSplitShadowMapsFBO;
-import com.alkrist.maribel.graphics.surface.FullScreenQuad;
-import com.alkrist.maribel.graphics.target.FBO;
 import com.alkrist.maribel.graphics.target.OffScreenFBO;
 import com.alkrist.maribel.graphics.target.TransparencyFBO;
-import com.alkrist.maribel.graphics.target.FBO.Attachment;
-import com.alkrist.maribel.graphics.transparency.OpaqueTransparencyBlending;
 import com.alkrist.maribel.graphics.ui.WindowCanvas;
 import com.alkrist.maribel.utils.ImmutableArrayList;
 
@@ -70,7 +70,6 @@ public class RenderEngine {
 	private ImmutableArrayList<Entity> transparentSceneRenderList;
 	private ImmutableArrayList<Entity> shadowSceneRenderList;
 	private ImmutableArrayList<Entity> windowCanvases;
-	private ImmutableArrayList<Entity> postProcessingVolumes;
 	private ImmutableArrayList<Entity> pointLightEntities;
 	private ImmutableArrayList<Entity> directionLightEntities;
 	
@@ -229,12 +228,7 @@ public class RenderEngine {
 			fxaa.render(currentScene);
 			currentScene = fxaa.getFXAASceneTexture();
 		}*/
-		
-		/*sortPPEVolumeList();
-		for(PostProcessingVolume volume: ppeVolumeList) {
-			if(volume.isEnabled())
-				currentScene = ppeVolumeRenderer.render(volume, currentScene);
-		}*/
+
 		
 		fullScreenQuad.setTexture(currentScene);
 		fullScreenQuad.render();

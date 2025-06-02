@@ -1,13 +1,23 @@
 package com.alkrist.maribel.client.render.scenegraph;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.joml.Vector3f;
+
+import com.alkrist.maribel.client.core.Camera;
 
 public class RenderList {
 	private LinkedHashMap<String, Renderable> objectList;
 	
+	private List<Renderable> sortedCache;
+    private boolean cacheValid;
+    
 	private boolean changed;
 	
 	public LinkedHashMap<String, Renderable> getObjectList(){
@@ -37,16 +47,19 @@ public class RenderList {
 	public void add(Renderable object){
 		
 		objectList.put(object.getId(), object);
+		cacheValid = false;
 	}
 	
 	public void remove(Renderable object){
 		
 		objectList.remove(object.getId());
+		cacheValid = false;
 	}
 	
 	public void remove(String key){
 		
 		objectList.remove(key);
+		cacheValid = false;
 	}
 	
 	public Set<String> getKeySet(){
@@ -72,5 +85,19 @@ public class RenderList {
 		return objectList.isEmpty();
 	}
 	
-	//TODO: sort objects
+	// painter's algorithm for transparent scene objects
+	public List<Renderable> sortBackToFront(Camera camera) {
+		Vector3f viewPosition = camera.getPosition();
+		
+        // Check if we can reuse the cached sort
+        if (!cacheValid || camera.isMoved()) {
+            // Update cache
+            sortedCache = new ArrayList<>(objectList.values());
+            sortedCache.sort(Comparator.comparingDouble(
+                r -> -r.getWorldTransform().getTranslation().distanceSquared(viewPosition)
+            ));
+            cacheValid = true;
+        }
+        return sortedCache;
+    }
 }

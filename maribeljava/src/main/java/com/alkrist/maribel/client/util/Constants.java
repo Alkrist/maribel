@@ -6,4 +6,9 @@ public class Constants {
 	
 	public static final double UPDATE_RATE = 60.0d;
 	public static final double NANOSECOND = 1_000_000_000.0d;
+	
+	public static final int CSM_SPLITS = 3;
+	
+	public static final int DIRECTION_LIGHT_UBO_INDEX = 52;
+	public static final int CSM_MATRICES_UBO_INDEX = 53;
 }

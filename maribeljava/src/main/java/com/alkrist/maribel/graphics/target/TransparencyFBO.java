@@ -8,6 +8,8 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import com.alkrist.maribel.client.render.target.FBO;
+import com.alkrist.maribel.client.render.target.FrameBuffer;
 import com.alkrist.maribel.client.render.texture.Texture;
 import com.alkrist.maribel.client.render.texture.Texture2D;
 import com.alkrist.maribel.client.render.texture.Texture.ImageFormat;

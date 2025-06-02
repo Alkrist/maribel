@@ -14,7 +14,7 @@ out vec3 normal_FS;
 //out vec3 tangent_FS;
 //out vec3 bitangent_FS;
 out vec2 textureCoords_FS;
-//out vec3 position_FS;
+out vec3 position_FS;
 
 void main(void){
 
@@ -34,16 +34,16 @@ void main(void){
 
 
 	//BITANGENT
-	//vec3 surfaceNormal = (projectionMatrix * viewModelMatrix * vec4(normal,0.0)).xyz;
-	//vec3 norm = normalize(surfaceNormal);
+	vec3 surfaceNormal = (projectionMatrix * viewModelMatrix * vec4(normal,0.0)).xyz;
+	vec3 norm = normalize(surfaceNormal);
 	//vec3 tang = normalize((viewModelMatrix * vec4(tangent, 0.0)).xyz);
 
 	//bitangent_FS = normalize(cross(norm, tang));
 
 	//TODO: fix normal maps according to new matrix calculations,fix position in deferred lighting
 	//OTHERS
-	//normal_FS = norm;
+	normal_FS = norm;
 	//tangent_FS = tang;
 	textureCoords_FS = textureCoords;
-	//position_FS = outWorldPosition.xyz;
+	position_FS = outWorldPosition.xyz;
 }

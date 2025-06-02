@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -170,5 +171,17 @@ public class Util {
 			result[i] = data[i].intValue();
 		
 		return result;
+	}
+	
+	public static FloatBuffer createFlippedBuffer(Vector3f vector) {
+		FloatBuffer buffer = createFloatBuffer(Float.BYTES * 3);
+		
+		buffer.put(vector.x);
+		buffer.put(vector.y);
+		buffer.put(vector.z);
+		
+		buffer.flip();
+		
+		return buffer;
 	}
 }

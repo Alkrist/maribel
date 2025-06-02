@@ -34,6 +34,10 @@ public class Node {
 		children.forEach(child -> child.render());
 	}
 	
+	public void renderShadows() {
+		children.forEach(child -> child.renderShadows());
+	}
+	
 	public void cleanup(){
 		children.forEach(child -> child.cleanup());
 	}

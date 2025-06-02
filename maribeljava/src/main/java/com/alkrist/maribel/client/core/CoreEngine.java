@@ -114,7 +114,6 @@ public class CoreEngine extends Engine{
 	public void update(double delta) {
 		input.update();
 		super.update(delta);
-		// TODO: ECS engine update here
 		
 		Context.getCamera().update(delta);
 	}
